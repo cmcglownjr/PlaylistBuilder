@@ -6,4 +6,9 @@
         <Nullable>enable</Nullable>
     </PropertyGroup>
 
+    <ItemGroup>
+      <PackageReference Include="LibVLCSharp" Version="3.6.5" />
+      <PackageReference Include="z440.atl.core" Version="4.3.0" />
+    </ItemGroup>
+
 </Project>

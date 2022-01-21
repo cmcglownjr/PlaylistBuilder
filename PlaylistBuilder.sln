@@ -1,8 +1,28 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PlaylistBuilder.Lib", "PlaylistBuilder.Lib\PlaylistBuilder.Lib.csproj", "{3A455583-839A-4E25-9726-A2C9CFED27A0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PlaylistBuilder.GUI", "PlaylistBuilder.GUI\PlaylistBuilder.GUI.csproj", "{75D0FF1F-E5D3-4697-877D-906A54F57AE5}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sandbox", "Sandbox\Sandbox.csproj", "{7C82175A-8309-4CBB-A614-DAF4FCF585FA}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{3A455583-839A-4E25-9726-A2C9CFED27A0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3A455583-839A-4E25-9726-A2C9CFED27A0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3A455583-839A-4E25-9726-A2C9CFED27A0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3A455583-839A-4E25-9726-A2C9CFED27A0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{75D0FF1F-E5D3-4697-877D-906A54F57AE5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{75D0FF1F-E5D3-4697-877D-906A54F57AE5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{75D0FF1F-E5D3-4697-877D-906A54F57AE5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{75D0FF1F-E5D3-4697-877D-906A54F57AE5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7C82175A-8309-4CBB-A614-DAF4FCF585FA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7C82175A-8309-4CBB-A614-DAF4FCF585FA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7C82175A-8309-4CBB-A614-DAF4FCF585FA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7C82175A-8309-4CBB-A614-DAF4FCF585FA}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

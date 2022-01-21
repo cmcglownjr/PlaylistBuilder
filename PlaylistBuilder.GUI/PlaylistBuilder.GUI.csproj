@@ -5,15 +5,17 @@
         <Nullable>enable</Nullable>
     </PropertyGroup>
     <ItemGroup>
-        <Folder Include="Models\"/>
-        <AvaloniaResource Include="Assets\**"/>
-        <None Remove=".gitignore"/>
+        <Folder Include="Models\" />
+        <AvaloniaResource Include="Assets\**" />
+        <None Remove=".gitignore" />
     </ItemGroup>
     <ItemGroup>
-        <PackageReference Include="Avalonia" Version="0.10.10"/>
-        <PackageReference Include="Avalonia.Desktop" Version="0.10.10"/>
+        <PackageReference Include="Avalonia" Version="0.10.11" />
+        <PackageReference Include="Avalonia.Desktop" Version="0.10.11" />
+        <PackageReference Include="Avalonia.Diagnostics" Version="0.10.11" />
         <!--Condition below is needed to remove Avalonia.Diagnostics package from build output in Release configuration.-->
-        <PackageReference Condition="'$(Configuration)' == 'Debug'" Include="Avalonia.Diagnostics" Version="0.10.10"/>
-        <PackageReference Include="Avalonia.ReactiveUI" Version="0.10.10"/>
+        <PackageReference Include="Avalonia.ReactiveUI" Version="0.10.11" />
+        <PackageReference Include="LibVLCSharp" Version="3.6.5" />
+        <PackageReference Include="z440.atl.core" Version="4.3.0" />
     </ItemGroup>
 </Project>
