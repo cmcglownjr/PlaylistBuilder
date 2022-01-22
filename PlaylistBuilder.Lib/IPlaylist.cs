@@ -4,6 +4,8 @@ namespace PlaylistBuilder.Lib;
 
 public interface IPlaylist
 {
+    public bool Relative { set; }
+    public List<Track> ReadList { get; }
     public void LoadPlaylist(string path);
     public void SavePlaylist(string path);
     public void AddTrack(Track track);

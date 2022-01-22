@@ -2,48 +2,33 @@ using ATL;
 
 namespace PlaylistBuilder.Lib;
 
-public class PlaylistM3U : IPlaylist
+public class PlaylistM3U : PlaylistBase
 {
     private string _header = "#EXTM3U";
-    private List<Track> _playlist = new();
-    
-    public void LoadPlaylist(string path)
+    protected override void CreateFile()
     {
-        throw new NotImplementedException();
-    }
+        if (_savedPlaylist.Exists)
+        {
+            File.Delete(_savedPlaylist.FullName);
+        }
 
-    public void SavePlaylist(string path)
-    {
-        throw new NotImplementedException();
-    }
-
-    public void AddTrack(Track track)
-    {
-        throw new NotImplementedException();
-    }
-
-    public void RemoveTrack(Track track)
-    {
-        throw new NotImplementedException();
-    }
-
-    public void ClearPlaylist()
-    {
-        throw new NotImplementedException();
-    }
-
-    public void ShufflePlaylist()
-    {
-        throw new NotImplementedException();
-    }
-
-    public void RemoveDuplicates()
-    {
-        throw new NotImplementedException();
-    }
-
-    public void RemoveUnavailable()
-    {
-        throw new NotImplementedException();
+        using StreamWriter sw = File.CreateText(_savedPlaylist.FullName);
+        sw.WriteLine(_header);
+        foreach (Track item in _playlist)
+        {
+            sw.WriteLine($"#EXTINF:{item.Duration},{item.Artist} - {item.Title}");
+            if (_relative)
+            {
+                if (_savedPlaylist.DirectoryName != null)
+                {
+                    var path = Path.GetRelativePath(_savedPlaylist.DirectoryName, item.Path);
+                    sw.WriteLine($"{path}");
+                }
+            }
+            else
+            {
+                sw.WriteLine($"{item.Path}");
+            }
+        }
     }
 }
