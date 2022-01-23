@@ -1,3 +1,4 @@
+using System.Security.Cryptography;
 using ATL;
 using ATL.Playlist;
 
@@ -49,7 +50,7 @@ public abstract class PlaylistBase : IPlaylist
 
     public void ShufflePlaylist()
     {
-        throw new NotImplementedException();
+        Shuffle(_playlist);
     }
 
     public void RemoveDuplicates()
@@ -90,6 +91,22 @@ public abstract class PlaylistBase : IPlaylist
         foreach (Track track in reader.Tracks)
         {
             _playlist.Add(track);
+        }
+    }
+    private void Shuffle<T>(IList<T> list)
+    {
+        RNGCryptoServiceProvider provider = new RNGCryptoServiceProvider();
+        int n = list.Count;
+        while (n > 1)
+        {
+            byte[] box = new byte[1];
+            do provider.GetBytes(box);
+            while (!(box[0] < n * (Byte.MaxValue / n)));
+            int k = (box[0] % n);
+            n--;
+            T value = list[k];
+            list[k] = list[n];
+            list[n] = value;
         }
     }
 }
