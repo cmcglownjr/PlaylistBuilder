@@ -93,7 +93,7 @@ public abstract class PlaylistBase : IPlaylist
             _playlist.Add(track);
         }
     }
-    private void Shuffle<T>(IList<T> list)
+    public static void Shuffle<T>(IList<T> list)
     {
         RNGCryptoServiceProvider provider = new RNGCryptoServiceProvider();
         int n = list.Count;

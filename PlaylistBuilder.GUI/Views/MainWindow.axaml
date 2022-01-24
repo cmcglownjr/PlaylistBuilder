@@ -3,15 +3,23 @@
         xmlns:vm="using:PlaylistBuilder.GUI.ViewModels"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:views="clr-namespace:PlaylistBuilder.GUI.Views"
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
         x:Class="PlaylistBuilder.GUI.Views.MainWindow"
         Icon="/Assets/avalonia-logo.ico"
-        Title="PlaylistBuilder.GUI">
+        Title="PlaylistBuilder">
 
     <Design.DataContext>
         <vm:MainWindowViewModel/>
     </Design.DataContext>
-
-    <TextBlock Text="{Binding Greeting}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+    <DockPanel>
+        <Menu DockPanel.Dock="Top">
+            <MenuItem Header="_File"></MenuItem>
+        </Menu>
+        <StackPanel DockPanel.Dock="Left" Orientation="Horizontal">
+            <views:DirectoryView/>
+            <views:PlaylistView/>
+        </StackPanel>
+    </DockPanel>
 
 </Window>

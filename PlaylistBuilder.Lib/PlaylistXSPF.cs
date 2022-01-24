@@ -9,7 +9,7 @@ public class PlaylistXSPF : PlaylistBase
     private string? _playlistCreator;
     protected override void CreateFile()
     {
-        var sts = new XmlWriterSettings()
+        var sts = new XmlWriterSettings
         {
             Indent = true,
         };
