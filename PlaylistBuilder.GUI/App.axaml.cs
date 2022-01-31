@@ -3,6 +3,7 @@ using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
 using PlaylistBuilder.GUI.ViewModels;
 using PlaylistBuilder.GUI.Views;
+using Splat;
 
 namespace PlaylistBuilder.GUI
 {
@@ -10,6 +11,7 @@ namespace PlaylistBuilder.GUI
     {
         public override void Initialize()
         {
+            new AppBootstrapper();
             AvaloniaXamlLoader.Load(this);
         }
 
@@ -19,7 +21,8 @@ namespace PlaylistBuilder.GUI
             {
                 desktop.MainWindow = new MainWindow
                 {
-                    DataContext = new MainWindowViewModel(),
+                    // DataContext = new MainWindowViewModel(),
+                    DataContext = Locator.Current.GetService(typeof(MainWindowViewModel))
                 };
             }
 
