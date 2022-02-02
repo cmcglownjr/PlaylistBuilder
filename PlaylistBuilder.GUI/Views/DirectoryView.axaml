@@ -10,10 +10,13 @@
         <vm:DirectoryViewModel/>
     </Design.DataContext>
     
-    <ListBox Items="{Binding ItemList}">
+    <ListBox Items="{Binding ItemList}" Margin="10">
         <ListBox.ItemTemplate>
             <DataTemplate DataType="models:MediaItemModel">
-                <TextBlock Foreground="Red" Text="{Binding Name}"/>
+                <StackPanel Orientation="Horizontal" Margin="5" Width="350">
+                    <Image Width="25" Height="25" Source="{Binding MediaIcon.Source}" Margin="5 0"/>
+                    <TextBlock Text="{Binding Name}" Margin="5 0" TextWrapping="Wrap"/>
+                </StackPanel>
             </DataTemplate>
         </ListBox.ItemTemplate>
     </ListBox>

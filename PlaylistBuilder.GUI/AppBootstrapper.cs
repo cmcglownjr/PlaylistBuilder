@@ -13,6 +13,7 @@ namespace PlaylistBuilder.GUI
 
         private void RegisterServices()
         {
+            Locator.CurrentMutable.RegisterConstant(new IconModel(), typeof(IconModel));
             Locator.CurrentMutable.RegisterConstant(new DirectoryViewModel(), typeof(DirectoryViewModel));
             Locator.CurrentMutable.RegisterConstant(new MainWindowViewModel(), typeof(MainWindowViewModel));
         }
