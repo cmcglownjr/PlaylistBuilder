@@ -2,35 +2,45 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
+using System.Linq;
+using PlaylistBuilder.GUI.Models;
 using ReactiveUI;
 
 namespace PlaylistBuilder.GUI.ViewModels
 {
     public class DirectoryViewModel : ViewModelBase
     {
-        string musicDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyMusic);
-        public ObservableCollection<object> TreeList { get; }
+        readonly string _musicDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyMusic);
+        public ObservableCollection<object> ItemList { get; }
 
         public DirectoryViewModel()
         {
-            TreeList = new ObservableCollection<object>(PopulateTree(musicDirectory));
+            ItemList = new ObservableCollection<object>(PopulateTree(_musicDirectory));
         }
         
         private List<object> PopulateTree(string directory)
         {
-            List<object> treeList = new List<object>();
+            List<string> extensions = new List<string> { ".m3u", ".M3U", ".pls", ".PLS", ".xspf", ".XSPF" };
+            List<object> itemList = new List<object>();
             DirectoryInfo info = new DirectoryInfo(directory);
             foreach (DirectoryInfo dir in info.GetDirectories())
             {
-                treeList.Add(dir.Name);
+                itemList.Add(new MediaItemModel(dir, MediaItemType.Directory));
             }
 
             foreach (FileInfo file in info.GetFiles())
             {
-                treeList.Add(file.Name);
+                if (extensions.Any(file.Extension.Contains))
+                {
+                    itemList.Add(new MediaItemModel(file, MediaItemType.Playlist));
+                }
+                else
+                {
+                    itemList.Add(new MediaItemModel(file, MediaItemType.Media));
+                }
             }
 
-            return treeList;
+            return itemList;
         }
     }
 }

@@ -1,7 +1,7 @@
 <UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:vm="using:PlaylistBuilder.GUI.ViewModels"
-             xmlns:models="clr-namespace:PlaylistBuilder.GUI.Models;assembly=PlaylistBuilder"
+             xmlns:models="clr-namespace:PlaylistBuilder.GUI.Models"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
@@ -10,7 +10,11 @@
         <vm:DirectoryViewModel/>
     </Design.DataContext>
     
-    <ListBox Items="{Binding TreeList}">
-        
+    <ListBox Items="{Binding ItemList}">
+        <ListBox.ItemTemplate>
+            <DataTemplate DataType="models:MediaItemModel">
+                <TextBlock Foreground="Red" Text="{Binding Name}"/>
+            </DataTemplate>
+        </ListBox.ItemTemplate>
     </ListBox>
 </UserControl>
