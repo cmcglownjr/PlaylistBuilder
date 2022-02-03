@@ -43,6 +43,9 @@
             <views:DirectoryView/>
             <views:PlaylistView/>
         </StackPanel>
+        <StackPanel DockPanel.Dock="Bottom">
+            <views:PlaybackView/>
+        </StackPanel>
     </DockPanel>
 
 </Window>
