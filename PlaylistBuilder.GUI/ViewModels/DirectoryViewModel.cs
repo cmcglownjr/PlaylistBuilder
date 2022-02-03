@@ -15,10 +15,11 @@ namespace PlaylistBuilder.GUI.ViewModels
         readonly string _musicDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyMusic);
         private IconModel _mediaIconModel;
         public ObservableCollection<MediaItemModel> ItemList { get; }
-
+        public IconModel MediaIconModel;
         public DirectoryViewModel()
         {
             _mediaIconModel = (IconModel)Locator.Current.GetService(typeof(IconModel));
+            MediaIconModel = _mediaIconModel;
             ItemList = new ObservableCollection<MediaItemModel>(PopulateTree(_musicDirectory));
         }
         

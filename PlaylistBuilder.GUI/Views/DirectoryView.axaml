@@ -9,15 +9,32 @@
     <Design.DataContext>
         <vm:DirectoryViewModel/>
     </Design.DataContext>
-    <ListBox Items="{Binding ItemList}" Width="350" Margin="10" 
-             ScrollViewer.VerticalScrollBarVisibility="Auto" ScrollViewer.HorizontalScrollBarVisibility="Auto">
-        <ListBox.ItemTemplate>
-            <DataTemplate DataType="models:MediaItemModel">
-                <StackPanel Orientation="Horizontal" Margin="5">
-                    <Image Width="25" Height="25" Source="{Binding MediaIcon.Source}" Margin="5 0"/>
-                    <TextBlock Text="{Binding Name}" Margin="5 0" TextWrapping="Wrap"/>
-                </StackPanel>
-            </DataTemplate>
-        </ListBox.ItemTemplate>
-    </ListBox>
+    <StackPanel Orientation="Vertical">
+        <StackPanel Orientation="Horizontal" Margin="10">
+            <Button>
+                <Image Width="25" Height="25" Source="../Assets/undo.png"/>
+            </Button>
+            <Button>
+                <Image Width="25" Height="25" Source="../Assets/redo.png"/>
+            </Button>
+            <Button>
+                <Image Width="25" Height="25" Source="../Assets/parent.png"/>
+            </Button>
+            <Button>
+                <Image Width="25" Height="25" Source="../Assets/home.png"/>
+            </Button>
+            <TextBox Text="/home/eezyville/Music"></TextBox>
+        </StackPanel>
+        <ListBox Items="{Binding ItemList}" Width="350" Height="500" Margin="10" 
+                 ScrollViewer.VerticalScrollBarVisibility="Auto" ScrollViewer.HorizontalScrollBarVisibility="Auto">
+            <ListBox.ItemTemplate>
+                <DataTemplate DataType="models:MediaItemModel">
+                    <StackPanel Orientation="Horizontal" Margin="5">
+                        <Image Width="25" Height="25" Source="{Binding MediaIcon.Source}" Margin="5 0"/>
+                        <TextBlock Text="{Binding Name}" Margin="5 0" TextWrapping="Wrap"/>
+                    </StackPanel>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
+    </StackPanel>
 </UserControl>
