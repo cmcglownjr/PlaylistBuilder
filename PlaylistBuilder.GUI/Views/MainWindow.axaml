@@ -12,8 +12,8 @@
     <Design.DataContext>
         <vm:MainWindowViewModel/>
     </Design.DataContext>
-    <DockPanel>
-        <Menu DockPanel.Dock="Top">
+    <StackPanel Orientation="Vertical">
+        <Menu>
             <MenuItem Header="_File">
                 <MenuItem Header="_Open Playlist..."/>
                 <MenuItem Header="_Save Playlist"/>
@@ -39,13 +39,12 @@
                 <MenuItem Header="About AvaloniaUI"/>
             </MenuItem>
         </Menu>
-        <StackPanel DockPanel.Dock="Left" Orientation="Horizontal">
+        <StackPanel Orientation="Horizontal">
             <views:DirectoryView/>
             <views:PlaylistView/>
         </StackPanel>
-        <StackPanel DockPanel.Dock="Bottom">
+        <StackPanel>
             <views:PlaybackView/>
         </StackPanel>
-    </DockPanel>
-
+    </StackPanel>
 </Window>

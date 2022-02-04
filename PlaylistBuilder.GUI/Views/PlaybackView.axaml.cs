@@ -1,6 +1,8 @@
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Markup.Xaml;
+using PlaylistBuilder.GUI.ViewModels;
+using Splat;
 
 namespace PlaylistBuilder.GUI.Views
 {
@@ -8,6 +10,7 @@ namespace PlaylistBuilder.GUI.Views
     {
         public PlaybackView()
         {
+            DataContext = Locator.Current.GetService(typeof(PlaybackViewModel));
             InitializeComponent();
         }
 
