@@ -8,7 +8,7 @@ namespace PlaylistBuilder.GUI.Models
     public class IconModel
     {
         public readonly Bitmap FolderImage, MusicImage, PlaylistImage, RedoImage, UndoImage, ParentImage, HomeImage, 
-            PreviousImage, NextImage, PlayImage, PauseImage, StopImage;
+            PreviousImage, NextImage, PlayImage, PauseImage, StopImage, NewImage, OpenImage, SaveImage;
 
         public IconModel()
         {
@@ -25,6 +25,9 @@ namespace PlaylistBuilder.GUI.Models
             PlayImage = new Bitmap(assets.Open(new Uri("avares://PlaylistBuilder.GUI/Assets/play.png")));
             PauseImage = new Bitmap(assets.Open(new Uri("avares://PlaylistBuilder.GUI/Assets/pause.png")));
             StopImage = new Bitmap(assets.Open(new Uri("avares://PlaylistBuilder.GUI/Assets/stop.png")));
+            NewImage = new Bitmap(assets.Open(new Uri("avares://PlaylistBuilder.GUI/Assets/new.png")));
+            OpenImage = new Bitmap(assets.Open(new Uri("avares://PlaylistBuilder.GUI/Assets/open.png")));
+            SaveImage = new Bitmap(assets.Open(new Uri("avares://PlaylistBuilder.GUI/Assets/save.png")));
         }
     }
 }

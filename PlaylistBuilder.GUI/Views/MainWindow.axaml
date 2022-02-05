@@ -12,7 +12,7 @@
     <Design.DataContext>
         <vm:MainWindowViewModel/>
     </Design.DataContext>
-    <StackPanel Orientation="Vertical">
+    <StackPanel Orientation="Vertical" Width="800" HorizontalAlignment="Left">
         <Menu>
             <MenuItem Header="_File">
                 <MenuItem Header="_Open Playlist..."/>

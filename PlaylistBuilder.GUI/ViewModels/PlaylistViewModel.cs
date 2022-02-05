@@ -8,7 +8,6 @@ namespace PlaylistBuilder.GUI.ViewModels
     public class PlaylistViewModel : ViewModelBase
     {
         public ObservableCollection<PlaylistTrack> PlaylistTracks { get; }
-
         public PlaylistViewModel()
         {
             PlaylistTracks = new ObservableCollection<PlaylistTrack>(GenerateTracks());

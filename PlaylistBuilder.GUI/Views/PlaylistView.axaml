@@ -9,30 +9,34 @@
     <Design.DataContext>
         <vm:PlaylistViewModel/>
     </Design.DataContext>
-    <StackPanel>
-        <DataGrid AutoGenerateColumns="True" Items="{Binding PlaylistTracks}"/>
-        <!-- <DataGrid Name="PlaylistDataGrid" Items="{Binding PlaylistTracks}" AutoGenerateColumns="False"> -->
-        <!--     <DataGrid.Columns> -->
-        <!--         <DataGridTextColumn Header="Track #" -->
-        <!--                             Binding="{Binding Track}" -->
-        <!--                             Width="2*"/> -->
-        <!--         <DataGridTextColumn Header="Title" -->
-        <!--                             Binding="{Binding Title}" -->
-        <!--                             Width="2*"/> -->
-        <!--         <DataGridTextColumn Header="Artist" -->
-        <!--                             Binding="{Binding Artist}" -->
-        <!--                             Width="3*"/> -->
-        <!--         <DataGridTextColumn Header="Album" -->
-        <!--                             Binding="{Binding Album}" -->
-        <!--                             Width="3*"/> -->
-        <!--         <DataGridTextColumn Header="Duration" -->
-        <!--                             Binding="{Binding Duration}" -->
-        <!--                             Width="1*"/> -->
-        <!--         <DataGridTextColumn Header="File Name" -->
-        <!--                             Binding="{Binding FileName}" -->
-        <!--                             Width="3*"/> -->
-        <!--     </DataGrid.Columns> -->
-        <!-- -->
-        <!-- </DataGrid> -->
+    <StackPanel Orientation="Vertical">
+        <StackPanel Orientation="Horizontal" Margin="10">
+            <Button>
+                <Image Width="25" Height="25" Source="../Assets/new.png"/>
+            </Button>
+            <Button>
+                <Image Width="25" Height="25" Source="../Assets/open.png"/>
+            </Button>
+            <Button>
+                <Image Width="25" Height="25" Source="../Assets/save.png"/>
+            </Button>
+        </StackPanel>
+        <DataGrid Name="PlaylistDataGrid" Items="{Binding PlaylistTracks}" 
+                  AutoGenerateColumns="False" CanUserResizeColumns="True" Margin="5 0">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Track"
+                                    Binding="{Binding Track}" Width="80"/>
+                <DataGridTextColumn Header="Title"
+                                    Binding="{Binding Title}" Width="180"/>
+                <DataGridTextColumn Header="Artist"
+                                    Binding="{Binding Artist}" Width="180"/>
+                <DataGridTextColumn Header="Album"
+                                    Binding="{Binding Album}" Width="180"/>
+                <DataGridTextColumn Header="Duration"
+                                    Binding="{Binding Duration}" Width="180"/>
+                <DataGridTextColumn Header="File Name"
+                                    Binding="{Binding FileName}" Width="180"/>
+            </DataGrid.Columns>
+        </DataGrid>
     </StackPanel>
 </UserControl>
