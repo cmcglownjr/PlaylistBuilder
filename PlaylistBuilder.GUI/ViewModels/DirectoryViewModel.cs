@@ -50,7 +50,6 @@ namespace PlaylistBuilder.GUI.ViewModels
                     itemList.Add(new MediaItemModel(file, MediaItemType.Media, mediaImage));
                 }
             }
-
             return itemList;
         }
     }
