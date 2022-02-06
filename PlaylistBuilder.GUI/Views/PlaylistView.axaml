@@ -21,22 +21,45 @@
                 <Image Width="25" Height="25" Source="../Assets/save.png"/>
             </Button>
         </StackPanel>
-        <DataGrid Name="PlaylistDataGrid" Items="{Binding PlaylistTracks}" 
-                  AutoGenerateColumns="False" CanUserResizeColumns="True" Margin="5 0">
-            <DataGrid.Columns>
-                <DataGridTextColumn Header="Track"
-                                    Binding="{Binding Track}" Width="80"/>
-                <DataGridTextColumn Header="Title"
-                                    Binding="{Binding Title}" Width="180"/>
-                <DataGridTextColumn Header="Artist"
-                                    Binding="{Binding Artist}" Width="180"/>
-                <DataGridTextColumn Header="Album"
-                                    Binding="{Binding Album}" Width="180"/>
-                <DataGridTextColumn Header="Duration"
-                                    Binding="{Binding Duration}" Width="180"/>
-                <DataGridTextColumn Header="File Name"
-                                    Binding="{Binding FileName}" Width="180"/>
-            </DataGrid.Columns>
-        </DataGrid>
+        <TabControl>
+            <TabItem Header="Playlist 1">
+                <DataGrid Name="PlaylistDataGrid" Items="{Binding PlaylistTracks}" 
+                          AutoGenerateColumns="False" CanUserResizeColumns="True" Margin="5 0">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="Track"
+                                            Binding="{Binding Track}" Width="80"/>
+                        <DataGridTextColumn Header="Title"
+                                            Binding="{Binding Title}" Width="180"/>
+                        <DataGridTextColumn Header="Artist"
+                                            Binding="{Binding Artist}" Width="180"/>
+                        <DataGridTextColumn Header="Album"
+                                            Binding="{Binding Album}" Width="180"/>
+                        <DataGridTextColumn Header="Duration"
+                                            Binding="{Binding Duration}" Width="180"/>
+                        <DataGridTextColumn Header="File Name"
+                                            Binding="{Binding FileName}" Width="180"/>
+                    </DataGrid.Columns>
+                </DataGrid>
+            </TabItem>
+            <TabItem Header="Playlist 2">
+                <DataGrid Items="{Binding PlaylistTracks}" 
+                          AutoGenerateColumns="False" CanUserResizeColumns="True" Margin="5 0">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="Track"
+                                            Binding="{Binding Track}" Width="80"/>
+                        <DataGridTextColumn Header="Title"
+                                            Binding="{Binding Title}" Width="180"/>
+                        <DataGridTextColumn Header="Artist"
+                                            Binding="{Binding Artist}" Width="180"/>
+                        <DataGridTextColumn Header="Album"
+                                            Binding="{Binding Album}" Width="180"/>
+                        <DataGridTextColumn Header="Duration"
+                                            Binding="{Binding Duration}" Width="180"/>
+                        <DataGridTextColumn Header="File Name"
+                                            Binding="{Binding FileName}" Width="180"/>
+                    </DataGrid.Columns>
+                </DataGrid>
+            </TabItem>
+        </TabControl>
     </StackPanel>
 </UserControl>
