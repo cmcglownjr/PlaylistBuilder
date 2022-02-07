@@ -9,6 +9,9 @@
         Icon="/Assets/avalonia-logo.ico"
         Title="PlaylistBuilder">
 
+    <Window.Styles>
+        <StyleInclude Source="/Assets/DefaultStyle.axaml"/>
+    </Window.Styles>
     <Design.DataContext>
         <vm:MainWindowViewModel/>
     </Design.DataContext>

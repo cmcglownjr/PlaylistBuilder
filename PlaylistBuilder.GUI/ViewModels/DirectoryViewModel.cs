@@ -18,10 +18,15 @@ namespace PlaylistBuilder.GUI.ViewModels
     {
         private readonly string _musicDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyMusic);
         private string _currentDirectory = "";
+        private string _rootDirectory = Directory.GetDirectoryRoot(Environment.SpecialFolder.Personal.ToString());
         private readonly List<string> _playlistExtensions= new();
         private readonly List<string> _mediaExtensions = new();
         private IconModel _mediaIconModel;
         private List<MediaItemModel> _itemList = new();
+
+        private Stack<string> _undoStack = new();
+
+        private Stack<string> _redoStack = new();
         // public ObservableCollection<MediaItemModel> ItemList { get; private set; }
         public List<MediaItemModel> ItemList
         {
@@ -44,7 +49,7 @@ namespace PlaylistBuilder.GUI.ViewModels
             _mediaIconModel = (IconModel)Locator.Current.GetService(typeof(IconModel));
             MediaIconModel = _mediaIconModel;
             FindExtensions();
-            CurrentDirectory = _musicDirectory;
+            // CurrentDirectory = _musicDirectory;
             ItemList = new List<MediaItemModel>(PopulateTree(_musicDirectory));
             HomeBtnPressed = ReactiveCommand.Create(HomeDirectory);
             ParentBtnPressed = ReactiveCommand.Create(ParentDirectory);
@@ -76,7 +81,7 @@ namespace PlaylistBuilder.GUI.ViewModels
         }
         private List<MediaItemModel> PopulateTree(string directory)
         {
-            
+            ItemList.Clear();
             List<MediaItemModel> itemList = new List<MediaItemModel>();
             DirectoryInfo info = new DirectoryInfo(directory);
             foreach (DirectoryInfo dir in info.GetDirectories())
@@ -110,7 +115,6 @@ namespace PlaylistBuilder.GUI.ViewModels
                     itemList.Add(new MediaItemModel(file, MediaItemType.Media, mediaImage));
                 }
             }
-
             CurrentDirectory = directory;
             return itemList;
         }
@@ -118,29 +122,51 @@ namespace PlaylistBuilder.GUI.ViewModels
         private void HomeDirectory()
         {
             string homeDirectory = Environment.GetFolderPath(Environment.SpecialFolder.Personal);
-            ItemList.Clear();
+            _undoStack.Push(CurrentDirectory);
             ItemList = new List<MediaItemModel>(PopulateTree(homeDirectory));
-            TrackNavigation();
         }
 
         private void ParentDirectory()
         {
-            //TODO: Logic for parent directory
+            if (CurrentDirectory != _rootDirectory)
+            {
+                _undoStack.Push(CurrentDirectory);
+                ItemList = new List<MediaItemModel>(PopulateTree(Directory.GetParent(CurrentDirectory).ToString()));
+            }
+            else
+            {
+                //TODO: Log that you are at the root level
+            }
         }
 
-        private void TrackNavigation()
+        private void TrackNavigation(bool initialDirectory)
         {
-            //TODO: Logic to track navigation changes
+            if (!initialDirectory)
+            {
+                _undoStack.Push(_currentDirectory);
+            }
         }
 
         private void UndoNavigation()
         {
-            //TODO: Logic to undo navigation choice
+            if (_undoStack.Count > 0)
+            {
+                _redoStack.Push(CurrentDirectory);
+                CurrentDirectory = _undoStack.Peek();
+                _undoStack.Pop();
+                ItemList = new List<MediaItemModel>(PopulateTree(CurrentDirectory));
+            }
         }
 
         private void RedoNavigation()
         {
-            //TODO: Logic to redo navigation choice
+            if (_redoStack.Count > 0)
+            {
+                _undoStack.Push(CurrentDirectory);
+                CurrentDirectory = _redoStack.Peek();
+                _redoStack.Pop();
+                ItemList = new List<MediaItemModel>(PopulateTree(CurrentDirectory));
+            }
         }
     }
 }
