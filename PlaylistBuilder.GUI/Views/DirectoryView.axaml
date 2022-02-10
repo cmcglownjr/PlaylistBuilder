@@ -1,5 +1,8 @@
 <UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:i="using:Avalonia.Xaml.Interactivity"
+             xmlns:ia="using:Avalonia.Xaml.Interactions.Core"
+             xmlns:ic="using:Avalonia.Xaml.Interactions.Custom"
              xmlns:vm="using:PlaylistBuilder.GUI.ViewModels"
              xmlns:models="clr-namespace:PlaylistBuilder.GUI.Models"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -29,13 +32,24 @@
             <TextBlock Text="{Binding CurrentDirectory}" Width="200" VerticalAlignment="Center"/>
         </StackPanel>
         <ListBox Items="{Binding ItemList}" Width="350" Height="500"
-                 ScrollViewer.VerticalScrollBarVisibility="Auto" ScrollViewer.HorizontalScrollBarVisibility="Auto">
+                 ScrollViewer.VerticalScrollBarVisibility="Auto" 
+                 ScrollViewer.HorizontalScrollBarVisibility="Auto" 
+                 SelectionMode="Single"
+                 SelectedIndex="{Binding SelectedIndex}"
+                 DoubleTapped="InputElement_OnDoubleTapped">
+            <!-- <i:Interaction.Behaviors> -->
+            <!--     <ia:EventTriggerBehavior EventName="DoubleTapped" SourceObject="{Binding #ItemImage}"> -->
+            <!--          -->
+            <!--     </ia:EventTriggerBehavior> -->
+            <!-- </i:Interaction.Behaviors> -->
             <ListBox.ItemTemplate>
                 <DataTemplate DataType="models:MediaItemModel">
-                    <StackPanel Orientation="Horizontal">
-                        <Image Width="25" Height="25" Source="{Binding MediaIcon.Source}" Margin="5 0"/>
-                        <TextBlock Text="{Binding Name}" Margin="5 0" TextWrapping="Wrap"/>
-                    </StackPanel>
+                    <!-- <Button Width="350"> -->
+                        <StackPanel Orientation="Horizontal">
+                            <Image x:Name="ItemImage" Width="25" Height="25" Source="{Binding MediaIcon.Source}" Margin="5 0"/>
+                            <TextBlock Text="{Binding Name}" Margin="5 0" TextWrapping="Wrap"/>
+                        </StackPanel>
+                    <!-- </Button> -->
                 </DataTemplate>
             </ListBox.ItemTemplate>
         </ListBox>

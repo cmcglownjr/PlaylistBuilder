@@ -19,6 +19,7 @@ namespace PlaylistBuilder.GUI.ViewModels
         private readonly string _musicDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyMusic);
         private string _currentDirectory = "";
         private string _rootDirectory = Directory.GetDirectoryRoot(Environment.SpecialFolder.Personal.ToString());
+        private int _selectedIndex;
         private readonly List<string> _playlistExtensions= new();
         private readonly List<string> _mediaExtensions = new();
         private IconModel _mediaIconModel;
@@ -40,10 +41,17 @@ namespace PlaylistBuilder.GUI.ViewModels
             get => _currentDirectory;
             set => this.RaiseAndSetIfChanged(ref _currentDirectory, value);
         }
+
+        public int SelectedIndex
+        {
+            get => _selectedIndex;
+            set => this.RaiseAndSetIfChanged(ref _selectedIndex, value);
+        }
         public ReactiveCommand<Unit, Unit> HomeBtnPressed { get; }
         public ReactiveCommand<Unit, Unit> ParentBtnPressed { get; }
         public ReactiveCommand<Unit, Unit> UndoBtnPressed { get; }
         public ReactiveCommand<Unit, Unit> RedoBtnPressed { get; }
+        public ReactiveCommand<Unit, Unit> ListItemDblClick { get; }
         public DirectoryViewModel()
         {
             _mediaIconModel = (IconModel)Locator.Current.GetService(typeof(IconModel));
@@ -55,6 +63,7 @@ namespace PlaylistBuilder.GUI.ViewModels
             ParentBtnPressed = ReactiveCommand.Create(ParentDirectory);
             UndoBtnPressed = ReactiveCommand.Create(UndoNavigation);
             RedoBtnPressed = ReactiveCommand.Create(RedoNavigation);
+            ListItemDblClick = ReactiveCommand.Create(SelectedItem);
         }
         private void FindExtensions()
         {
@@ -165,6 +174,17 @@ namespace PlaylistBuilder.GUI.ViewModels
                 _undoStack.Push(CurrentDirectory);
                 CurrentDirectory = _redoStack.Peek();
                 _redoStack.Pop();
+                ItemList = new List<MediaItemModel>(PopulateTree(CurrentDirectory));
+            }
+        }
+
+        public void SelectedItem()
+        {
+            MediaItemModel selectedItem = _itemList[_selectedIndex];
+            if (selectedItem.FileType == MediaItemType.Directory)
+            {
+                TrackNavigation(false);
+                CurrentDirectory = selectedItem.FullPath;
                 ItemList = new List<MediaItemModel>(PopulateTree(CurrentDirectory));
             }
         }
