@@ -23,13 +23,13 @@ namespace PlaylistBuilder.GUI.ViewModels
         {
             PlaylistTracks = new ObservableCollection<PlaylistTrack>(GenerateTracks());
             NewBtnPressed = ReactiveCommand.Create(NewPlaylist);
-            PlaylistTabModels.Add(new PlaylistTabModel("Playlist 1", new PlaylistDataGrid()));
-            PlaylistTabModels.Add(new PlaylistTabModel("Playlist 2", new PlaylistDataGrid()));
+            PlaylistTabModels.Add(new PlaylistTabModel($"Playlist {PlaylistTabModels.Count + 1}", new PlaylistDataGrid()));
+            PlaylistTabModels.Add(new PlaylistTabModel($"Playlist {PlaylistTabModels.Count + 1}", new PlaylistDataGrid()));
         }
 
         private void NewPlaylist()
         {
-            //TODO: Create new tabbed playlist
+            PlaylistTabModels.Add(new PlaylistTabModel($"Playlist {PlaylistTabModels.Count + 1}", new PlaylistDataGrid()));
         }
 
         private IEnumerable<PlaylistTrack> GenerateTracks()

@@ -25,7 +25,7 @@
                 <Image Width="25" Height="25" Source="../Assets/save.png"/>
             </Button>
         </StackPanel>
-        <TabControl x:Name="PlaylistTabControl" Items="{Binding PlaylistTabModels}">
+        <TabControl x:Name="PlaylistTabControl" Items="{Binding PlaylistTabModels, Mode=TwoWay}">
             <TabControl.ItemTemplate>
                 <DataTemplate>
                     <TextBlock Text="{Binding Header}"/>

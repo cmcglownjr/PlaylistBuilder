@@ -11,6 +11,8 @@
         <None Remove=".gitignore" />
     </ItemGroup>
     <ItemGroup>
+        <PackageReference Include="Aura.UI" Version="0.1.4.2" />
+        <PackageReference Include="Aura.UI.FluentTheme" Version="0.1.4.2" />
         <PackageReference Include="Avalonia" Version="0.10.12" />
         <PackageReference Include="Avalonia.Controls.DataGrid" Version="0.10.12" />
         <PackageReference Include="Avalonia.Desktop" Version="0.10.12" />
