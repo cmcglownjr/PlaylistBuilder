@@ -1,16 +1,35 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Reactive;
 using PlaylistBuilder.GUI.Models;
+using PlaylistBuilder.GUI.Views;
+using ReactiveUI;
 
 namespace PlaylistBuilder.GUI.ViewModels
 {
     public class PlaylistViewModel : ViewModelBase
     {
+        private List<PlaylistTabModel> _playlistTabModels = new();
         public ObservableCollection<PlaylistTrack> PlaylistTracks { get; }
+
+        public List<PlaylistTabModel> PlaylistTabModels
+        {
+            get => _playlistTabModels;
+            set => this.RaiseAndSetIfChanged(ref _playlistTabModels, value);
+        }
+        public ReactiveCommand<Unit, Unit> NewBtnPressed { get; }
         public PlaylistViewModel()
         {
             PlaylistTracks = new ObservableCollection<PlaylistTrack>(GenerateTracks());
+            NewBtnPressed = ReactiveCommand.Create(NewPlaylist);
+            PlaylistTabModels.Add(new PlaylistTabModel("Playlist 1", new PlaylistDataGrid()));
+            PlaylistTabModels.Add(new PlaylistTabModel("Playlist 2", new PlaylistDataGrid()));
+        }
+
+        private void NewPlaylist()
+        {
+            //TODO: Create new tabbed playlist
         }
 
         private IEnumerable<PlaylistTrack> GenerateTracks()

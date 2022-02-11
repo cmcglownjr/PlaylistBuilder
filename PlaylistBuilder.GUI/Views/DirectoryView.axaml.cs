@@ -22,9 +22,9 @@ namespace PlaylistBuilder.GUI.Views
             AvaloniaXamlLoader.Load(this);
         }
 
-        private void InputElement_OnDoubleTapped(object? sender, RoutedEventArgs e)
+        private void OnDoubleTapped(object? sender, RoutedEventArgs e)
         {
-            _directoryViewModel.SelectedItem();
+            _directoryViewModel.DblTappedItem();
             //TODO: Do this as an MVVM way
         }
     }

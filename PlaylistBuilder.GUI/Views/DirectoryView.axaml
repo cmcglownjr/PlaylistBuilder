@@ -36,7 +36,7 @@
                  ScrollViewer.HorizontalScrollBarVisibility="Auto" 
                  SelectionMode="Single"
                  SelectedIndex="{Binding SelectedIndex}"
-                 DoubleTapped="InputElement_OnDoubleTapped">
+                 DoubleTapped="OnDoubleTapped">
             <!-- <i:Interaction.Behaviors> -->
             <!--     <ia:EventTriggerBehavior EventName="DoubleTapped" SourceObject="{Binding #ItemImage}"> -->
             <!--          -->

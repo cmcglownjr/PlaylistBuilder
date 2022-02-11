@@ -51,7 +51,7 @@ namespace PlaylistBuilder.GUI.ViewModels
         public ReactiveCommand<Unit, Unit> ParentBtnPressed { get; }
         public ReactiveCommand<Unit, Unit> UndoBtnPressed { get; }
         public ReactiveCommand<Unit, Unit> RedoBtnPressed { get; }
-        public ReactiveCommand<Unit, Unit> ListItemDblClick { get; }
+        // public ReactiveCommand<Unit, Unit> ListItemDblClick { get; }
         public DirectoryViewModel()
         {
             _mediaIconModel = (IconModel)Locator.Current.GetService(typeof(IconModel));
@@ -63,7 +63,7 @@ namespace PlaylistBuilder.GUI.ViewModels
             ParentBtnPressed = ReactiveCommand.Create(ParentDirectory);
             UndoBtnPressed = ReactiveCommand.Create(UndoNavigation);
             RedoBtnPressed = ReactiveCommand.Create(RedoNavigation);
-            ListItemDblClick = ReactiveCommand.Create(SelectedItem);
+            // ListItemDblClick = ReactiveCommand.Create(SelectedItem);
         }
         private void FindExtensions()
         {
@@ -132,6 +132,7 @@ namespace PlaylistBuilder.GUI.ViewModels
         {
             string homeDirectory = Environment.GetFolderPath(Environment.SpecialFolder.Personal);
             _undoStack.Push(CurrentDirectory);
+            _redoStack.Clear();
             ItemList = new List<MediaItemModel>(PopulateTree(homeDirectory));
         }
 
@@ -140,6 +141,7 @@ namespace PlaylistBuilder.GUI.ViewModels
             if (CurrentDirectory != _rootDirectory)
             {
                 _undoStack.Push(CurrentDirectory);
+                _redoStack.Clear();
                 ItemList = new List<MediaItemModel>(PopulateTree(Directory.GetParent(CurrentDirectory).ToString()));
             }
             else
@@ -178,14 +180,29 @@ namespace PlaylistBuilder.GUI.ViewModels
             }
         }
 
-        public void SelectedItem()
+        public void DblTappedItem()
         {
             MediaItemModel selectedItem = _itemList[_selectedIndex];
-            if (selectedItem.FileType == MediaItemType.Directory)
+            switch (selectedItem.FileType)
             {
-                TrackNavigation(false);
-                CurrentDirectory = selectedItem.FullPath;
-                ItemList = new List<MediaItemModel>(PopulateTree(CurrentDirectory));
+                case MediaItemType.Directory:
+                {
+                    TrackNavigation(false);
+                    _redoStack.Clear();
+                    CurrentDirectory = selectedItem.FullPath;
+                    ItemList = new List<MediaItemModel>(PopulateTree(CurrentDirectory));
+                    break;
+                }
+                case MediaItemType.Media:
+                {
+                    //TODO: Logic for adding media to playlists
+                    break;
+                }
+                case MediaItemType.Playlist:
+                {
+                    //TODO: Logic for adding new playlist as new tab
+                    break;
+                }
             }
         }
     }
