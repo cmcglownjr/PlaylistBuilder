@@ -18,6 +18,9 @@
             <Button Command="{Binding NewBtnPressed}">
                 <Image Width="25" Height="25" Source="../Assets/new.png"/>
             </Button>
+            <Button Command="{Binding CloseBtnPressed}">
+                <Image Width="25" Height="25" Source="../Assets/cancel.png"/>
+            </Button>
             <Button>
                 <Image Width="25" Height="25" Source="../Assets/open.png"/>
             </Button>
@@ -25,7 +28,8 @@
                 <Image Width="25" Height="25" Source="../Assets/save.png"/>
             </Button>
         </StackPanel>
-        <TabControl x:Name="PlaylistTabControl" Items="{Binding PlaylistTabModels, Mode=TwoWay}">
+        <TabControl x:Name="PlaylistTabControl" Items="{Binding PlaylistTabModels, Mode=TwoWay}" 
+                    SelectedIndex="{Binding PlaylistItem}">
             <TabControl.ItemTemplate>
                 <DataTemplate>
                     <TextBlock Text="{Binding Header}"/>

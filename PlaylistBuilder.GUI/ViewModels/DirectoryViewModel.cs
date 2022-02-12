@@ -23,6 +23,7 @@ namespace PlaylistBuilder.GUI.ViewModels
         private readonly List<string> _playlistExtensions= new();
         private readonly List<string> _mediaExtensions = new();
         private IconModel _mediaIconModel;
+        private PlaylistViewModel _playlistViewModel;
         private List<MediaItemModel> _itemList = new();
 
         private Stack<string> _undoStack = new();
@@ -55,6 +56,7 @@ namespace PlaylistBuilder.GUI.ViewModels
         public DirectoryViewModel()
         {
             _mediaIconModel = (IconModel)Locator.Current.GetService(typeof(IconModel));
+            _playlistViewModel = (PlaylistViewModel)Locator.Current.GetService(typeof(PlaylistViewModel));
             MediaIconModel = _mediaIconModel;
             FindExtensions();
             // CurrentDirectory = _musicDirectory;

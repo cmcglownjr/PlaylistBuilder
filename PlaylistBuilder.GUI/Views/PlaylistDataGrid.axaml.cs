@@ -10,7 +10,7 @@ public class PlaylistDataGrid : UserControl
 {
     public PlaylistDataGrid()
     {
-        DataContext = Locator.Current.GetService(typeof(PlaylistViewModel));
+        DataContext = new PlaylistDataGridViewModel();
         InitializeComponent();
     }
 

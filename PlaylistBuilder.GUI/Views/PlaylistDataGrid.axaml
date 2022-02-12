@@ -10,13 +10,13 @@
         <StyleInclude Source="/Assets/DefaultStyle.axaml"/>
     </UserControl.Styles>
     <Design.DataContext>
-        <vm:PlaylistViewModel/>
+        <vm:PlaylistDataGridViewModel/>
     </Design.DataContext>
     <DataGrid Name="PlaylistDataGrid" Items="{Binding PlaylistTracks}" 
               AutoGenerateColumns="False" CanUserResizeColumns="True" Margin="5 0">
         <DataGrid.Columns>
             <DataGridTextColumn Header="Track"
-                                Binding="{Binding Track}" Width="80"/>
+                                Binding="{Binding TrackNumber}" Width="80"/>
             <DataGridTextColumn Header="Title"
                                 Binding="{Binding Title}" Width="180"/>
             <DataGridTextColumn Header="Artist"
