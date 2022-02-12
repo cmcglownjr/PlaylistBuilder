@@ -4,11 +4,11 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:views="clr-namespace:PlaylistBuilder.GUI.Views"
+        xmlns:models="clr-namespace:PlaylistBuilder.GUI.Models"
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
         x:Class="PlaylistBuilder.GUI.Views.MainWindow"
         Icon="/Assets/avalonia-logo.ico"
-        Title="PlaylistBuilder">
-
+        Title="Playlist Builder">
     <Window.Styles>
         <StyleInclude Source="/Assets/DefaultStyle.axaml"/>
     </Window.Styles>
@@ -43,11 +43,125 @@
             </MenuItem>
         </Menu>
         <StackPanel Orientation="Horizontal">
-            <views:DirectoryView/>
-            <views:PlaylistView/>
+            <StackPanel Orientation="Vertical" Margin="10" HorizontalAlignment="Left">
+                <StackPanel Orientation="Horizontal">
+                    <Button Classes="FileNavigation" Command="{Binding UndoBtnPressed}">
+                        <Image Width="25" Height="25" Source="../Assets/undo.png"/>
+                    </Button>
+                    <Button Classes="FileNavigation" Command="{Binding RedoBtnPressed}">
+                        <Image Width="25" Height="25" Source="../Assets/redo.png"/>
+                    </Button>
+                    <Button Classes="FileNavigation" Command="{Binding ParentBtnPressed}">
+                        <Image Width="25" Height="25" Source="../Assets/parent.png"/>
+                    </Button>
+                    <Button Classes="FileNavigation" Command="{Binding HomeBtnPressed}">
+                        <Image Width="25" Height="25" Source="../Assets/home.png"/>
+                    </Button>
+                    <TextBlock Text="{Binding CurrentDirectory}" Width="200" VerticalAlignment="Center"/>
+                </StackPanel>
+                <ListBox Items="{Binding ItemList}" Width="350" Height="500"
+                         ScrollViewer.VerticalScrollBarVisibility="Auto" 
+                         ScrollViewer.HorizontalScrollBarVisibility="Auto" 
+                         SelectionMode="Single"
+                         SelectedIndex="{Binding SelectedIndex}"
+                         DoubleTapped="OnDoubleTapped">
+                    <ListBox.ItemTemplate>
+                        <DataTemplate DataType="models:MediaItemModel">
+                            <StackPanel Orientation="Horizontal">
+                                <Image x:Name="ItemImage" Width="25" Height="25" Source="{Binding MediaIcon.Source}" Margin="5 0"/>
+                                <TextBlock Text="{Binding Name}" Margin="5 0" TextWrapping="Wrap"/>
+                            </StackPanel>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                </ListBox>
+            </StackPanel>
+            <StackPanel Orientation="Vertical">
+                <StackPanel Orientation="Horizontal" Margin="10">
+                    <Button Command="{Binding NewBtnPressed}">
+                        <Image Width="25" Height="25" Source="../Assets/new.png"/>
+                    </Button>
+                    <Button Command="{Binding CloseBtnPressed}">
+                        <Image Width="25" Height="25" Source="../Assets/cancel.png"/>
+                    </Button>
+                    <Button>
+                        <Image Width="25" Height="25" Source="../Assets/open.png"/>
+                    </Button>
+                    <Button>
+                        <Image Width="25" Height="25" Source="../Assets/save.png"/>
+                    </Button>
+                </StackPanel>
+                <TabControl x:Name="PlaylistTabControl" Items="{Binding PlaylistTabModels, Mode=TwoWay}" 
+                            SelectedIndex="{Binding PlaylistItem}">
+                    <TabControl.ItemTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding Header}"/>
+                        </DataTemplate>
+                    </TabControl.ItemTemplate>
+                    <TabControl.ContentTemplate>
+                        <DataTemplate>
+                            <views:PlaylistDataGrid/>
+                        </DataTemplate>
+                    </TabControl.ContentTemplate>
+                </TabControl>
+            </StackPanel>
         </StackPanel>
         <StackPanel>
-            <views:PlaybackView/>
+            <StackPanel Orientation="Horizontal" Margin="10">
+        <Border BorderThickness="0" BorderBrush="Black">
+            <StackPanel Orientation="Horizontal" Width="350">
+                <Image Width="100" Height="100" Source="../Assets/CD.png"/>
+                <StackPanel Orientation="Vertical" Margin="10 0">
+                    <TextBlock Text="Title" Margin="0 10"/>
+                    <TextBlock Text="Artist" Margin="0 10"/>
+                    <TextBlock Text="Album" Margin="0 10"/>
+                </StackPanel>
+            </StackPanel>
+        </Border>
+        <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+            <Button>
+                <Button.Styles>
+                    <Style Selector="Button">
+                        <Setter Property="CornerRadius" Value="100"/>
+                    </Style>
+                </Button.Styles>
+                <Image Width="25" Height="25" Source="../Assets/previous.png"/>
+            </Button>
+            <Button>
+                <Button.Styles>
+                    <Style Selector="Button">
+                        <Setter Property="CornerRadius" Value="100"/>
+                    </Style>
+                </Button.Styles>
+                <Image Width="25" Height="25" Source="../Assets/stop.png"/>
+            </Button>
+            <Button>
+                <Button.Styles>
+                    <Style Selector="Button">
+                        <Setter Property="CornerRadius" Value="100"/>
+                    </Style>
+                </Button.Styles>
+                <Image Width="25" Height="25" Source="../Assets/play.png"/>
+            </Button>
+            <Button>
+                <Button.Styles>
+                    <Style Selector="Button">
+                        <Setter Property="CornerRadius" Value="100"/>
+                    </Style>
+                </Button.Styles>
+                <Image Width="25" Height="25" Source="../Assets/pause.png"/>
+            </Button>
+            <Button>
+                <Button.Styles>
+                    <Style Selector="Button">
+                        <Setter Property="CornerRadius" Value="100"/>
+                    </Style>
+                </Button.Styles>
+                <Image Width="25" Height="25" Source="../Assets/next.png"/>
+            </Button>
+            <TextBlock Text="# Tracks - [Total Time]" Margin="10 0"/>
+            <ProgressBar Minimum="0" Maximum="500" Width="500"></ProgressBar>
+        </StackPanel>
+    </StackPanel>
         </StackPanel>
     </StackPanel>
 </Window>
