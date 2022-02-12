@@ -6,7 +6,5 @@
         </Border>
     </Design.PreviewWith>
 
-    <Style Selector="Button.FileNavigation">
-        <Setter Property="Margin" Value="5"/>
-    </Style>
+    <!-- Add Styles Here -->
 </Styles>

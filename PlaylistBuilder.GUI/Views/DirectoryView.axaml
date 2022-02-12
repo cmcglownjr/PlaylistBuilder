@@ -1,0 +1,40 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:PlaylistBuilder.GUI.ViewModels"
+             xmlns:models="clr-namespace:PlaylistBuilder.GUI.Models"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="PlaylistBuilder.GUI.Views.DirectoryView">
+    <Design.DataContext>
+        <vm:DirectoryViewModel/>
+    </Design.DataContext>
+    <StackPanel Orientation="Vertical" Margin="10">
+        <StackPanel Orientation="Horizontal" Margin="0 0 0 5">
+            <Button Classes="FileNavigation">
+                <Image Width="25" Height="25" Source="../Assets/undo.png"/>
+            </Button>
+            <Button Classes="FileNavigation">
+                <Image Width="25" Height="25" Source="../Assets/redo.png"/>
+            </Button>
+            <Button Classes="FileNavigation">
+                <Image Width="25" Height="25" Source="../Assets/parent.png"/>
+            </Button>
+            <Button Classes="FileNavigation">
+                <Image Width="25" Height="25" Source="../Assets/home.png"/>
+            </Button>
+            <TextBox Text="/home/eezyville/Music"></TextBox>
+        </StackPanel>
+        <ListBox Items="{Binding ItemList}" Width="350" Height="500" Margin="0 5 0 0"
+                 ScrollViewer.VerticalScrollBarVisibility="Auto" ScrollViewer.HorizontalScrollBarVisibility="Auto">
+            <ListBox.ItemTemplate>
+                <DataTemplate DataType="models:MediaItemModel">
+                    <StackPanel Orientation="Horizontal" Margin="5">
+                        <Image Width="25" Height="25" Source="{Binding MediaIcon.Source}" Margin="5 0"/>
+                        <TextBlock Text="{Binding Name}" Margin="5 0" TextWrapping="Wrap"/>
+                    </StackPanel>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
+    </StackPanel>
+</UserControl>

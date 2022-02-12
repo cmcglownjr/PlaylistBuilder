@@ -1,17 +1,17 @@
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Markup.Xaml;
+using PlaylistBuilder.GUI.ViewModels;
+using Splat;
 
 namespace PlaylistBuilder.GUI.Views
 {
-    public partial class MainWindow : Window
+    public class PlaybackView : UserControl
     {
-        public MainWindow()
+        public PlaybackView()
         {
+            DataContext = Locator.Current.GetService(typeof(PlaybackViewModel));
             InitializeComponent();
-#if DEBUG
-            this.AttachDevTools();
-#endif
         }
 
         private void InitializeComponent()
