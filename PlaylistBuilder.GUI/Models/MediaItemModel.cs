@@ -19,11 +19,13 @@ namespace PlaylistBuilder.GUI.Models
         {
             FullPath = media.FullName;
             Name = media.Name;
+            Extension = media.Extension;
             FileType = mediaItemType;
             MediaIcon = mediaIcon;
         }
         public string FullPath { get; }
         public string Name { get; }
+        public string Extension { get; }
         public MediaItemType FileType { get; }
         public Image MediaIcon { get; }
     }

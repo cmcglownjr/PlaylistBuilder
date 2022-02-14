@@ -4,13 +4,12 @@ using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Reactive;
-using System.Text;
 using ATL;
 using ATL.AudioData;
 using ATL.Playlist;
 using Avalonia.Controls;
 using PlaylistBuilder.GUI.Models;
-using PlaylistBuilder.GUI.Views;
+using PlaylistBuilder.Lib;
 using ReactiveUI;
 using Splat;
 
@@ -20,25 +19,22 @@ namespace PlaylistBuilder.GUI.ViewModels
     {
         private readonly string _musicDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyMusic);
         private string _currentDirectory = "";
-        private string _rootDirectory = Directory.GetDirectoryRoot(Environment.SpecialFolder.Personal.ToString());
+        private readonly string _rootDirectory = Directory.GetDirectoryRoot(Environment.SpecialFolder.Personal.ToString());
         private int _selectedIndex;
         private readonly List<string> _playlistExtensions= new();
         private readonly List<string> _mediaExtensions = new();
-        private IconModel _mediaIconModel;
+        private readonly IconModel? _mediaIconModel;
         private List<MediaItemModel> _itemList = new();
 
         private Stack<string> _undoStack = new();
 
         private Stack<string> _redoStack = new();
-        private ObservableCollection<PlaylistTabModel> _playlistTabModels = new();
-        private int _playlistItem;
+        public ObservableCollection<PlaylistTrack> PlaylistTracks { get; }
         public List<MediaItemModel> ItemList
         {
             get => _itemList; 
             private set => this.RaiseAndSetIfChanged(ref _itemList, value);
         }
-        public IconModel MediaIconModel;
-
         public string CurrentDirectory
         {
             get => _currentDirectory;
@@ -50,27 +46,15 @@ namespace PlaylistBuilder.GUI.ViewModels
             get => _selectedIndex;
             set => this.RaiseAndSetIfChanged(ref _selectedIndex, value);
         }
-        public ObservableCollection<PlaylistTabModel> PlaylistTabModels
-        {
-            get => _playlistTabModels;
-            set => this.RaiseAndSetIfChanged(ref _playlistTabModels, value);
-        }
-
-        public int PlaylistItem
-        {
-            get => _playlistItem;
-            set => this.RaiseAndSetIfChanged(ref _playlistItem, value);
-        }
         public ReactiveCommand<Unit, Unit> HomeBtnPressed { get; }
         public ReactiveCommand<Unit, Unit> ParentBtnPressed { get; }
         public ReactiveCommand<Unit, Unit> UndoBtnPressed { get; }
         public ReactiveCommand<Unit, Unit> RedoBtnPressed { get; }
         public ReactiveCommand<Unit, Unit> NewBtnPressed { get; }
-        public ReactiveCommand<Unit, Unit> CloseBtnPressed { get; }
 
         public MainWindowViewModel()
         {
-            _mediaIconModel = (IconModel)Locator.Current.GetService(typeof(IconModel));
+            _mediaIconModel = (IconModel)Locator.Current.GetService(typeof(IconModel))!;
             FindExtensions();
             ItemList = new List<MediaItemModel>(PopulateTree(_musicDirectory));
             HomeBtnPressed = ReactiveCommand.Create(HomeDirectory);
@@ -78,7 +62,7 @@ namespace PlaylistBuilder.GUI.ViewModels
             UndoBtnPressed = ReactiveCommand.Create(UndoNavigation);
             RedoBtnPressed = ReactiveCommand.Create(RedoNavigation);
             NewBtnPressed = ReactiveCommand.Create(NewPlaylist);
-            CloseBtnPressed = ReactiveCommand.Create(ClosePlaylist);
+            PlaylistTracks = new();
         }
         private void FindExtensions()
         {
@@ -210,24 +194,56 @@ namespace PlaylistBuilder.GUI.ViewModels
                 }
                 case MediaItemType.Media:
                 {
-                    //TODO: Logic for adding media to playlists
+                    PlaylistTracks.Add(new PlaylistTrack(new Track(selectedItem.FullPath)));
                     break;
                 }
                 case MediaItemType.Playlist:
                 {
-                    //TODO: Logic for adding new playlist as new tab
+                    switch (selectedItem.Extension)
+                    {
+                        case ".m3u" or ".M3U":
+                        {
+                            IPlaylist playlist = new PlaylistM3U();
+                            playlist.LoadPlaylist(selectedItem.FullPath);
+                            LoadPlaylist(playlist);
+                            break;
+                        }
+                        case ".pls" or ".PLS":
+                        {
+                            IPlaylist playlist = new PlaylistPLS();
+                            playlist.LoadPlaylist(selectedItem.FullPath);
+                            LoadPlaylist(playlist);
+                            break;
+                        }
+                        case ".xspf" or ".XSPF":
+                        {
+                            IPlaylist playlist = new PlaylistXSPF();
+                            playlist.LoadPlaylist(selectedItem.FullPath);
+                            LoadPlaylist(playlist);
+                            break;
+                        }
+                    }
                     break;
                 }
             }
         }
         private void NewPlaylist()
         {
-            PlaylistTabModels.Add(new PlaylistTabModel($"Playlist {PlaylistTabModels.Count + 1}", new PlaylistDataGrid()));
+            PlaylistTracks.Clear();
         }
 
-        private void ClosePlaylist()
+        private void LoadPlaylist(IPlaylist playlist)
         {
-            PlaylistTabModels.RemoveAt(PlaylistItem);
+            PlaylistTracks.Clear();
+            foreach (Track track in playlist.ReadList)
+            {
+                PlaylistTracks.Add(new PlaylistTrack(track));
+            }
+        }
+
+        private void SavePlaylist()
+        {
+            //TODO: Logic for saving playlist
         }
     }
 }

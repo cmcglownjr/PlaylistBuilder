@@ -3,7 +3,6 @@
         xmlns:vm="using:PlaylistBuilder.GUI.ViewModels"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:views="clr-namespace:PlaylistBuilder.GUI.Views"
         xmlns:models="clr-namespace:PlaylistBuilder.GUI.Models"
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
         x:Class="PlaylistBuilder.GUI.Views.MainWindow"
@@ -80,9 +79,6 @@
                     <Button Command="{Binding NewBtnPressed}">
                         <Image Width="25" Height="25" Source="../Assets/new.png"/>
                     </Button>
-                    <Button Command="{Binding CloseBtnPressed}">
-                        <Image Width="25" Height="25" Source="../Assets/cancel.png"/>
-                    </Button>
                     <Button>
                         <Image Width="25" Height="25" Source="../Assets/open.png"/>
                     </Button>
@@ -90,19 +86,22 @@
                         <Image Width="25" Height="25" Source="../Assets/save.png"/>
                     </Button>
                 </StackPanel>
-                <TabControl x:Name="PlaylistTabControl" Items="{Binding PlaylistTabModels, Mode=TwoWay}" 
-                            SelectedIndex="{Binding PlaylistItem}">
-                    <TabControl.ItemTemplate>
-                        <DataTemplate>
-                            <TextBlock Text="{Binding Header}"/>
-                        </DataTemplate>
-                    </TabControl.ItemTemplate>
-                    <TabControl.ContentTemplate>
-                        <DataTemplate>
-                            <views:PlaylistDataGrid/>
-                        </DataTemplate>
-                    </TabControl.ContentTemplate>
-                </TabControl>
+                <DataGrid Items="{Binding PlaylistTracks}" Margin="5 0" Height="500">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="Track"
+                                            Binding="{Binding TrackNumber}" Width="80"/>
+                        <DataGridTextColumn Header="Title"
+                                            Binding="{Binding Title}" Width="180"/>
+                        <DataGridTextColumn Header="Artist"
+                                            Binding="{Binding Artist}" Width="180"/>
+                        <DataGridTextColumn Header="Album"
+                                            Binding="{Binding Album}" Width="180"/>
+                        <DataGridTextColumn Header="Duration"
+                                            Binding="{Binding Duration}" Width="180"/>
+                        <DataGridTextColumn Header="File Name"
+                                            Binding="{Binding FileName}" Width="180"/>
+                    </DataGrid.Columns>
+                </DataGrid>
             </StackPanel>
         </StackPanel>
         <StackPanel>
