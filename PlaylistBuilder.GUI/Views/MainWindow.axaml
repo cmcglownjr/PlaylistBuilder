@@ -79,14 +79,15 @@
                     <Button Command="{Binding NewBtnPressed}">
                         <Image Width="25" Height="25" Source="../Assets/new.png"/>
                     </Button>
-                    <Button>
+                    <Button Command="{Binding OpenBtnPressed}">
                         <Image Width="25" Height="25" Source="../Assets/open.png"/>
                     </Button>
                     <Button>
                         <Image Width="25" Height="25" Source="../Assets/save.png"/>
                     </Button>
                 </StackPanel>
-                <DataGrid Items="{Binding PlaylistTracks}" Margin="5 0" Height="500">
+                <DataGrid Items="{Binding PlaylistTracks}" Margin="5 0" Height="500" 
+                          x:DataType="models:PlaylistTrack" AreRowDetailsFrozen="False" CanUserReorderColumns="True">
                     <DataGrid.Columns>
                         <DataGridTextColumn Header="Track"
                                             Binding="{Binding TrackNumber}" Width="80"/>

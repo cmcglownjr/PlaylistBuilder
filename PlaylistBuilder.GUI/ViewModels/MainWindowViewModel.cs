@@ -4,11 +4,13 @@ using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Reactive;
+using System.Threading.Tasks;
 using ATL;
 using ATL.AudioData;
 using ATL.Playlist;
 using Avalonia.Controls;
 using PlaylistBuilder.GUI.Models;
+using PlaylistBuilder.GUI.Views;
 using PlaylistBuilder.Lib;
 using ReactiveUI;
 using Splat;
@@ -17,6 +19,7 @@ namespace PlaylistBuilder.GUI.ViewModels
 {
     public class MainWindowViewModel : ViewModelBase
     {
+        private readonly MainWindow _mainWindow;
         private readonly string _musicDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyMusic);
         private string _currentDirectory = "";
         private readonly string _rootDirectory = Directory.GetDirectoryRoot(Environment.SpecialFolder.Personal.ToString());
@@ -51,9 +54,11 @@ namespace PlaylistBuilder.GUI.ViewModels
         public ReactiveCommand<Unit, Unit> UndoBtnPressed { get; }
         public ReactiveCommand<Unit, Unit> RedoBtnPressed { get; }
         public ReactiveCommand<Unit, Unit> NewBtnPressed { get; }
+        public ReactiveCommand<Unit, Unit> OpenBtnPressed { get; }
 
         public MainWindowViewModel()
         {
+            _mainWindow = new MainWindow();
             _mediaIconModel = (IconModel)Locator.Current.GetService(typeof(IconModel))!;
             FindExtensions();
             ItemList = new List<MediaItemModel>(PopulateTree(_musicDirectory));
@@ -62,6 +67,7 @@ namespace PlaylistBuilder.GUI.ViewModels
             UndoBtnPressed = ReactiveCommand.Create(UndoNavigation);
             RedoBtnPressed = ReactiveCommand.Create(RedoNavigation);
             NewBtnPressed = ReactiveCommand.Create(NewPlaylist);
+            OpenBtnPressed = ReactiveCommand.CreateFromTask(OpenFile);
             PlaylistTracks = new();
         }
         private void FindExtensions()
@@ -72,7 +78,7 @@ namespace PlaylistBuilder.GUI.ViewModels
                 {
                     foreach (string extension in f)
                     {
-                        _playlistExtensions.Add(extension);
+                        _playlistExtensions.Add(extension.Trim('.'));
                     }
                 }
             }
@@ -199,30 +205,9 @@ namespace PlaylistBuilder.GUI.ViewModels
                 }
                 case MediaItemType.Playlist:
                 {
-                    switch (selectedItem.Extension)
-                    {
-                        case ".m3u" or ".M3U":
-                        {
-                            IPlaylist playlist = new PlaylistM3U();
-                            playlist.LoadPlaylist(selectedItem.FullPath);
-                            LoadPlaylist(playlist);
-                            break;
-                        }
-                        case ".pls" or ".PLS":
-                        {
-                            IPlaylist playlist = new PlaylistPLS();
-                            playlist.LoadPlaylist(selectedItem.FullPath);
-                            LoadPlaylist(playlist);
-                            break;
-                        }
-                        case ".xspf" or ".XSPF":
-                        {
-                            IPlaylist playlist = new PlaylistXSPF();
-                            playlist.LoadPlaylist(selectedItem.FullPath);
-                            LoadPlaylist(playlist);
-                            break;
-                        }
-                    }
+                    FileInfo file = new FileInfo(selectedItem.FullPath);
+                    IPlaylist playlist = PlaylistHandler(file);
+                    ImportPlaylist(playlist);
                     break;
                 }
             }
@@ -232,7 +217,7 @@ namespace PlaylistBuilder.GUI.ViewModels
             PlaylistTracks.Clear();
         }
 
-        private void LoadPlaylist(IPlaylist playlist)
+        private void ImportPlaylist(IPlaylist playlist)
         {
             PlaylistTracks.Clear();
             foreach (Track track in playlist.ReadList)
@@ -244,6 +229,38 @@ namespace PlaylistBuilder.GUI.ViewModels
         private void SavePlaylist()
         {
             //TODO: Logic for saving playlist
+        }
+
+        private async Task OpenFile()
+        {
+            OpenFileDialog dialog = new();
+            dialog.Filters.Add(new FileDialogFilter{Name = "Playlists", 
+                Extensions = _playlistExtensions});
+            dialog.AllowMultiple = false;
+            dialog.Title = "Open File";
+            string[] result = await dialog.ShowAsync(_mainWindow);
+            if (result != null)
+            {
+                foreach (string filepath in result)
+                {
+                    FileInfo file = new(filepath);
+                    IPlaylist playlist = PlaylistHandler(file);
+                    ImportPlaylist(playlist);
+                }
+            }
+        }
+
+        private IPlaylist PlaylistHandler(FileInfo importPlaylist)
+        {
+            IPlaylist playlist = importPlaylist.Extension switch
+            {
+                ".m3u" or ".M3U" => new PlaylistM3U(),
+                ".pls" or ".PLS" => new PlaylistPLS(),
+                ".xspf" or ".XSPF" => new PlaylistXSPF(),
+                _ => throw new ArgumentOutOfRangeException()
+            };
+            playlist.LoadPlaylist(importPlaylist.FullName);
+            return playlist;
         }
     }
 }
