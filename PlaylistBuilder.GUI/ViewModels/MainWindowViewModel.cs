@@ -55,6 +55,7 @@ namespace PlaylistBuilder.GUI.ViewModels
         public ReactiveCommand<Unit, Unit> RedoBtnPressed { get; }
         public ReactiveCommand<Unit, Unit> NewBtnPressed { get; }
         public ReactiveCommand<Unit, Unit> OpenBtnPressed { get; }
+        public ReactiveCommand<Unit, Unit> SaveBtnPressed { get; }
 
         public MainWindowViewModel()
         {
@@ -68,6 +69,7 @@ namespace PlaylistBuilder.GUI.ViewModels
             RedoBtnPressed = ReactiveCommand.Create(RedoNavigation);
             NewBtnPressed = ReactiveCommand.Create(NewPlaylist);
             OpenBtnPressed = ReactiveCommand.CreateFromTask(OpenFile);
+            SaveBtnPressed = ReactiveCommand.CreateFromTask(SavePlaylist);
             PlaylistTracks = new();
         }
         private void FindExtensions()
@@ -226,9 +228,23 @@ namespace PlaylistBuilder.GUI.ViewModels
             }
         }
 
-        private void SavePlaylist()
+        private async Task SavePlaylist()
         {
-            //TODO: Logic for saving playlist
+            SaveFileDialog dialog = new();
+            dialog.Filters.Add(new FileDialogFilter{Name = "Playlists", Extensions = _playlistExtensions});
+            dialog.Title = "Save Playlist";
+            dialog.DefaultExtension = "m3u";
+            //TODO: Set up default extensions
+            string result = await dialog.ShowAsync(_mainWindow);
+            if (result != null)
+            {
+                IPlaylist playlist = PlaylistHandler(new FileInfo(result));
+                foreach (PlaylistTrack playlistTrack in PlaylistTracks)
+                {
+                    playlist.AddTrack(playlistTrack.Track);
+                }
+                playlist.SavePlaylist(result);
+            }
         }
 
         private async Task OpenFile()

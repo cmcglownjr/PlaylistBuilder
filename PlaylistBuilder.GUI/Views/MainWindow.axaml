@@ -82,7 +82,7 @@
                     <Button Command="{Binding OpenBtnPressed}">
                         <Image Width="25" Height="25" Source="../Assets/open.png"/>
                     </Button>
-                    <Button>
+                    <Button Command="{Binding SaveBtnPressed}">
                         <Image Width="25" Height="25" Source="../Assets/save.png"/>
                     </Button>
                 </StackPanel>
