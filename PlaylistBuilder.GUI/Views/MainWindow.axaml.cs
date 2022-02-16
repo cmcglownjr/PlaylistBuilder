@@ -29,5 +29,10 @@ namespace PlaylistBuilder.GUI.Views
             _mainWindowViewModel.DblTappedItem();
             //TODO: Do this as an MVVM way
         }
+
+        private void DataGrid_OnDoubleTapped(object? sender, RoutedEventArgs e)
+        {
+            throw new System.NotImplementedException();
+        }
     }
 }

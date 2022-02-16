@@ -6,7 +6,7 @@
         xmlns:models="clr-namespace:PlaylistBuilder.GUI.Models"
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
         x:Class="PlaylistBuilder.GUI.Views.MainWindow"
-        Icon="/Assets/avalonia-logo.ico"
+        Icon="/Assets/playlistbuilder-logo.ico"
         Title="Playlist Builder">
     <Window.Styles>
         <StyleInclude Source="/Assets/DefaultStyle.axaml"/>
@@ -23,15 +23,15 @@
                 <MenuItem Header="_Quit"/>
             </MenuItem>
             <MenuItem Header="_Settings">
-                <MenuItem Header="Preferences"/>
+                <MenuItem Header="Preferences" Command="{Binding PreferenceBtnPressed}"/>
             </MenuItem>
             <MenuItem Header="_Playlist">
-                <MenuItem Header="New Playlist"/>
+                <!-- <MenuItem Header="New Playlist"/> -->
                 <Separator/>
                 <MenuItem Header="Shuffle Mode"/>
                 <MenuItem Header="Repeat Mode"/>
                 <Separator/>
-                <MenuItem Header="Clear Playlist"/>
+                <!-- <MenuItem Header="Clear Playlist"/> -->
                 <MenuItem Header="Shuffle Playlist"/>
                 <MenuItem Header="Remove Duplicates"/>
                 <MenuItem Header="Remove Unavailable"/>
@@ -62,7 +62,7 @@
                          ScrollViewer.VerticalScrollBarVisibility="Auto" 
                          ScrollViewer.HorizontalScrollBarVisibility="Auto" 
                          SelectionMode="Single"
-                         SelectedIndex="{Binding SelectedIndex}"
+                         SelectedIndex="{Binding SelectedDirectoryIndex}"
                          DoubleTapped="OnDoubleTapped">
                     <ListBox.ItemTemplate>
                         <DataTemplate DataType="models:MediaItemModel">
@@ -85,9 +85,20 @@
                     <Button Command="{Binding SaveBtnPressed}">
                         <Image Width="25" Height="25" Source="../Assets/save.png"/>
                     </Button>
+                    <Button Command="{Binding SwapUpBtnPressed}">
+                        <Image Width="25" Height="25" Source="../Assets/swapUp.png"/>
+                    </Button>
+                    <Button Command="{Binding SwapDownBtnPressed}">
+                        <Image Width="25" Height="25" Source="../Assets/swapDown.png"/>
+                    </Button>
+                    <Button Command="{Binding RemoveBtnPressed}">
+                        <Image Width="25" Height="25" Source="../Assets/cancel.png"/>
+                    </Button>
                 </StackPanel>
-                <DataGrid Items="{Binding PlaylistTracks}" Margin="5 0" Height="500" 
-                          x:DataType="models:PlaylistTrack" AreRowDetailsFrozen="False" CanUserReorderColumns="True">
+                <DataGrid x:Name="PlaylistDataGrid" Items="{Binding PlaylistTracks, Mode=TwoWay}" Margin="5 0" Height="500" 
+                          x:DataType="models:PlaylistTrack" AreRowDetailsFrozen="False" CanUserReorderColumns="True"
+                          DoubleTapped="DataGrid_OnDoubleTapped"
+                          SelectedIndex="{Binding SelectedPlaylistIndex, Mode=TwoWay}">
                     <DataGrid.Columns>
                         <DataGridTextColumn Header="Track"
                                             Binding="{Binding TrackNumber}" Width="80"/>
@@ -108,7 +119,7 @@
         <StackPanel>
             <StackPanel Orientation="Horizontal" Margin="10">
         <Border BorderThickness="0" BorderBrush="Black">
-            <StackPanel Orientation="Horizontal" Width="350">
+            <StackPanel x:Name="TrackDetail" Orientation="Horizontal" Width="350">
                 <Image Width="100" Height="100" Source="../Assets/CD.png"/>
                 <StackPanel Orientation="Vertical" Margin="10 0">
                     <TextBlock Text="Title" Margin="0 10"/>
@@ -117,7 +128,7 @@
                 </StackPanel>
             </StackPanel>
         </Border>
-        <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+        <StackPanel x:Name="Playback" Orientation="Horizontal" VerticalAlignment="Center">
             <Button>
                 <Button.Styles>
                     <Style Selector="Button">
@@ -158,7 +169,7 @@
                 </Button.Styles>
                 <Image Width="25" Height="25" Source="../Assets/next.png"/>
             </Button>
-            <TextBlock Text="# Tracks - [Total Time]" Margin="10 0"/>
+            <TextBlock Text="{Binding PlaylistTotals}" Margin="10 0"/>
             <ProgressBar Minimum="0" Maximum="500" Width="500"></ProgressBar>
         </StackPanel>
     </StackPanel>

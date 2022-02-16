@@ -9,6 +9,8 @@ using ATL;
 using ATL.AudioData;
 using ATL.Playlist;
 using Avalonia.Controls;
+using DynamicData;
+using DynamicData.Binding;
 using PlaylistBuilder.GUI.Models;
 using PlaylistBuilder.GUI.Views;
 using PlaylistBuilder.Lib;
@@ -22,33 +24,50 @@ namespace PlaylistBuilder.GUI.ViewModels
         private readonly MainWindow _mainWindow;
         private readonly string _musicDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyMusic);
         private string _currentDirectory = "";
-        private readonly string _rootDirectory = Directory.GetDirectoryRoot(Environment.SpecialFolder.Personal.ToString());
-        private int _selectedIndex;
-        private readonly List<string> _playlistExtensions= new();
+
+        private readonly string _rootDirectory =
+            Directory.GetDirectoryRoot(Environment.SpecialFolder.Personal.ToString());
+
+        private int _selectedDirectoryIndex;
+        private int _selectedPlaylistIndex;
+        private readonly List<string> _playlistExtensions = new();
         private readonly List<string> _mediaExtensions = new();
         private readonly IconModel? _mediaIconModel;
         private List<MediaItemModel> _itemList = new();
-
         private Stack<string> _undoStack = new();
-
         private Stack<string> _redoStack = new();
-        public ObservableCollection<PlaylistTrack> PlaylistTracks { get; }
+        private string _playlistDetails = "0 tracks - [00:00:00]";
+        private ObservableCollection<PlaylistTrack> _tracks = new();
+        public ObservableCollection<PlaylistTrack> PlaylistTracks { get; set; }
+
         public List<MediaItemModel> ItemList
         {
-            get => _itemList; 
+            get => _itemList;
             private set => this.RaiseAndSetIfChanged(ref _itemList, value);
         }
+
         public string CurrentDirectory
         {
             get => _currentDirectory;
             set => this.RaiseAndSetIfChanged(ref _currentDirectory, value);
         }
 
-        public int SelectedIndex
+        public int SelectedDirectoryIndex
         {
-            get => _selectedIndex;
-            set => this.RaiseAndSetIfChanged(ref _selectedIndex, value);
+            get => _selectedDirectoryIndex;
+            set => this.RaiseAndSetIfChanged(ref _selectedDirectoryIndex, value);
         }
+        public int SelectedPlaylistIndex
+        {
+            get => _selectedPlaylistIndex;
+            set => this.RaiseAndSetIfChanged(ref _selectedPlaylistIndex, value);
+        }
+        public string PlaylistTotals
+        {
+            get => _playlistDetails;
+            set => this.RaiseAndSetIfChanged(ref _playlistDetails, value);
+        }
+
         public ReactiveCommand<Unit, Unit> HomeBtnPressed { get; }
         public ReactiveCommand<Unit, Unit> ParentBtnPressed { get; }
         public ReactiveCommand<Unit, Unit> UndoBtnPressed { get; }
@@ -56,6 +75,10 @@ namespace PlaylistBuilder.GUI.ViewModels
         public ReactiveCommand<Unit, Unit> NewBtnPressed { get; }
         public ReactiveCommand<Unit, Unit> OpenBtnPressed { get; }
         public ReactiveCommand<Unit, Unit> SaveBtnPressed { get; }
+        public ReactiveCommand<Unit, Unit> SwapUpBtnPressed { get; }
+        public ReactiveCommand<Unit, Unit> SwapDownBtnPressed { get; }
+        public ReactiveCommand<Unit, Unit> RemoveBtnPressed { get; }
+        public ReactiveCommand<Unit, Unit> PreferenceBtnPressed { get; }
 
         public MainWindowViewModel()
         {
@@ -70,7 +93,17 @@ namespace PlaylistBuilder.GUI.ViewModels
             NewBtnPressed = ReactiveCommand.Create(NewPlaylist);
             OpenBtnPressed = ReactiveCommand.CreateFromTask(OpenFile);
             SaveBtnPressed = ReactiveCommand.CreateFromTask(SavePlaylist);
+            SwapUpBtnPressed = ReactiveCommand.Create(() => MovePlaylistItem(true));
+            SwapDownBtnPressed = ReactiveCommand.Create(() => MovePlaylistItem(false));
+            RemoveBtnPressed = ReactiveCommand.Create(RemoveTrack);
+            PreferenceBtnPressed = ReactiveCommand.Create(OpenPreferenceWindow);
             PlaylistTracks = new();
+        }
+
+        private void OpenPreferenceWindow()
+        {
+            var prefenceWindow = new PreferenceWindow();
+            prefenceWindow.Show();
         }
         private void FindExtensions()
         {
@@ -189,7 +222,7 @@ namespace PlaylistBuilder.GUI.ViewModels
 
         public void DblTappedItem()
         {
-            MediaItemModel selectedItem = _itemList[_selectedIndex];
+            MediaItemModel selectedItem = _itemList[_selectedDirectoryIndex];
             switch (selectedItem.FileType)
             {
                 case MediaItemType.Directory:
@@ -217,6 +250,7 @@ namespace PlaylistBuilder.GUI.ViewModels
         private void NewPlaylist()
         {
             PlaylistTracks.Clear();
+            UpdatePlaylistTotals();
         }
 
         private void ImportPlaylist(IPlaylist playlist)
@@ -226,6 +260,7 @@ namespace PlaylistBuilder.GUI.ViewModels
             {
                 PlaylistTracks.Add(new PlaylistTrack(track));
             }
+            UpdatePlaylistTotals();
         }
 
         private async Task SavePlaylist()
@@ -277,6 +312,41 @@ namespace PlaylistBuilder.GUI.ViewModels
             };
             playlist.LoadPlaylist(importPlaylist.FullName);
             return playlist;
+        }
+
+        private void UpdatePlaylistTotals()
+        {
+            int totalTracks = PlaylistTracks.Count;
+            int totalTime = 0;
+            foreach (PlaylistTrack track in PlaylistTracks)
+            {
+                totalTime += track.Track.Duration;
+            }
+            PlaylistTotals = $"{totalTracks} tracks - [{TimeSpan.FromSeconds(totalTime)}]";
+        }
+
+        private void MovePlaylistItem(bool moveUp)
+        {
+            int index = SelectedPlaylistIndex;
+            _tracks.AddRange(PlaylistTracks);
+            PlaylistTracks.Clear();
+            if (moveUp)
+            {
+                _tracks.Move(index, index - 1);
+                SelectedPlaylistIndex = index - 1;
+            }
+            else
+            {
+                _tracks.Move(index, index + 1);
+                SelectedPlaylistIndex = index + 1;
+            }
+            PlaylistTracks.AddRange(_tracks);
+            _tracks.Clear();
+        }
+
+        private void RemoveTrack()
+        {
+            PlaylistTracks.RemoveAt(SelectedPlaylistIndex);
         }
     }
 }
