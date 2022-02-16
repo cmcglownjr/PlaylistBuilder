@@ -16,8 +16,14 @@
     <StackPanel Orientation="Vertical" Margin="10" HorizontalAlignment="Left" VerticalAlignment="Top">
         <TextBlock>File Path Mode</TextBlock>
         <StackPanel Orientation="Horizontal">
-            <RadioButton x:Name="AbsoluteRadio" GroupName="FilePathRadio" IsChecked="True" Margin="10">Absolute Paths</RadioButton>
-            <RadioButton x:Name="RelativeRadio" GroupName="FilePathRadio" Margin="10">Relative Paths</RadioButton>
+            <RadioButton x:Name="AbsoluteRadio" GroupName="FilePathRadio" Margin="10">Absolute Paths</RadioButton>
+            <RadioButton x:Name="RelativeRadio" GroupName="FilePathRadio" IsChecked="True" Margin="10">Relative Paths</RadioButton>
+        </StackPanel>
+        <TextBlock>Default File Format</TextBlock>
+        <StackPanel Orientation="Horizontal">
+            <RadioButton x:Name="M3URadio" GroupName="FileExtensionRadio" IsChecked="True" Margin="10">.m3u</RadioButton>
+            <RadioButton x:Name="PlsRadio" GroupName="FileExtensionRadio" Margin="10">.pls</RadioButton>
+            <RadioButton x:Name="XspfRadio" GroupName="FileExtensionRadio" Margin="10">.xspf</RadioButton>
         </StackPanel>
     </StackPanel>
 </Window>

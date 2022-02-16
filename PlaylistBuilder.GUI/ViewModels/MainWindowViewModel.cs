@@ -9,9 +9,8 @@ using ATL;
 using ATL.AudioData;
 using ATL.Playlist;
 using Avalonia.Controls;
-using DynamicData;
-using DynamicData.Binding;
 using PlaylistBuilder.GUI.Models;
+using static PlaylistBuilder.GUI.Models.MoveItem;
 using PlaylistBuilder.GUI.Views;
 using PlaylistBuilder.Lib;
 using ReactiveUI;
@@ -37,7 +36,6 @@ namespace PlaylistBuilder.GUI.ViewModels
         private Stack<string> _undoStack = new();
         private Stack<string> _redoStack = new();
         private string _playlistDetails = "0 tracks - [00:00:00]";
-        private ObservableCollection<PlaylistTrack> _tracks = new();
         public ObservableCollection<PlaylistTrack> PlaylistTracks { get; set; }
 
         public List<MediaItemModel> ItemList
@@ -236,6 +234,7 @@ namespace PlaylistBuilder.GUI.ViewModels
                 case MediaItemType.Media:
                 {
                     PlaylistTracks.Add(new PlaylistTrack(new Track(selectedItem.FullPath)));
+                    UpdatePlaylistTotals();
                     break;
                 }
                 case MediaItemType.Playlist:
@@ -327,21 +326,16 @@ namespace PlaylistBuilder.GUI.ViewModels
 
         private void MovePlaylistItem(bool moveUp)
         {
-            int index = SelectedPlaylistIndex;
-            _tracks.AddRange(PlaylistTracks);
-            PlaylistTracks.Clear();
             if (moveUp)
             {
-                _tracks.Move(index, index - 1);
-                SelectedPlaylistIndex = index - 1;
+                MoveListItem(PlaylistTracks, SelectedPlaylistIndex, SelectedPlaylistIndex - 1);
+                SelectedPlaylistIndex -= 2;
             }
             else
             {
-                _tracks.Move(index, index + 1);
-                SelectedPlaylistIndex = index + 1;
+                MoveListItem(PlaylistTracks, SelectedPlaylistIndex, SelectedPlaylistIndex + 1);
+                SelectedPlaylistIndex += 1;
             }
-            PlaylistTracks.AddRange(_tracks);
-            _tracks.Clear();
         }
 
         private void RemoveTrack()
