@@ -326,21 +326,32 @@ namespace PlaylistBuilder.GUI.ViewModels
 
         private void MovePlaylistItem(bool moveUp)
         {
-            if (moveUp)
+            int index = SelectedPlaylistIndex;
+            try
             {
-                MoveListItem(PlaylistTracks, SelectedPlaylistIndex, SelectedPlaylistIndex - 1);
-                SelectedPlaylistIndex -= 2;
+                if (moveUp)
+                {
+                    MoveListItem(PlaylistTracks, index, index - 1);
+                    SelectedPlaylistIndex = index - 1;
+                }
+                else
+                {
+                    MoveListItem(PlaylistTracks, index, index + 1);
+                    SelectedPlaylistIndex = index + 1;
+                }
             }
-            else
+            catch (IndexOutOfRangeException e)
             {
-                MoveListItem(PlaylistTracks, SelectedPlaylistIndex, SelectedPlaylistIndex + 1);
-                SelectedPlaylistIndex += 1;
+                Console.WriteLine(e);
+                // TODO: Log that the items are at the top or bottom of list
             }
+            
         }
 
         private void RemoveTrack()
         {
             PlaylistTracks.RemoveAt(SelectedPlaylistIndex);
+            UpdatePlaylistTotals();
         }
     }
 }
