@@ -14,6 +14,7 @@ using static PlaylistBuilder.GUI.Models.MoveItem;
 using PlaylistBuilder.GUI.Views;
 using PlaylistBuilder.Lib;
 using ReactiveUI;
+using Serilog;
 using Splat;
 
 namespace PlaylistBuilder.GUI.ViewModels
@@ -184,7 +185,7 @@ namespace PlaylistBuilder.GUI.ViewModels
             }
             else
             {
-                //TODO: Log that you are at the root level
+                Log.Warning("You are at the root level!");
             }
         }
 
@@ -235,13 +236,22 @@ namespace PlaylistBuilder.GUI.ViewModels
                 {
                     PlaylistTracks.Add(new PlaylistTrack(new Track(selectedItem.FullPath)));
                     UpdatePlaylistTotals();
+                    Log.Information("Adding {Arg0} tracks to the playlist", PlaylistTracks.Count);
                     break;
                 }
                 case MediaItemType.Playlist:
                 {
                     FileInfo file = new FileInfo(selectedItem.FullPath);
-                    IPlaylist playlist = PlaylistHandler(file);
-                    ImportPlaylist(playlist);
+                    try
+                    {
+                        IPlaylist playlist = PlaylistHandler(file);
+                        ImportPlaylist(playlist);
+                        Log.Information("Adding an media item to the current playlist");
+                    }
+                    catch (ArgumentOutOfRangeException e)
+                    {
+                        Log.Information("Imported playlist is not supported");
+                    }
                     break;
                 }
             }
@@ -272,12 +282,19 @@ namespace PlaylistBuilder.GUI.ViewModels
             string result = await dialog.ShowAsync(_mainWindow);
             if (result != null)
             {
-                IPlaylist playlist = PlaylistHandler(new FileInfo(result));
-                foreach (PlaylistTrack playlistTrack in PlaylistTracks)
+                try
                 {
-                    playlist.AddTrack(playlistTrack.Track);
+                    IPlaylist playlist = PlaylistHandler(new FileInfo(result));
+                    foreach (PlaylistTrack playlistTrack in PlaylistTracks)
+                    {
+                        playlist.AddTrack(playlistTrack.Track);
+                    }
+                    playlist.SavePlaylist(result);
                 }
-                playlist.SavePlaylist(result);
+                catch (ArgumentOutOfRangeException e)
+                {
+                    Log.Information("Imported playlist is not supported");
+                }
             }
         }
 
@@ -294,8 +311,15 @@ namespace PlaylistBuilder.GUI.ViewModels
                 foreach (string filepath in result)
                 {
                     FileInfo file = new(filepath);
-                    IPlaylist playlist = PlaylistHandler(file);
-                    ImportPlaylist(playlist);
+                    try
+                    {
+                        IPlaylist playlist = PlaylistHandler(file);
+                        ImportPlaylist(playlist);
+                    }
+                    catch (ArgumentOutOfRangeException e)
+                    {
+                        Log.Information("Imported playlist is not supported");
+                    }
                 }
             }
         }
@@ -342,16 +366,18 @@ namespace PlaylistBuilder.GUI.ViewModels
             }
             catch (IndexOutOfRangeException e)
             {
-                Console.WriteLine(e);
-                // TODO: Log that the items are at the top or bottom of list
+                Log.Warning("You are moving items outside of the list!");
+                // Log.Error("{@Arg0}", e);
             }
             
         }
 
         private void RemoveTrack()
         {
+            PlaylistTrack track = PlaylistTracks[SelectedPlaylistIndex];
             PlaylistTracks.RemoveAt(SelectedPlaylistIndex);
             UpdatePlaylistTotals();
+            Log.Information("Removing '{Arg0}' from playlist", track.Title);
         }
     }
 }
