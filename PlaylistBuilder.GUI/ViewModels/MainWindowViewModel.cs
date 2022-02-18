@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using ATL;
 using ATL.AudioData;
 using ATL.Playlist;
+using LibVLCSharp.Shared;
 using Avalonia.Controls;
 using PlaylistBuilder.GUI.Models;
 using static PlaylistBuilder.GUI.Models.MoveItem;
@@ -37,6 +38,8 @@ namespace PlaylistBuilder.GUI.ViewModels
         private Stack<string> _undoStack = new();
         private Stack<string> _redoStack = new();
         private string _playlistDetails = "0 tracks - [00:00:00]";
+        private LibVLC _libVlc;
+        private List<MediaPlayer> _playlistMedia = new();
         public ObservableCollection<PlaylistTrack> PlaylistTracks { get; set; }
 
         public List<MediaItemModel> ItemList
@@ -84,9 +87,16 @@ namespace PlaylistBuilder.GUI.ViewModels
         public ReactiveCommand<Unit, Unit> PlsExtension { get; }
         public ReactiveCommand<Unit, Unit> XspfExtension { get; }
         public ReactiveCommand<Window, Unit> CloseButton { get; }
+        public ReactiveCommand<Unit, Unit> PlayBtn { get; }
+        public ReactiveCommand<Unit, Unit> PauseBtn { get; }
+        public ReactiveCommand<Unit, Unit> StopBtn { get; }
+        public ReactiveCommand<Unit, Unit> NextBtn { get; }
+        public ReactiveCommand<Unit, Unit> PreviousBtn { get; }
 
         public MainWindowViewModel()
         {
+            Core.Initialize();
+            _libVlc = new(true);
             _mainWindow = new MainWindow();
             _mediaIconModel = (IconModel)Locator.Current.GetService(typeof(IconModel))!;
             FindExtensions();
@@ -108,6 +118,11 @@ namespace PlaylistBuilder.GUI.ViewModels
             PlsExtension = ReactiveCommand.Create(() => SetPlaylistExtension(PlaylistExtension.PLS));
             XspfExtension = ReactiveCommand.Create(() => SetPlaylistExtension(PlaylistExtension.XSPF));
             CloseButton = ReactiveCommand.Create<Window>(OnClosePressed);
+            PlayBtn = ReactiveCommand.Create(() => MediaPlayback(PlaybackControl.Play));
+            PauseBtn = ReactiveCommand.Create(() => MediaPlayback(PlaybackControl.Pause));
+            StopBtn = ReactiveCommand.Create(() => MediaPlayback(PlaybackControl.Stop));
+            NextBtn = ReactiveCommand.Create(() => MediaPlayback(PlaybackControl.Next));
+            PreviousBtn = ReactiveCommand.Create(() => MediaPlayback(PlaybackControl.Previous));
             PlaylistTracks = new();
         }
 
@@ -171,7 +186,7 @@ namespace PlaylistBuilder.GUI.ViewModels
             ItemList.Clear();
             List<MediaItemModel> itemList = new List<MediaItemModel>();
             DirectoryInfo info = new DirectoryInfo(directory);
-            foreach (DirectoryInfo dir in info.GetDirectories())
+            foreach (DirectoryInfo dir in info.GetDirectories().OrderBy(dir => dir.Name))
             {
                 if ((dir.Attributes & FileAttributes.Hidden) == 0)
                 {
@@ -183,7 +198,7 @@ namespace PlaylistBuilder.GUI.ViewModels
                 }
             }
 
-            foreach (FileInfo file in info.GetFiles())
+            foreach (FileInfo file in info.GetFiles().OrderBy(file => file.Name))
             {
                 if (_playlistExtensions.Any(file.Extension.Contains))
                 {
@@ -274,6 +289,7 @@ namespace PlaylistBuilder.GUI.ViewModels
                 case MediaItemType.Media:
                 {
                     PlaylistTracks.Add(new PlaylistTrack(new Track(selectedItem.FullPath)));
+                    _playlistMedia.Add(new(new Media(_libVlc, new Uri(selectedItem.FullPath))));
                     UpdatePlaylistTotals();
                     Log.Information("Adding {Arg0} tracks to the playlist", PlaylistTracks.Count);
                     break;
@@ -298,6 +314,7 @@ namespace PlaylistBuilder.GUI.ViewModels
         private void NewPlaylist()
         {
             PlaylistTracks.Clear();
+            _playlistMedia.Clear();
             UpdatePlaylistTotals();
         }
 
@@ -307,6 +324,7 @@ namespace PlaylistBuilder.GUI.ViewModels
             foreach (Track track in playlist.ReadList)
             {
                 PlaylistTracks.Add(new PlaylistTrack(track));
+                _playlistMedia.Add(new(new Media(_libVlc, new Uri(track.Path))));
             }
             UpdatePlaylistTotals();
         }
@@ -397,11 +415,13 @@ namespace PlaylistBuilder.GUI.ViewModels
                 if (moveUp)
                 {
                     MoveListItem(PlaylistTracks, index, index - 1);
+                    MoveListItem(_playlistMedia, index, index - 1);
                     SelectedPlaylistIndex = index - 1;
                 }
                 else
                 {
                     MoveListItem(PlaylistTracks, index, index + 1);
+                    MoveListItem(_playlistMedia, index, index + 1);
                     SelectedPlaylistIndex = index + 1;
                 }
             }
@@ -417,8 +437,59 @@ namespace PlaylistBuilder.GUI.ViewModels
         {
             PlaylistTrack track = PlaylistTracks[SelectedPlaylistIndex];
             PlaylistTracks.RemoveAt(SelectedPlaylistIndex);
+            _playlistMedia.RemoveAt(SelectedPlaylistIndex);
             UpdatePlaylistTotals();
             Log.Information("Removing '{Arg0}' from playlist", track.Title);
+        }
+
+        private void MediaPlayback(PlaybackControl control)
+        {
+            switch (control)
+            {
+                case PlaybackControl.Play:
+                {
+                    _playlistMedia[SelectedPlaylistIndex].Play();
+                    break;
+                }
+                case PlaybackControl.Pause:
+                {
+                    _playlistMedia[SelectedPlaylistIndex].Pause();
+                    break;
+                }
+                case PlaybackControl.Stop:
+                {
+                    _playlistMedia[SelectedPlaylistIndex].Stop();
+                    break;
+                }
+                case PlaybackControl.Next:
+                {
+                    try
+                    {
+                        _playlistMedia[SelectedPlaylistIndex].Stop();
+                        SelectedPlaylistIndex += 1;
+                        _playlistMedia[SelectedPlaylistIndex].Play();
+                    }
+                    catch (Exception e)
+                    {
+                        Log.Warning("End of playlist");
+                    }
+                    break;
+                }
+                case PlaybackControl.Previous:
+                {
+                    try
+                    {
+                        _playlistMedia[SelectedPlaylistIndex].Stop();
+                        SelectedPlaylistIndex -= 1;
+                        _playlistMedia[SelectedPlaylistIndex].Play();
+                    }
+                    catch (Exception e)
+                    {
+                        Log.Warning("Beginning of playlist");
+                    }
+                    break;
+                }
+            }
         }
     }
 }

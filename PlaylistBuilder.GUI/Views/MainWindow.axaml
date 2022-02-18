@@ -129,7 +129,7 @@
             </StackPanel>
         </Border>
         <StackPanel x:Name="Playback" Orientation="Horizontal" VerticalAlignment="Center">
-            <Button>
+            <Button Command="{Binding PreviousBtn}">
                 <Button.Styles>
                     <Style Selector="Button">
                         <Setter Property="CornerRadius" Value="100"/>
@@ -137,7 +137,7 @@
                 </Button.Styles>
                 <Image Width="25" Height="25" Source="../Assets/previous.png"/>
             </Button>
-            <Button>
+            <Button Command="{Binding StopBtn}">
                 <Button.Styles>
                     <Style Selector="Button">
                         <Setter Property="CornerRadius" Value="100"/>
@@ -145,7 +145,7 @@
                 </Button.Styles>
                 <Image Width="25" Height="25" Source="../Assets/stop.png"/>
             </Button>
-            <Button>
+            <Button Command="{Binding PlayBtn}">
                 <Button.Styles>
                     <Style Selector="Button">
                         <Setter Property="CornerRadius" Value="100"/>
@@ -153,7 +153,7 @@
                 </Button.Styles>
                 <Image Width="25" Height="25" Source="../Assets/play.png"/>
             </Button>
-            <Button>
+            <Button Command="{Binding PauseBtn}">
                 <Button.Styles>
                     <Style Selector="Button">
                         <Setter Property="CornerRadius" Value="100"/>
@@ -161,7 +161,7 @@
                 </Button.Styles>
                 <Image Width="25" Height="25" Source="../Assets/pause.png"/>
             </Button>
-            <Button>
+            <Button Command="{Binding NextBtn}">
                 <Button.Styles>
                     <Style Selector="Button">
                         <Setter Property="CornerRadius" Value="100"/>
