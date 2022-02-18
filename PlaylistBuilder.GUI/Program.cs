@@ -29,7 +29,8 @@ namespace PlaylistBuilder.GUI
             Log.Logger = new LoggerConfiguration()
                 .MinimumLevel.Debug()
                 .WriteTo.Console()
-                .WriteTo.File(Path.Combine(workingDirectory, "PlaylistBuilder.log"), rollingInterval: RollingInterval.Day)
+                .WriteTo.File(Path.Combine(workingDirectory, "PlaylistBuilder.log"), rollingInterval: RollingInterval.Day,
+                    outputTemplate:"{Timestamp:yyyy-MM-dd HH:mm:ss} [{Level:u3}] {Message:lj}{NewLine}{Exception}")
                 .CreateLogger();
             return AppBuilder.Configure<App>()
                 .UsePlatformDetect()

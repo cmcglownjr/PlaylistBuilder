@@ -24,12 +24,12 @@ namespace PlaylistBuilder.GUI.ViewModels
         private readonly MainWindow _mainWindow;
         private readonly string _musicDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyMusic);
         private string _currentDirectory = "";
-
         private readonly string _rootDirectory =
             Directory.GetDirectoryRoot(Environment.SpecialFolder.Personal.ToString());
-
+        private string _playlistExtension = "m3u";
         private int _selectedDirectoryIndex;
         private int _selectedPlaylistIndex;
+        private bool _playlistAbsolute;
         private readonly List<string> _playlistExtensions = new();
         private readonly List<string> _mediaExtensions = new();
         private readonly IconModel? _mediaIconModel;
@@ -78,6 +78,12 @@ namespace PlaylistBuilder.GUI.ViewModels
         public ReactiveCommand<Unit, Unit> SwapDownBtnPressed { get; }
         public ReactiveCommand<Unit, Unit> RemoveBtnPressed { get; }
         public ReactiveCommand<Unit, Unit> PreferenceBtnPressed { get; }
+        public ReactiveCommand<Unit, Unit> AbsoluteFilePath { get; }
+        public ReactiveCommand<Unit, Unit> RelativeFilePath { get; }
+        public ReactiveCommand<Unit, Unit> M3UExtension { get; }
+        public ReactiveCommand<Unit, Unit> PlsExtension { get; }
+        public ReactiveCommand<Unit, Unit> XspfExtension { get; }
+        public ReactiveCommand<Window, Unit> CloseButton { get; }
 
         public MainWindowViewModel()
         {
@@ -96,6 +102,12 @@ namespace PlaylistBuilder.GUI.ViewModels
             SwapDownBtnPressed = ReactiveCommand.Create(() => MovePlaylistItem(false));
             RemoveBtnPressed = ReactiveCommand.Create(RemoveTrack);
             PreferenceBtnPressed = ReactiveCommand.Create(OpenPreferenceWindow);
+            AbsoluteFilePath = ReactiveCommand.Create(() => SetPlaylistFilePaths(true));
+            RelativeFilePath = ReactiveCommand.Create(() => SetPlaylistFilePaths(false));
+            M3UExtension = ReactiveCommand.Create(() => SetPlaylistExtension(PlaylistExtension.M3U));
+            PlsExtension = ReactiveCommand.Create(() => SetPlaylistExtension(PlaylistExtension.PLS));
+            XspfExtension = ReactiveCommand.Create(() => SetPlaylistExtension(PlaylistExtension.XSPF));
+            CloseButton = ReactiveCommand.Create<Window>(OnClosePressed);
             PlaylistTracks = new();
         }
 
@@ -103,6 +115,33 @@ namespace PlaylistBuilder.GUI.ViewModels
         {
             var prefenceWindow = new PreferenceWindow();
             prefenceWindow.Show();
+        }
+
+        private void SetPlaylistFilePaths(bool setAbsolute)
+        {
+            _playlistAbsolute = setAbsolute;
+            Log.Information("Playlist absolute paths set to {Arg0}", setAbsolute);
+        }
+
+        private void SetPlaylistExtension(PlaylistExtension extension)
+        {
+            switch (extension)
+            {
+                case PlaylistExtension.M3U:
+                    _playlistExtension = "m3u";
+                    break;
+                case PlaylistExtension.PLS:
+                    _playlistExtension = "pls";
+                    break;
+                case PlaylistExtension.XSPF:
+                    _playlistExtension = "xspf";
+                    break;
+            }
+        }
+
+        private void OnClosePressed(Window window)
+        {
+            window.Close();
         }
         private void FindExtensions()
         {
@@ -275,10 +314,9 @@ namespace PlaylistBuilder.GUI.ViewModels
         private async Task SavePlaylist()
         {
             SaveFileDialog dialog = new();
-            dialog.Filters.Add(new FileDialogFilter{Name = "Playlists", Extensions = _playlistExtensions});
-            dialog.Title = "Save Playlist";
-            dialog.DefaultExtension = "m3u";
-            //TODO: Set up default extensions
+            dialog.Filters.Add(new FileDialogFilter{Name = $"Playlists ({_playlistExtension})", Extensions = _playlistExtensions});
+            dialog.Title = $"Save Playlist as {_playlistExtension}";
+            dialog.DefaultExtension = _playlistExtension;
             string result = await dialog.ShowAsync(_mainWindow);
             if (result != null)
             {
@@ -289,7 +327,9 @@ namespace PlaylistBuilder.GUI.ViewModels
                     {
                         playlist.AddTrack(playlistTrack.Track);
                     }
+                    playlist.Relative = !_playlistAbsolute;
                     playlist.SavePlaylist(result);
+                    Log.Information("Playlist saved to {Arg0}", result);
                 }
                 catch (ArgumentOutOfRangeException e)
                 {
@@ -315,6 +355,7 @@ namespace PlaylistBuilder.GUI.ViewModels
                     {
                         IPlaylist playlist = PlaylistHandler(file);
                         ImportPlaylist(playlist);
+                        Log.Information("Playlist imported from {Arg0}", result);
                     }
                     catch (ArgumentOutOfRangeException e)
                     {

@@ -5,7 +5,8 @@
         xmlns:viewModels="clr-namespace:PlaylistBuilder.GUI.ViewModels"
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
         x:Class="PlaylistBuilder.GUI.Views.PreferenceWindow"
-        Width="300" Height="500"
+        x:Name="PreferenceWindow"
+        Width="300" Height="250"
         Title="PreferenceWindow">
     <Window.Styles>
         <StyleInclude Source="/Assets/DefaultStyle.axaml"/>
@@ -16,15 +17,23 @@
     <StackPanel Orientation="Vertical" Margin="10" HorizontalAlignment="Left" VerticalAlignment="Top">
         <TextBlock>File Path Mode</TextBlock>
         <StackPanel Orientation="Horizontal">
-            <RadioButton x:Name="AbsoluteRadio" GroupName="FilePathRadio" Margin="10" Content="Absolute Paths"/>
+            <RadioButton x:Name="AbsoluteRadio" GroupName="FilePathRadio" Margin="10" Content="Absolute Paths"
+                         Command="{Binding AbsoluteFilePath}"/>
             <RadioButton x:Name="RelativeRadio" GroupName="FilePathRadio" IsChecked="True" Margin="10" 
-                         Content="Relative Paths"/>
+                         Content="Relative Paths" Command="{Binding RelativeFilePath}"/>
         </StackPanel>
         <TextBlock>Default File Format</TextBlock>
         <StackPanel Orientation="Horizontal">
-            <RadioButton x:Name="M3URadio" GroupName="FileExtensionRadio" IsChecked="True" Margin="10">.m3u</RadioButton>
-            <RadioButton x:Name="PlsRadio" GroupName="FileExtensionRadio" Margin="10">.pls</RadioButton>
-            <RadioButton x:Name="XspfRadio" GroupName="FileExtensionRadio" Margin="10">.xspf</RadioButton>
+            <RadioButton x:Name="M3URadio" GroupName="FileExtensionRadio" Content=".m3u" IsChecked="True" Margin="10"
+                         Command="{Binding M3UExtension}"/>
+            <RadioButton x:Name="PlsRadio" GroupName="FileExtensionRadio" Content=".pls" Margin="10"
+                         Command="{Binding PlsExtension}"/>
+            <RadioButton x:Name="XspfRadio" GroupName="FileExtensionRadio" Content=".xspf" Margin="10"
+                         Command="{Binding XspfExtension}"/>
+        </StackPanel>
+        <StackPanel HorizontalAlignment="Right" Margin="15">
+            <Button Content="Close" IsCancel="True" Command="{Binding CloseButton}"
+                    CommandParameter="{Binding ElementName=PreferenceWindow}"/>
         </StackPanel>
     </StackPanel>
 </Window>
