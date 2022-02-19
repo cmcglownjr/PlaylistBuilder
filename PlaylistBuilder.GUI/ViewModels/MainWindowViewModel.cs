@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
 using System.Reactive;
@@ -10,6 +11,7 @@ using ATL.AudioData;
 using ATL.Playlist;
 using LibVLCSharp.Shared;
 using Avalonia.Controls;
+using Avalonia.Media.Imaging;
 using PlaylistBuilder.GUI.Models;
 using static PlaylistBuilder.GUI.Models.MoveItem;
 using PlaylistBuilder.GUI.Views;
@@ -28,6 +30,9 @@ namespace PlaylistBuilder.GUI.ViewModels
         private readonly string _rootDirectory =
             Directory.GetDirectoryRoot(Environment.SpecialFolder.Personal.ToString());
         private string _playlistExtension = "m3u";
+        private string _trackAlbum = "No Media";
+        private string _trackArtist = "No Media";
+        private string _trackTitle = "No Media";
         private int _selectedDirectoryIndex;
         private int _selectedPlaylistIndex;
         private bool _playlistAbsolute;
@@ -40,6 +45,7 @@ namespace PlaylistBuilder.GUI.ViewModels
         private string _playlistDetails = "0 tracks - [00:00:00]";
         private LibVLC _libVlc;
         private List<MediaPlayer> _playlistMedia = new();
+        private Image _trackImage = new();
         public ObservableCollection<PlaylistTrack> PlaylistTracks { get; set; }
 
         public List<MediaItemModel> ItemList
@@ -70,6 +76,25 @@ namespace PlaylistBuilder.GUI.ViewModels
             set => this.RaiseAndSetIfChanged(ref _playlistDetails, value);
         }
 
+        public Image TrackImage => _trackImage;
+
+        public string TrackAlbum
+        {
+            get => _trackAlbum; 
+            set => this.RaiseAndSetIfChanged(ref _trackAlbum, value);
+        }
+
+        public string TrackArtist
+        {
+            get => _trackArtist; 
+            set => this.RaiseAndSetIfChanged(ref _trackArtist, value);
+        }
+
+        public string TrackTitle
+        {
+            get => _trackTitle; 
+            set => this.RaiseAndSetIfChanged(ref _trackTitle, value);
+        }
         public ReactiveCommand<Unit, Unit> HomeBtnPressed { get; }
         public ReactiveCommand<Unit, Unit> ParentBtnPressed { get; }
         public ReactiveCommand<Unit, Unit> UndoBtnPressed { get; }
@@ -99,6 +124,7 @@ namespace PlaylistBuilder.GUI.ViewModels
             _libVlc = new(true);
             _mainWindow = new MainWindow();
             _mediaIconModel = (IconModel)Locator.Current.GetService(typeof(IconModel))!;
+            TrackImage.Source = _mediaIconModel.CDImage;
             FindExtensions();
             ItemList = new List<MediaItemModel>(PopulateTree(_musicDirectory));
             HomeBtnPressed = ReactiveCommand.Create(HomeDirectory);
@@ -313,6 +339,8 @@ namespace PlaylistBuilder.GUI.ViewModels
         }
         private void NewPlaylist()
         {
+            MediaPlayback(PlaybackControl.Stop);
+            NowPlaying(false);
             PlaylistTracks.Clear();
             _playlistMedia.Clear();
             UpdatePlaylistTotals();
@@ -320,7 +348,9 @@ namespace PlaylistBuilder.GUI.ViewModels
 
         private void ImportPlaylist(IPlaylist playlist)
         {
+            MediaPlayback(PlaybackControl.Stop);
             PlaylistTracks.Clear();
+            NowPlaying(false);
             foreach (Track track in playlist.ReadList)
             {
                 PlaylistTracks.Add(new PlaylistTrack(track));
@@ -435,9 +465,10 @@ namespace PlaylistBuilder.GUI.ViewModels
 
         private void RemoveTrack()
         {
+            int trackIndex = SelectedPlaylistIndex;
             PlaylistTrack track = PlaylistTracks[SelectedPlaylistIndex];
-            PlaylistTracks.RemoveAt(SelectedPlaylistIndex);
-            _playlistMedia.RemoveAt(SelectedPlaylistIndex);
+            PlaylistTracks.RemoveAt(trackIndex);
+            _playlistMedia.RemoveAt(trackIndex);
             UpdatePlaylistTotals();
             Log.Information("Removing '{Arg0}' from playlist", track.Title);
         }
@@ -448,7 +479,12 @@ namespace PlaylistBuilder.GUI.ViewModels
             {
                 case PlaybackControl.Play:
                 {
+                    foreach (MediaPlayer media in _playlistMedia)
+                    {
+                        media.Stop();
+                    }
                     _playlistMedia[SelectedPlaylistIndex].Play();
+                    NowPlaying(true);
                     break;
                 }
                 case PlaybackControl.Pause:
@@ -459,6 +495,7 @@ namespace PlaylistBuilder.GUI.ViewModels
                 case PlaybackControl.Stop:
                 {
                     _playlistMedia[SelectedPlaylistIndex].Stop();
+                    NowPlaying(false);
                     break;
                 }
                 case PlaybackControl.Next:
@@ -468,6 +505,7 @@ namespace PlaylistBuilder.GUI.ViewModels
                         _playlistMedia[SelectedPlaylistIndex].Stop();
                         SelectedPlaylistIndex += 1;
                         _playlistMedia[SelectedPlaylistIndex].Play();
+                        NowPlaying(true);
                     }
                     catch (Exception e)
                     {
@@ -482,6 +520,7 @@ namespace PlaylistBuilder.GUI.ViewModels
                         _playlistMedia[SelectedPlaylistIndex].Stop();
                         SelectedPlaylistIndex -= 1;
                         _playlistMedia[SelectedPlaylistIndex].Play();
+                        NowPlaying(true);
                     }
                     catch (Exception e)
                     {
@@ -489,6 +528,41 @@ namespace PlaylistBuilder.GUI.ViewModels
                     }
                     break;
                 }
+            }
+        }
+
+        private void NowPlaying(bool show)
+        {
+            if (show)
+            {
+                Track track = PlaylistTracks[SelectedPlaylistIndex].Track;
+                if (track.EmbeddedPictures.Count > 0)
+                {
+                    IList<PictureInfo> embeddedPictures = track.EmbeddedPictures;
+                    System.Drawing.Image image =
+                        System.Drawing.Image.FromStream(new MemoryStream(embeddedPictures[0].PictureData));
+                    using (MemoryStream memory = new MemoryStream())
+                    {
+                        image.Save(memory, ImageFormat.Jpeg);
+                        memory.Position = 0;
+                        TrackImage.Source = new Bitmap(memory);
+                    }
+                }
+                else
+                {
+                    TrackImage.Source = _mediaIconModel.CDImage;
+                }
+                TrackAlbum = track.Album;
+                TrackArtist = track.Artist;
+                TrackTitle = track.Title;
+                Log.Information("Now playing {Arg0}", track.Title);
+            }
+            else
+            {
+                TrackImage.Source = _mediaIconModel.CDImage;
+                TrackAlbum = "No Media";
+                TrackArtist = "No Media";
+                TrackTitle = "No Media";
             }
         }
     }

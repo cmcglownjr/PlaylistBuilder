@@ -32,7 +32,7 @@ namespace PlaylistBuilder.GUI.Views
 
         private void DataGrid_OnDoubleTapped(object? sender, RoutedEventArgs e)
         {
-            throw new System.NotImplementedException();
+            // throw new System.NotImplementedException();
         }
     }
 }
