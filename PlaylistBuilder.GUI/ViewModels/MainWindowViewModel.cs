@@ -339,7 +339,10 @@ namespace PlaylistBuilder.GUI.ViewModels
         }
         private void NewPlaylist()
         {
-            MediaPlayback(PlaybackControl.Stop);
+            if (_playlistMedia.Count > 0)
+            {
+                MediaPlayback(PlaybackControl.Stop);
+            }
             NowPlaying(false);
             PlaylistTracks.Clear();
             _playlistMedia.Clear();
@@ -348,7 +351,10 @@ namespace PlaylistBuilder.GUI.ViewModels
 
         private void ImportPlaylist(IPlaylist playlist)
         {
-            MediaPlayback(PlaybackControl.Stop);
+            if (_playlistMedia.Count > 0)
+            {
+                MediaPlayback(PlaybackControl.Stop);
+            }
             PlaylistTracks.Clear();
             NowPlaying(false);
             foreach (Track track in playlist.ReadList)
