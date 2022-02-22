@@ -1,8 +1,56 @@
 <UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:PlaylistBuilder.GUI.ViewModels"
+             xmlns:models="clr-namespace:PlaylistBuilder.GUI.Models"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="PlaylistBuilder.GUI.Views.PlaylistView">
-    Welcome to Avalonia!
+    <UserControl.Styles>
+        <StyleInclude Source="/Assets/DefaultStyle.axaml"/>
+    </UserControl.Styles>
+    <Design.DataContext>
+        <vm:PlaylistViewModel/>
+    </Design.DataContext>
+    <StackPanel Orientation="Vertical">
+                <StackPanel Orientation="Horizontal" Margin="10">
+                    <Button Command="{Binding NewBtnPressed}">
+                        <Image Width="25" Height="25" Source="../Assets/new.png"/>
+                    </Button>
+                    <Button Command="{Binding OpenBtnPressed}">
+                        <Image Width="25" Height="25" Source="../Assets/open.png"/>
+                    </Button>
+                    <Button Command="{Binding SaveBtnPressed}">
+                        <Image Width="25" Height="25" Source="../Assets/save.png"/>
+                    </Button>
+                    <Button Command="{Binding SwapUpBtnPressed}">
+                        <Image Width="25" Height="25" Source="../Assets/swapUp.png"/>
+                    </Button>
+                    <Button Command="{Binding SwapDownBtnPressed}">
+                        <Image Width="25" Height="25" Source="../Assets/swapDown.png"/>
+                    </Button>
+                    <Button Command="{Binding RemoveBtnPressed}">
+                        <Image Width="25" Height="25" Source="../Assets/cancel.png"/>
+                    </Button>
+                </StackPanel>
+                <DataGrid x:Name="PlaylistDataGrid" Items="{Binding PlaylistTracks, Mode=TwoWay}" Margin="5 0" Height="500" 
+                          x:DataType="models:PlaylistTrack" AreRowDetailsFrozen="False" CanUserReorderColumns="True"
+                          DoubleTapped="OnDoubleTapped"
+                          SelectedIndex="{Binding SelectedPlaylistIndex, Mode=TwoWay}">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="Track"
+                                            Binding="{Binding TrackNumber}" Width="80"/>
+                        <DataGridTextColumn Header="Title"
+                                            Binding="{Binding Title}" Width="180"/>
+                        <DataGridTextColumn Header="Artist"
+                                            Binding="{Binding Artist}" Width="180"/>
+                        <DataGridTextColumn Header="Album"
+                                            Binding="{Binding Album}" Width="180"/>
+                        <DataGridTextColumn Header="Duration"
+                                            Binding="{Binding Duration}" Width="180"/>
+                        <DataGridTextColumn Header="File Name"
+                                            Binding="{Binding FileName}" Width="180"/>
+                    </DataGrid.Columns>
+                </DataGrid>
+            </StackPanel>
 </UserControl>

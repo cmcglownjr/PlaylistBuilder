@@ -1,8 +1,68 @@
 <UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:PlaylistBuilder.GUI.ViewModels"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="PlaylistBuilder.GUI.Views.PlaybackView">
-    Welcome to Avalonia!
+    <UserControl.Styles>
+        <StyleInclude Source="/Assets/DefaultStyle.axaml"/>
+    </UserControl.Styles>
+    <Design.DataContext>
+        <vm:PlaybackViewModel/>
+    </Design.DataContext>
+    <StackPanel Orientation="Horizontal" Margin="10">
+        <StackPanel x:Name="TrackDetail" Orientation="Horizontal" Width="350">
+            <ContentControl Width="100" Height="100" Content="{Binding TrackImage}"/>
+            <StackPanel Orientation="Vertical" Margin="10 0">
+                <TextBlock Text="{Binding TrackTitle}" Margin="0 10"/>
+                <TextBlock Text="{Binding TrackArtist}" Margin="0 10"/>
+                <TextBlock Text="{Binding TrackAlbum}" Margin="0 10"/>
+            </StackPanel>
+        </StackPanel>
+        <StackPanel x:Name="Playback" Orientation="Horizontal" VerticalAlignment="Center">
+            <Button Command="{Binding PreviousBtn}">
+                <Button.Styles>
+                    <Style Selector="Button">
+                        <Setter Property="CornerRadius" Value="100"/>
+                    </Style>
+                </Button.Styles>
+                <Image Width="25" Height="25" Source="../Assets/previous.png"/>
+            </Button>
+            <Button Command="{Binding StopBtn}">
+                <Button.Styles>
+                    <Style Selector="Button">
+                        <Setter Property="CornerRadius" Value="100"/>
+                    </Style>
+                </Button.Styles>
+                <Image Width="25" Height="25" Source="../Assets/stop.png"/>
+            </Button>
+            <Button Command="{Binding PlayBtn}">
+                <Button.Styles>
+                    <Style Selector="Button">
+                        <Setter Property="CornerRadius" Value="100"/>
+                    </Style>
+                </Button.Styles>
+                <Image Width="25" Height="25" Source="../Assets/play.png"/>
+            </Button>
+            <Button Command="{Binding PauseBtn}">
+                <Button.Styles>
+                    <Style Selector="Button">
+                        <Setter Property="CornerRadius" Value="100"/>
+                    </Style>
+                </Button.Styles>
+                <Image Width="25" Height="25" Source="../Assets/pause.png"/>
+            </Button>
+            <Button Command="{Binding NextBtn}">
+                <Button.Styles>
+                    <Style Selector="Button">
+                        <Setter Property="CornerRadius" Value="100"/>
+                    </Style>
+                </Button.Styles>
+                <Image Width="25" Height="25" Source="../Assets/next.png"/>
+            </Button>
+            <TextBlock Text="{Binding PlaylistDetails}" Margin="10 0"/>
+            <ProgressBar Minimum="0" Maximum="500" Width="500"></ProgressBar>
+        </StackPanel>
+    </StackPanel>
 </UserControl>
