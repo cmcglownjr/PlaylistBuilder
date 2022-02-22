@@ -571,5 +571,11 @@ namespace PlaylistBuilder.GUI.ViewModels
                 TrackTitle = "No Media";
             }
         }
+
+        public void DblTappedPlaylist()
+        {
+            TrackInfoWindow trackInfo = new TrackInfoWindow();
+            trackInfo.Show();
+        }
     }
 }

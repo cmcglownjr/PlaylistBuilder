@@ -1,0 +1,40 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:viewModels="clr-namespace:PlaylistBuilder.GUI.ViewModels"
+        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+        x:Class="PlaylistBuilder.GUI.Views.TrackInfoWindow"
+        Title="TrackInfoWindow">
+        <Window.Styles>
+                <StyleInclude Source="/Assets/DefaultStyle.axaml"/>
+        </Window.Styles>
+        <Design.DataContext>
+                <viewModels:MainWindowViewModel/>
+        </Design.DataContext>
+        <StackPanel Orientation="Vertical">
+                <TabControl>
+                        <TabItem Header="Summary">
+                                <StackPanel Orientation="Vertical">
+                                        <StackPanel Orientation="Horizontal">
+                                                <ContentControl Width="100" Height="100" Content="{Binding TrackImage}"/>
+                                                <StackPanel Orientation="Vertical">
+                                                        <TextBlock Text="{Binding TrackArtist}"/>
+                                                        <TextBlock Text="{Binding TrackTitle}"/>
+                                                        <TextBlock Text="{Binding TrackAlbum}"/>
+                                                </StackPanel>
+                                        </StackPanel>
+                                </StackPanel>
+                        </TabItem>
+                        <TabItem Header="Edit">
+                                <TextBlock>Sample Edit</TextBlock>
+                        </TabItem>
+                </TabControl>
+                <StackPanel Orientation="Horizontal">
+                        <Button>Previous</Button>
+                        <Button>Next</Button>
+                        <Button>Save</Button>
+                        <Button>Discard</Button>
+                </StackPanel>
+        </StackPanel>
+</Window>

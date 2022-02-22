@@ -27,7 +27,7 @@
             </MenuItem>
             <MenuItem Header="_Playlist">
                 <!-- <MenuItem Header="New Playlist"/> -->
-                <Separator/>
+                <!-- <Separator/> -->
                 <MenuItem Header="Shuffle Mode"/>
                 <MenuItem Header="Repeat Mode"/>
                 <Separator/>
