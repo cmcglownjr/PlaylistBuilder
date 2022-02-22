@@ -2,7 +2,6 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:vm="using:PlaylistBuilder.GUI.ViewModels"
         xmlns:views="clr-namespace:PlaylistBuilder.GUI.Views"
-        xmlns:models="clr-namespace:PlaylistBuilder.GUI.Models"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
@@ -43,79 +42,9 @@
             </MenuItem>
         </Menu>
         <StackPanel Orientation="Horizontal">
-            <StackPanel Orientation="Vertical" Margin="10" HorizontalAlignment="Left">
-                <StackPanel Orientation="Horizontal">
-                    <Button Classes="FileNavigation" Command="{Binding UndoBtnPressed}">
-                        <Image Width="25" Height="25" Source="../Assets/undo.png"/>
-                    </Button>
-                    <Button Classes="FileNavigation" Command="{Binding RedoBtnPressed}">
-                        <Image Width="25" Height="25" Source="../Assets/redo.png"/>
-                    </Button>
-                    <Button Classes="FileNavigation" Command="{Binding ParentBtnPressed}">
-                        <Image Width="25" Height="25" Source="../Assets/parent.png"/>
-                    </Button>
-                    <Button Classes="FileNavigation" Command="{Binding HomeBtnPressed}">
-                        <Image Width="25" Height="25" Source="../Assets/home.png"/>
-                    </Button>
-                    <TextBlock Text="{Binding CurrentDirectory}" Width="200" VerticalAlignment="Center"/>
-                </StackPanel>
-                <ListBox Items="{Binding ItemList}" Width="350" Height="500"
-                         ScrollViewer.VerticalScrollBarVisibility="Auto" 
-                         ScrollViewer.HorizontalScrollBarVisibility="Auto" 
-                         SelectionMode="Single"
-                         SelectedIndex="{Binding SelectedDirectoryIndex}"
-                         DoubleTapped="OnDoubleTapped">
-                    <ListBox.ItemTemplate>
-                        <DataTemplate DataType="models:MediaItemModel">
-                            <StackPanel Orientation="Horizontal">
-                                <Image x:Name="ItemImage" Width="25" Height="25" Source="{Binding MediaIcon.Source}" Margin="5 0"/>
-                                <TextBlock Text="{Binding Name}" Margin="5 0" TextWrapping="Wrap"/>
-                            </StackPanel>
-                        </DataTemplate>
-                    </ListBox.ItemTemplate>
-                </ListBox>
-            </StackPanel>
-            <StackPanel Orientation="Vertical">
-                <StackPanel Orientation="Horizontal" Margin="10">
-                    <Button Command="{Binding NewBtnPressed}">
-                        <Image Width="25" Height="25" Source="../Assets/new.png"/>
-                    </Button>
-                    <Button Command="{Binding OpenBtnPressed}">
-                        <Image Width="25" Height="25" Source="../Assets/open.png"/>
-                    </Button>
-                    <Button Command="{Binding SaveBtnPressed}">
-                        <Image Width="25" Height="25" Source="../Assets/save.png"/>
-                    </Button>
-                    <Button Command="{Binding SwapUpBtnPressed}">
-                        <Image Width="25" Height="25" Source="../Assets/swapUp.png"/>
-                    </Button>
-                    <Button Command="{Binding SwapDownBtnPressed}">
-                        <Image Width="25" Height="25" Source="../Assets/swapDown.png"/>
-                    </Button>
-                    <Button Command="{Binding RemoveBtnPressed}">
-                        <Image Width="25" Height="25" Source="../Assets/cancel.png"/>
-                    </Button>
-                </StackPanel>
-                <DataGrid x:Name="PlaylistDataGrid" Items="{Binding PlaylistTracks, Mode=TwoWay}" Margin="5 0" Height="500" 
-                          x:DataType="models:PlaylistTrack" AreRowDetailsFrozen="False" CanUserReorderColumns="True"
-                          DoubleTapped="DataGrid_OnDoubleTapped"
-                          SelectedIndex="{Binding SelectedPlaylistIndex, Mode=TwoWay}">
-                    <DataGrid.Columns>
-                        <DataGridTextColumn Header="Track"
-                                            Binding="{Binding TrackNumber}" Width="80"/>
-                        <DataGridTextColumn Header="Title"
-                                            Binding="{Binding Title}" Width="180"/>
-                        <DataGridTextColumn Header="Artist"
-                                            Binding="{Binding Artist}" Width="180"/>
-                        <DataGridTextColumn Header="Album"
-                                            Binding="{Binding Album}" Width="180"/>
-                        <DataGridTextColumn Header="Duration"
-                                            Binding="{Binding Duration}" Width="180"/>
-                        <DataGridTextColumn Header="File Name"
-                                            Binding="{Binding FileName}" Width="180"/>
-                    </DataGrid.Columns>
-                </DataGrid>
-            </StackPanel>
+          <views:NavigatorView/>
+          <views:PlaylistView/>
         </StackPanel>
+        <views:PlaybackView/>
     </StackPanel>
 </Window>

@@ -18,17 +18,17 @@
         <TextBlock>File Path Mode</TextBlock>
         <StackPanel Orientation="Horizontal">
             <RadioButton x:Name="AbsoluteRadio" GroupName="FilePathRadio" Margin="10" Content="Absolute Paths"
-                         Command="{Binding AbsoluteFilePath}"/>
-            <RadioButton x:Name="RelativeRadio" GroupName="FilePathRadio" IsChecked="True" Margin="10" 
+                         Command="{Binding AbsoluteFilePath}"  IsChecked="{Binding AbsoluteRadio}"/>
+            <RadioButton x:Name="RelativeRadio" GroupName="FilePathRadio" IsChecked="{Binding RelativeRadio}" Margin="10" 
                          Content="Relative Paths" Command="{Binding RelativeFilePath}"/>
         </StackPanel>
         <TextBlock>Default File Format</TextBlock>
         <StackPanel Orientation="Horizontal">
-            <RadioButton x:Name="M3URadio" GroupName="FileExtensionRadio" Content=".m3u" IsChecked="True" Margin="10"
+            <RadioButton x:Name="M3URadio" GroupName="FileExtensionRadio" Content=".m3u" IsChecked="{Binding M3URadio}" Margin="10"
                          Command="{Binding M3UExtension}"/>
-            <RadioButton x:Name="PlsRadio" GroupName="FileExtensionRadio" Content=".pls" Margin="10"
+            <RadioButton x:Name="PlsRadio" GroupName="FileExtensionRadio" Content=".pls" IsChecked="{Binding PlsRadio}" Margin="10"
                          Command="{Binding PlsExtension}"/>
-            <RadioButton x:Name="XspfRadio" GroupName="FileExtensionRadio" Content=".xspf" Margin="10"
+            <RadioButton x:Name="XspfRadio" GroupName="FileExtensionRadio" Content=".xspf" IsChecked="{Binding XspfRadio}" Margin="10"
                          Command="{Binding XspfExtension}"/>
         </StackPanel>
         <StackPanel HorizontalAlignment="Right" Margin="15">

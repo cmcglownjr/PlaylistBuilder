@@ -1,13 +1,11 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Drawing.Imaging;
 using System.IO;
 using System.Reactive;
 using System.Threading.Tasks;
 using ATL;
 using Avalonia.Controls;
-using Avalonia.Media.Imaging;
 using LibVLCSharp.Shared;
 using PlaylistBuilder.GUI.Models;
 using PlaylistBuilder.GUI.Views;
@@ -21,12 +19,9 @@ namespace PlaylistBuilder.GUI.ViewModels;
 public class PlaylistViewModel : ViewModelBase
 {
     private readonly MainWindow _mainWindow;
-    private MainWindowViewModel _mainWindowViewModel;
     private PlaybackViewModel _playbackViewModel;
     private PreferenceViewModel _preferenceViewModel;
     private int _selectedPlaylistIndex;
-    private readonly List<string> _playlistExtensions = new();
-    private readonly List<string> _mediaExtensions = new();
     public ObservableCollection<PlaylistTrack> PlaylistTracks { get; set; }
     public int SelectedPlaylistIndex
     {
@@ -43,7 +38,6 @@ public class PlaylistViewModel : ViewModelBase
     public PlaylistViewModel()
     {
         _mainWindow = new MainWindow();
-        _mainWindowViewModel = (MainWindowViewModel)Locator.Current.GetService(typeof(MainWindowViewModel))!;
         _playbackViewModel = (PlaybackViewModel)Locator.Current.GetService(typeof(PlaybackViewModel))!;
         _preferenceViewModel = (PreferenceViewModel)Locator.Current.GetService(typeof(PreferenceViewModel))!;
         NewBtnPressed = ReactiveCommand.Create(NewPlaylist);
@@ -52,6 +46,7 @@ public class PlaylistViewModel : ViewModelBase
         SwapUpBtnPressed = ReactiveCommand.Create(() => MovePlaylistItem(true));
         SwapDownBtnPressed = ReactiveCommand.Create(() => MovePlaylistItem(false));
         RemoveBtnPressed = ReactiveCommand.Create(RemoveTrack);
+        PlaylistTracks = new();
     }
     public void DblTappedPlaylist()
     {
@@ -69,7 +64,7 @@ public class PlaylistViewModel : ViewModelBase
         _playbackViewModel.PlaylistMedia.Clear();
         UpdatePlaylistTotals();
     }
-    private void ImportPlaylist(IPlaylist playlist)
+    internal void ImportPlaylist(IPlaylist playlist)
     {
         if (_playbackViewModel.PlaylistMedia.Count > 0)
         {
@@ -86,8 +81,10 @@ public class PlaylistViewModel : ViewModelBase
     }
     private async Task SavePlaylist()
     {
+        NavigatorViewModel navigatorViewModel = (NavigatorViewModel)Locator.Current.GetService(typeof(NavigatorViewModel))!;
         SaveFileDialog dialog = new();
-        dialog.Filters.Add(new FileDialogFilter{Name = $"Playlists ({_preferenceViewModel.PlaylistExtension})", Extensions = _playlistExtensions});
+        dialog.Filters.Add(new FileDialogFilter{Name = $"Playlists ({_preferenceViewModel.PlaylistExtension})", 
+            Extensions = navigatorViewModel.PlaylistExtensions});
         dialog.Title = $"Save Playlist as {_preferenceViewModel.PlaylistExtension}";
         dialog.DefaultExtension = _preferenceViewModel.PlaylistExtension;
         string result = await dialog.ShowAsync(_mainWindow);
@@ -112,9 +109,10 @@ public class PlaylistViewModel : ViewModelBase
     }
     private async Task OpenFile()
     {
+        NavigatorViewModel navigatorViewModel = (NavigatorViewModel)Locator.Current.GetService(typeof(NavigatorViewModel))!;
         OpenFileDialog dialog = new();
         dialog.Filters.Add(new FileDialogFilter{Name = "Playlists", 
-            Extensions = _playlistExtensions});
+            Extensions = navigatorViewModel.PlaylistExtensions});
         dialog.AllowMultiple = false;
         dialog.Title = "Open File";
         string[] result = await dialog.ShowAsync(_mainWindow);
@@ -136,7 +134,7 @@ public class PlaylistViewModel : ViewModelBase
             }
         }
     }
-    private IPlaylist PlaylistHandler(FileInfo importPlaylist)
+    internal IPlaylist PlaylistHandler(FileInfo importPlaylist)
     {
         IPlaylist playlist = importPlaylist.Extension switch
         {
@@ -148,7 +146,7 @@ public class PlaylistViewModel : ViewModelBase
         playlist.LoadPlaylist(importPlaylist.FullName);
         return playlist;
     }
-    private void UpdatePlaylistTotals()
+    internal void UpdatePlaylistTotals()
     {
         int totalTracks = PlaylistTracks.Count;
         int totalTime = 0;

@@ -17,7 +17,7 @@ namespace PlaylistBuilder.GUI.ViewModels;
 public class PlaybackViewModel:ViewModelBase
 {
     private MainWindowViewModel _mainWindowViewModel;
-    private PlaylistViewModel _playlistViewModel;
+    // private PlaylistViewModel _playlistViewModel;
     private Image _trackImage = new();
     private readonly IconModel? _mediaIconModel;
     
@@ -62,7 +62,6 @@ public class PlaybackViewModel:ViewModelBase
         LibVlc = new(true);
         _mainWindowViewModel = new();
         _mediaIconModel = (IconModel)Locator.Current.GetService(typeof(IconModel))!;
-        _playlistViewModel = (PlaylistViewModel)Locator.Current.GetService(typeof(PlaylistViewModel))!;
         TrackImage.Source = _mediaIconModel.CDImage;
         PlayBtn = ReactiveCommand.Create(() => MediaPlayback(PlaybackControl.Play));
         PauseBtn = ReactiveCommand.Create(() => MediaPlayback(PlaybackControl.Pause));
@@ -72,6 +71,7 @@ public class PlaybackViewModel:ViewModelBase
     }
     internal void MediaPlayback(PlaybackControl control)
     {
+        PlaylistViewModel playlistViewModel = (PlaylistViewModel)Locator.Current.GetService(typeof(PlaylistViewModel))!;
         switch (control)
         {
             case PlaybackControl.Play:
@@ -80,18 +80,18 @@ public class PlaybackViewModel:ViewModelBase
                 {
                     media.Stop();
                 }
-                PlaylistMedia[_playlistViewModel.SelectedPlaylistIndex].Play();
+                PlaylistMedia[playlistViewModel.SelectedPlaylistIndex].Play();
                 NowPlaying(true);
                 break;
             }
             case PlaybackControl.Pause:
             {
-                PlaylistMedia[_playlistViewModel.SelectedPlaylistIndex].Pause();
+                PlaylistMedia[playlistViewModel.SelectedPlaylistIndex].Pause();
                 break;
             }
             case PlaybackControl.Stop:
             {
-                PlaylistMedia[_playlistViewModel.SelectedPlaylistIndex].Stop();
+                PlaylistMedia[playlistViewModel.SelectedPlaylistIndex].Stop();
                 NowPlaying(false);
                 break;
             }
@@ -99,9 +99,9 @@ public class PlaybackViewModel:ViewModelBase
             {
                 try
                 {
-                    PlaylistMedia[_playlistViewModel.SelectedPlaylistIndex].Stop();
-                    _playlistViewModel.SelectedPlaylistIndex += 1;
-                    PlaylistMedia[_playlistViewModel.SelectedPlaylistIndex].Play();
+                    PlaylistMedia[playlistViewModel.SelectedPlaylistIndex].Stop();
+                    playlistViewModel.SelectedPlaylistIndex += 1;
+                    PlaylistMedia[playlistViewModel.SelectedPlaylistIndex].Play();
                     NowPlaying(true);
                 }
                 catch (Exception e)
@@ -114,9 +114,9 @@ public class PlaybackViewModel:ViewModelBase
             {
                 try
                 {
-                    PlaylistMedia[_playlistViewModel.SelectedPlaylistIndex].Stop();
-                    _playlistViewModel.SelectedPlaylistIndex -= 1;
-                    PlaylistMedia[_playlistViewModel.SelectedPlaylistIndex].Play();
+                    PlaylistMedia[playlistViewModel.SelectedPlaylistIndex].Stop();
+                    playlistViewModel.SelectedPlaylistIndex -= 1;
+                    PlaylistMedia[playlistViewModel.SelectedPlaylistIndex].Play();
                     NowPlaying(true);
                 }
                 catch (Exception e)
@@ -129,9 +129,10 @@ public class PlaybackViewModel:ViewModelBase
     }
     internal void NowPlaying(bool show)
     {
+        PlaylistViewModel playlistViewModel = (PlaylistViewModel)Locator.Current.GetService(typeof(PlaylistViewModel))!;
         if (show)
         {
-            Track track = _playlistViewModel.PlaylistTracks[_playlistViewModel.SelectedPlaylistIndex].Track;
+            Track track = playlistViewModel.PlaylistTracks[playlistViewModel.SelectedPlaylistIndex].Track;
             if (track.EmbeddedPictures.Count > 0)
             {
                 IList<PictureInfo> embeddedPictures = track.EmbeddedPictures;

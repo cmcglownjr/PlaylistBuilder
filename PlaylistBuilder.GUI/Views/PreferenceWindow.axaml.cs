@@ -10,7 +10,7 @@ public partial class PreferenceWindow : Window
 {
     public PreferenceWindow()
     {
-        DataContext = Locator.Current.GetService(typeof(PreferenceWindow));
+        DataContext = Locator.Current.GetService(typeof(PreferenceViewModel));
         InitializeComponent();
 #if DEBUG
         this.AttachDevTools();

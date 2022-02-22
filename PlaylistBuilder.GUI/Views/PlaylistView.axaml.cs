@@ -13,7 +13,7 @@ public partial class PlaylistView : UserControl
     public PlaylistView()
     {
         DataContext = Locator.Current.GetService(typeof(PlaylistViewModel));
-        _playlistViewModel = (PlaylistViewModel)Locator.Current.GetService(typeof(PlaylistViewModel));
+        _playlistViewModel = (PlaylistViewModel)Locator.Current.GetService(typeof(PlaylistViewModel))!;
         InitializeComponent();
     }
 
