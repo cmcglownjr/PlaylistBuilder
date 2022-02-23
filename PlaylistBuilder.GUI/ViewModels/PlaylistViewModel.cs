@@ -19,8 +19,6 @@ namespace PlaylistBuilder.GUI.ViewModels;
 public class PlaylistViewModel : ViewModelBase
 {
     private readonly MainWindow _mainWindow;
-    private PlaybackViewModel _playbackViewModel;
-    private PreferenceViewModel _preferenceViewModel;
     private int _selectedPlaylistIndex;
     public ObservableCollection<PlaylistTrack> PlaylistTracks { get; set; }
     public int SelectedPlaylistIndex
@@ -38,8 +36,6 @@ public class PlaylistViewModel : ViewModelBase
     public PlaylistViewModel()
     {
         _mainWindow = new MainWindow();
-        _playbackViewModel = (PlaybackViewModel)Locator.Current.GetService(typeof(PlaybackViewModel))!;
-        _preferenceViewModel = (PreferenceViewModel)Locator.Current.GetService(typeof(PreferenceViewModel))!;
         NewBtnPressed = ReactiveCommand.Create(NewPlaylist);
         OpenBtnPressed = ReactiveCommand.CreateFromTask(OpenFile);
         SaveBtnPressed = ReactiveCommand.CreateFromTask(SavePlaylist);
@@ -50,43 +46,46 @@ public class PlaylistViewModel : ViewModelBase
     }
     public void DblTappedPlaylist()
     {
-        TrackInfoWindow trackInfo = new TrackInfoWindow();
+        TrackInfoWindow trackInfo = new TrackInfoWindow(PlaylistTracks[SelectedPlaylistIndex]);
         trackInfo.Show();
     }
     private void NewPlaylist()
     {
-        if (_playbackViewModel.PlaylistMedia.Count > 0)
+        PlaybackViewModel playbackViewModel = (PlaybackViewModel)Locator.Current.GetService(typeof(PlaybackViewModel))!;
+        if (playbackViewModel.PlaylistMedia.Count > 0)
         {
-            _playbackViewModel.MediaPlayback(PlaybackControl.Stop);
+            playbackViewModel.MediaPlayback(PlaybackControl.Stop);
         }
-        _playbackViewModel.NowPlaying(false);
+        playbackViewModel.NowPlaying(false);
         PlaylistTracks.Clear();
-        _playbackViewModel.PlaylistMedia.Clear();
+        playbackViewModel.PlaylistMedia.Clear();
         UpdatePlaylistTotals();
     }
     internal void ImportPlaylist(IPlaylist playlist)
     {
-        if (_playbackViewModel.PlaylistMedia.Count > 0)
+        PlaybackViewModel playbackViewModel = (PlaybackViewModel)Locator.Current.GetService(typeof(PlaybackViewModel))!;
+        if (playbackViewModel.PlaylistMedia.Count > 0)
         {
-            _playbackViewModel.MediaPlayback(PlaybackControl.Stop);
+            playbackViewModel.MediaPlayback(PlaybackControl.Stop);
         }
         PlaylistTracks.Clear();
-        _playbackViewModel.NowPlaying(false);
+        playbackViewModel.NowPlaying(false);
         foreach (Track track in playlist.ReadList)
         {
             PlaylistTracks.Add(new PlaylistTrack(track));
-            _playbackViewModel.PlaylistMedia.Add(new(new Media(_playbackViewModel.LibVlc, new Uri(track.Path))));
+            playbackViewModel.PlaylistMedia.Add(new(new Media(playbackViewModel.LibVlc, new Uri(track.Path))));
         }
         UpdatePlaylistTotals();
     }
     private async Task SavePlaylist()
     {
+        PreferenceViewModel preferenceViewModel = (PreferenceViewModel)Locator.Current.GetService(typeof(PreferenceViewModel))!;
         NavigatorViewModel navigatorViewModel = (NavigatorViewModel)Locator.Current.GetService(typeof(NavigatorViewModel))!;
         SaveFileDialog dialog = new();
-        dialog.Filters.Add(new FileDialogFilter{Name = $"Playlists ({_preferenceViewModel.PlaylistExtension})", 
+        dialog.Filters.Add(new FileDialogFilter{Name = $"Playlists ({preferenceViewModel.PlaylistExtension})", 
             Extensions = navigatorViewModel.PlaylistExtensions});
-        dialog.Title = $"Save Playlist as {_preferenceViewModel.PlaylistExtension}";
-        dialog.DefaultExtension = _preferenceViewModel.PlaylistExtension;
+        dialog.Title = $"Save Playlist as {preferenceViewModel.PlaylistExtension}";
+        dialog.DefaultExtension = preferenceViewModel.PlaylistExtension;
         string result = await dialog.ShowAsync(_mainWindow);
         if (result != null)
         {
@@ -97,13 +96,13 @@ public class PlaylistViewModel : ViewModelBase
                 {
                     playlist.AddTrack(playlistTrack.Track);
                 }
-                playlist.Relative = !_preferenceViewModel.PlaylistAbsolute;
+                playlist.Relative = !preferenceViewModel.PlaylistAbsolute;
                 playlist.SavePlaylist(result);
                 Log.Information("Playlist saved to {Arg0}", result);
             }
             catch (ArgumentOutOfRangeException e)
             {
-                Log.Information("Imported playlist is not supported");
+                Log.Information(e,"Imported playlist is not supported");
             }
         }
     }
@@ -129,7 +128,7 @@ public class PlaylistViewModel : ViewModelBase
                 }
                 catch (ArgumentOutOfRangeException e)
                 {
-                    Log.Information("Imported playlist is not supported");
+                    Log.Information(e,"Imported playlist is not supported");
                 }
             }
         }
@@ -148,48 +147,58 @@ public class PlaylistViewModel : ViewModelBase
     }
     internal void UpdatePlaylistTotals()
     {
+        PlaybackViewModel playbackViewModel = (PlaybackViewModel)Locator.Current.GetService(typeof(PlaybackViewModel))!;
         int totalTracks = PlaylistTracks.Count;
         int totalTime = 0;
         foreach (PlaylistTrack track in PlaylistTracks)
         {
             totalTime += track.Track.Duration;
         }
-        _playbackViewModel.PlaylistDetails = $"{totalTracks} tracks - [{TimeSpan.FromSeconds(totalTime)}]";
+        playbackViewModel.PlaylistDetails = $"{totalTracks} tracks - [{TimeSpan.FromSeconds(totalTime)}]";
     }
 
     private void MovePlaylistItem(bool moveUp)
     {
+        PlaybackViewModel playbackViewModel = (PlaybackViewModel)Locator.Current.GetService(typeof(PlaybackViewModel))!;
         int index = SelectedPlaylistIndex;
         try
         {
             if (moveUp)
             {
                 MoveItem.MoveListItem(PlaylistTracks, index, index - 1);
-                MoveItem.MoveListItem(_playbackViewModel.PlaylistMedia, index, index - 1);
+                MoveItem.MoveListItem(playbackViewModel.PlaylistMedia, index, index - 1);
                 SelectedPlaylistIndex = index - 1;
             }
             else
             {
                 MoveItem.MoveListItem(PlaylistTracks, index, index + 1);
-                MoveItem.MoveListItem(_playbackViewModel.PlaylistMedia, index, index + 1);
+                MoveItem.MoveListItem(playbackViewModel.PlaylistMedia, index, index + 1);
                 SelectedPlaylistIndex = index + 1;
             }
         }
         catch (IndexOutOfRangeException e)
         {
-            Log.Warning("You are moving items outside of the list!");
-            // Log.Error("{@Arg0}", e);
+            Log.Warning(e,"You are moving items outside of the list!");
         }
             
     }
 
     private void RemoveTrack()
     {
+        PlaybackViewModel playbackViewModel = (PlaybackViewModel)Locator.Current.GetService(typeof(PlaybackViewModel))!;
         int trackIndex = SelectedPlaylistIndex;
         PlaylistTrack track = PlaylistTracks[SelectedPlaylistIndex];
         PlaylistTracks.RemoveAt(trackIndex);
-        _playbackViewModel.PlaylistMedia.RemoveAt(trackIndex);
+        playbackViewModel.PlaylistMedia.RemoveAt(trackIndex);
         UpdatePlaylistTotals();
         Log.Information("Removing '{Arg0}' from playlist", track.Title);
+    }
+
+    internal void UpdateEditTrack(int index)
+    {
+        PlaybackViewModel playbackViewModel = (PlaybackViewModel)Locator.Current.GetService(typeof(PlaybackViewModel))!;
+        MoveItem.MoveListItem(PlaylistTracks, index, index);
+        MoveItem.MoveListItem(playbackViewModel.PlaylistMedia, index, index);
+        UpdatePlaylistTotals();
     }
 }

@@ -10,17 +10,15 @@ using LibVLCSharp.Shared;
 using PlaylistBuilder.GUI.Models;
 using ReactiveUI;
 using Serilog;
+using Serilog.Exceptions;
 using Splat;
 
 namespace PlaylistBuilder.GUI.ViewModels;
 
 public class PlaybackViewModel:ViewModelBase
 {
-    private MainWindowViewModel _mainWindowViewModel;
-    // private PlaylistViewModel _playlistViewModel;
     private Image _trackImage = new();
     private readonly IconModel? _mediaIconModel;
-    
     private string _trackAlbum = "No Media";
     private string _trackArtist = "No Media";
     private string _trackTitle = "No Media";
@@ -60,7 +58,6 @@ public class PlaybackViewModel:ViewModelBase
     {
         Core.Initialize();
         LibVlc = new(true);
-        _mainWindowViewModel = new();
         _mediaIconModel = (IconModel)Locator.Current.GetService(typeof(IconModel))!;
         TrackImage.Source = _mediaIconModel.CDImage;
         PlayBtn = ReactiveCommand.Create(() => MediaPlayback(PlaybackControl.Play));
@@ -91,7 +88,10 @@ public class PlaybackViewModel:ViewModelBase
             }
             case PlaybackControl.Stop:
             {
-                PlaylistMedia[playlistViewModel.SelectedPlaylistIndex].Stop();
+                foreach (MediaPlayer media in PlaylistMedia)
+                {
+                    media.Stop();
+                }
                 NowPlaying(false);
                 break;
             }
@@ -106,7 +106,7 @@ public class PlaybackViewModel:ViewModelBase
                 }
                 catch (Exception e)
                 {
-                    Log.Warning("End of playlist");
+                    Log.Warning(e, "End of playlist");
                 }
                 break;
             }
@@ -121,7 +121,7 @@ public class PlaybackViewModel:ViewModelBase
                 }
                 catch (Exception e)
                 {
-                    Log.Warning("Beginning of playlist");
+                    Log.Warning(e, "Beginning of playlist");
                 }
                 break;
             }
@@ -147,7 +147,7 @@ public class PlaybackViewModel:ViewModelBase
             }
             else
             {
-                TrackImage.Source = _mediaIconModel.CDImage;
+                TrackImage.Source = _mediaIconModel?.CDImage;
             }
             TrackAlbum = track.Album;
             TrackArtist = track.Artist;
@@ -156,7 +156,7 @@ public class PlaybackViewModel:ViewModelBase
         }
         else
         {
-            TrackImage.Source = _mediaIconModel.CDImage;
+            TrackImage.Source = _mediaIconModel?.CDImage;
             TrackAlbum = "No Media";
             TrackArtist = "No Media";
             TrackTitle = "No Media";

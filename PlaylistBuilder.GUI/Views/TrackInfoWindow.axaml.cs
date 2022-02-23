@@ -1,6 +1,7 @@
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Markup.Xaml;
+using PlaylistBuilder.GUI.Models;
 using PlaylistBuilder.GUI.ViewModels;
 using Splat;
 
@@ -10,7 +11,14 @@ public partial class TrackInfoWindow : Window
 {
     public TrackInfoWindow()
     {
-        DataContext = Locator.Current.GetService(typeof(TrackInfoViewModel));
+        InitializeComponent();
+#if DEBUG
+        this.AttachDevTools();
+#endif
+    }
+    public TrackInfoWindow(PlaylistTrack track)
+    {
+        DataContext = new TrackInfoViewModel(track);
         InitializeComponent();
 #if DEBUG
         this.AttachDevTools();

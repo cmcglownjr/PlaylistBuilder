@@ -4,6 +4,7 @@ using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.ReactiveUI;
 using Serilog;
+using Serilog.Exceptions;
 
 namespace PlaylistBuilder.GUI
 {
@@ -27,6 +28,7 @@ namespace PlaylistBuilder.GUI
             }
             var workingDirectory = @"/home/eezyville/Programming/Rider/PlaylistBuilder/PlaylistBuilder.GUI/";
             Log.Logger = new LoggerConfiguration()
+                .Enrich.WithExceptionDetails()
                 .MinimumLevel.Debug()
                 .WriteTo.Console()
                 .WriteTo.File(Path.Combine(workingDirectory, "PlaylistBuilder.log"), rollingInterval: RollingInterval.Day,

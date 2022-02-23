@@ -4,7 +4,9 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+        Width="520" Height="500"
         x:Class="PlaylistBuilder.GUI.Views.TrackInfoWindow"
+        x:Name="TrackInfoWindow"
         Title="TrackInfoWindow">
         <Window.Styles>
                 <StyleInclude Source="/Assets/DefaultStyle.axaml"/>
@@ -13,28 +15,71 @@
                 <vm:TrackInfoViewModel/>
         </Design.DataContext>
         <StackPanel Orientation="Vertical">
-                <TabControl>
+                <TabControl Width="500" Height="400">
                         <TabItem Header="Summary">
                                 <StackPanel Orientation="Vertical">
-                                        <StackPanel Orientation="Horizontal">
-                                                <ContentControl Width="100" Height="100" Content="{Binding TrackImage}"/>
-                                                <StackPanel Orientation="Vertical">
-                                                        <TextBlock Text="{Binding TrackArtist}"/>
-                                                        <TextBlock Text="{Binding TrackTitle}"/>
-                                                        <TextBlock Text="{Binding TrackAlbum}"/>
+                                        <Border Margin="10">
+                                                <StackPanel Orientation="Horizontal">
+                                                        <ContentControl Width="100" Height="100" Content="{Binding TrackImage}"/>
+                                                        <StackPanel Orientation="Vertical">
+                                                                <TextBlock Text="{Binding TrackArtist}" Margin="5"/>
+                                                                <TextBlock Text="{Binding TrackTitle}" Margin="5"/>
+                                                                <TextBlock Text="{Binding TrackAlbum}" Margin="5"/>
+                                                        </StackPanel>
                                                 </StackPanel>
-                                        </StackPanel>
+                                        </Border>
+                                        <Grid ColumnDefinitions="100, 1.5*" 
+                                              RowDefinitions="Auto, Auto, Auto, Auto, Auto, Auto" Margin="10">
+                                                <TextBlock Grid.Column="0" Grid.Row="0" Text="Length:"/>
+                                                <TextBlock Grid.Column="0" Grid.Row="1" Text="Bit Rate:"/>
+                                                <TextBlock Grid.Column="0" Grid.Row="2" Text="Sample Rate:"/>
+                                                <TextBlock Grid.Column="0" Grid.Row="3" Text="File Size:"/>
+                                                <TextBlock Grid.Column="0" Grid.Row="4" Text="File Type:"/>
+                                                <TextBlock Grid.Column="0" Grid.Row="5" Text="File Name:"/>
+                                                
+                                                <TextBlock Grid.Column="1" Grid.Row="0" Text="{Binding Length}"/>
+                                                <TextBlock Grid.Column="1" Grid.Row="1" Text="{Binding BitRate}"/>
+                                                <TextBlock Grid.Column="1" Grid.Row="2" Text="{Binding SampleRate}"/>
+                                                <TextBlock Grid.Column="1" Grid.Row="3" Text="{Binding FileSize}"/>
+                                                <TextBlock Grid.Column="1" Grid.Row="4" Text="{Binding FileType}"/>
+                                                <TextBlock Grid.Column="1" Grid.Row="5" Text="{Binding FileName}"/>
+                                        </Grid>
                                 </StackPanel>
                         </TabItem>
                         <TabItem Header="Edit">
-                                <TextBlock>Sample Edit</TextBlock>
+                                <Grid ColumnDefinitions="100, 1.5*, 100, 1.5*" RowDefinitions="Auto, Auto, Auto, Auto" Margin="5">
+                                        <TextBlock Grid.Column="0" Grid.Row="0" Text="Title:"/>
+                                        <TextBlock Grid.Column="0" Grid.Row="1" Text="Artist:"/>
+                                        <TextBlock Grid.Column="0" Grid.Row="2" Text="Album:"/>
+                                        <TextBlock Grid.Column="0" Grid.Row="3" Text="Album Artist:"/>
+                                        <TextBlock Grid.Column="2" Grid.Row="0" Text="Track #:"/>
+                                        <TextBlock Grid.Column="2" Grid.Row="1" Text="Disc #:"/>
+                                        <TextBlock Grid.Column="2" Grid.Row="2" Text="Year:"/>
+                                        
+                                        <TextBox Grid.Column="1" Grid.Row="0" Text="{Binding SetTitle}"/>
+                                        <TextBox Grid.Column="1" Grid.Row="1" Text="{Binding SetArtist}"/>
+                                        <TextBox Grid.Column="1" Grid.Row="2" Text="{Binding SetAlbum}"/>
+                                        <TextBox Grid.Column="1" Grid.Row="3" Text="{Binding SetAlbumArtist}"/>
+                                        <TextBox Grid.Column="3" Grid.Row="0" Text="{Binding SetTrack}"/>
+                                        <TextBox Grid.Column="3" Grid.Row="1" Text="{Binding SetDisc}"/>
+                                        <TextBox Grid.Column="3" Grid.Row="2" Text="{Binding SetYear}"/>
+                                </Grid>
                         </TabItem>
                 </TabControl>
-                <StackPanel Orientation="Horizontal">
-                        <Button>Previous</Button>
-                        <Button>Next</Button>
-                        <Button>Save</Button>
-                        <Button>Discard</Button>
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                        <Button Command="{Binding PreviousBtnPressed}">
+                                <Image Width="25" Height="25" Source="../Assets/previous.png"/>
+                        </Button>
+                        <Button Command="{Binding NextBtnPressed}">
+                                <Image Width="25" Height="25" Source="../Assets/next.png"/>
+                        </Button>
+                        <Button Command="{Binding SaveBtnPressed}">
+                                <Image Width="25" Height="25" Source="../Assets/save.png"/>
+                        </Button>
+                        <Button IsCancel="True" Command="{Binding DiscardBtnPressed}"
+                                CommandParameter="{Binding ElementName=TrackInfoWindow}">
+                                <Image Width="25" Height="25" Source="../Assets/cancel.png"/>
+                        </Button>
                 </StackPanel>
         </StackPanel>
 </Window>

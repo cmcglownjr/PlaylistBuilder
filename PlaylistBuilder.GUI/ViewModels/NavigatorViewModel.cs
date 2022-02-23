@@ -18,8 +18,6 @@ namespace PlaylistBuilder.GUI.ViewModels;
 
 public class NavigatorViewModel : ViewModelBase
 {
-    private PlaylistViewModel _playlistViewModel;
-    private PlaybackViewModel _playbackViewModel;
     private readonly string _musicDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyMusic);
     private string _currentDirectory = "";
     private readonly string _rootDirectory =
@@ -55,8 +53,6 @@ public class NavigatorViewModel : ViewModelBase
     public NavigatorViewModel()
     {
         _mediaIconModel = (IconModel)Locator.Current.GetService(typeof(IconModel))!;
-        _playlistViewModel = (PlaylistViewModel)Locator.Current.GetService(typeof(PlaylistViewModel))!;
-        _playbackViewModel = (PlaybackViewModel)Locator.Current.GetService(typeof(PlaybackViewModel))!;
         FindExtensions();
         ItemList = new List<MediaItemModel>(PopulateTree(_musicDirectory));
         HomeBtnPressed = ReactiveCommand.Create(HomeDirectory);
@@ -175,6 +171,8 @@ public class NavigatorViewModel : ViewModelBase
     }
     public void DblTappedItem()
     {
+        PlaylistViewModel playlistViewModel = (PlaylistViewModel)Locator.Current.GetService(typeof(PlaylistViewModel))!;
+        PlaybackViewModel playbackViewModel = (PlaybackViewModel)Locator.Current.GetService(typeof(PlaybackViewModel))!;
         MediaItemModel selectedItem = _itemList[_selectedDirectoryIndex];
         switch (selectedItem.FileType)
         {
@@ -188,12 +186,12 @@ public class NavigatorViewModel : ViewModelBase
             }
             case MediaItemType.Media:
             {
-                _playlistViewModel.PlaylistTracks.Add(new PlaylistTrack(new Track(selectedItem.FullPath)));
-                _playbackViewModel.PlaylistMedia.Add(new(new Media(_playbackViewModel.LibVlc, 
+                playlistViewModel.PlaylistTracks.Add(new PlaylistTrack(new Track(selectedItem.FullPath)));
+                playbackViewModel.PlaylistMedia.Add(new(new Media(playbackViewModel.LibVlc, 
                     new Uri(selectedItem.FullPath))));
-                _playlistViewModel.UpdatePlaylistTotals();
+                playlistViewModel.UpdatePlaylistTotals();
                 Log.Information("Adding {Arg0} tracks to the playlist", 
-                    _playlistViewModel.PlaylistTracks.Count);
+                    playlistViewModel.PlaylistTracks.Count);
                 break;
             }
             case MediaItemType.Playlist:
@@ -201,8 +199,8 @@ public class NavigatorViewModel : ViewModelBase
                 FileInfo file = new FileInfo(selectedItem.FullPath);
                 try
                 {
-                    IPlaylist playlist = _playlistViewModel.PlaylistHandler(file);
-                    _playlistViewModel.ImportPlaylist(playlist);
+                    IPlaylist playlist = playlistViewModel.PlaylistHandler(file);
+                    playlistViewModel.ImportPlaylist(playlist);
                     Log.Information("Adding an media item to the current playlist");
                 }
                 catch (ArgumentOutOfRangeException e)
