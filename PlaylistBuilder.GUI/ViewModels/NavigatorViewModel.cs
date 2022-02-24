@@ -201,11 +201,11 @@ public class NavigatorViewModel : ViewModelBase
                 {
                     IPlaylist playlist = playlistViewModel.PlaylistHandler(file);
                     playlistViewModel.ImportPlaylist(playlist);
-                    Log.Information("Adding an media item to the current playlist");
+                    Log.Information("Adding a media item to the current playlist");
                 }
                 catch (ArgumentOutOfRangeException e)
                 {
-                    Log.Information("Imported playlist is not supported");
+                    Log.Warning(e,"Imported playlist is not supported");
                 }
                 break;
             }

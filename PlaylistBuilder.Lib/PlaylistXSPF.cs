@@ -32,7 +32,7 @@ public class PlaylistXSPF : PlaylistBase
         }
         
         writer.WriteStartElement("trackList");
-        foreach (Track track in _playlist)
+        foreach (Track track in Playlist)
         {
             writer.WriteStartElement("track");
             writer.WriteStartElement("title");

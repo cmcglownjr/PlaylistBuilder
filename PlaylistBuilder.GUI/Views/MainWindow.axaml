@@ -6,6 +6,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
         x:Class="PlaylistBuilder.GUI.Views.MainWindow"
+        x:Name="MainWindow"
         Icon="/Assets/playlistbuilder-logo.ico"
         Title="Playlist Builder">
     <Window.Styles>
@@ -17,10 +18,11 @@
     <StackPanel Orientation="Vertical" Width="800" HorizontalAlignment="Left">
         <Menu>
             <MenuItem Header="_File">
-                <MenuItem Header="_Open Playlist..."/>
-                <MenuItem Header="_Save Playlist"/>
+                <MenuItem Header="_Open Playlist..." Command="{Binding OpenBtnPressed}"/>
+                <MenuItem Header="_Save Playlist" Command="{Binding SaveBtnPressed}"/>
                 <Separator/>
-                <MenuItem Header="_Quit"/>
+                <MenuItem Header="_Quit" Command="{Binding QuitBtnPressed}"
+                          CommandParameter="{Binding ElementName=MainWindow}"/>
             </MenuItem>
             <MenuItem Header="_Settings">
                 <MenuItem Header="Preferences" Command="{Binding PreferenceBtnPressed}"/>
@@ -32,9 +34,9 @@
                 <MenuItem Header="Repeat Mode"/>
                 <Separator/>
                 <!-- <MenuItem Header="Clear Playlist"/> -->
-                <MenuItem Header="Shuffle Playlist"/>
-                <MenuItem Header="Remove Duplicates"/>
-                <MenuItem Header="Remove Unavailable"/>
+                <MenuItem Header="Shuffle Playlist" Command="{Binding ShuffleBtnPressed}"/>
+                <MenuItem Header="Remove Duplicates" Command="{Binding RemoveDuplicateBtnPressed}"/>
+                <MenuItem Header="Remove Unavailable" Command="{Binding RemoveUnavailableBtnPressed}"/>
             </MenuItem>
             <MenuItem Header="About">
                 <MenuItem Header="About PlaylistBuilder"/>

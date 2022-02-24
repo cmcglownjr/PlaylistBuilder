@@ -14,7 +14,7 @@ public class PlaylistM3U : PlaylistBase
 
         using StreamWriter sw = File.CreateText(_savedPlaylist.FullName);
         sw.WriteLine(_header);
-        foreach (Track item in _playlist)
+        foreach (Track item in Playlist)
         {
             sw.WriteLine($"#EXTINF:{item.Duration},{item.Artist} - {item.Title}");
             if (_relative)

@@ -10,7 +10,6 @@ using LibVLCSharp.Shared;
 using PlaylistBuilder.GUI.Models;
 using ReactiveUI;
 using Serilog;
-using Serilog.Exceptions;
 using Splat;
 
 namespace PlaylistBuilder.GUI.ViewModels;

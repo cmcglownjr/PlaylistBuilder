@@ -1,13 +1,11 @@
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Reactive;
-using System.Threading.Tasks;
 using ATL;
-using Avalonia.Controls;
 using LibVLCSharp.Shared;
 using PlaylistBuilder.GUI.Models;
+using static PlaylistBuilder.GUI.Models.DialogModels;
 using PlaylistBuilder.GUI.Views;
 using PlaylistBuilder.Lib;
 using ReactiveUI;
@@ -18,7 +16,6 @@ namespace PlaylistBuilder.GUI.ViewModels;
 
 public class PlaylistViewModel : ViewModelBase
 {
-    private readonly MainWindow _mainWindow;
     private int _selectedPlaylistIndex;
     public ObservableCollection<PlaylistTrack> PlaylistTracks { get; set; }
     public int SelectedPlaylistIndex
@@ -35,10 +32,9 @@ public class PlaylistViewModel : ViewModelBase
 
     public PlaylistViewModel()
     {
-        _mainWindow = new MainWindow();
         NewBtnPressed = ReactiveCommand.Create(NewPlaylist);
         OpenBtnPressed = ReactiveCommand.CreateFromTask(OpenFile);
-        SaveBtnPressed = ReactiveCommand.CreateFromTask(SavePlaylist);
+        SaveBtnPressed = ReactiveCommand.CreateFromTask(SaveFile);
         SwapUpBtnPressed = ReactiveCommand.Create(() => MovePlaylistItem(true));
         SwapDownBtnPressed = ReactiveCommand.Create(() => MovePlaylistItem(false));
         RemoveBtnPressed = ReactiveCommand.Create(RemoveTrack);
@@ -76,62 +72,6 @@ public class PlaylistViewModel : ViewModelBase
             playbackViewModel.PlaylistMedia.Add(new(new Media(playbackViewModel.LibVlc, new Uri(track.Path))));
         }
         UpdatePlaylistTotals();
-    }
-    private async Task SavePlaylist()
-    {
-        PreferenceViewModel preferenceViewModel = (PreferenceViewModel)Locator.Current.GetService(typeof(PreferenceViewModel))!;
-        NavigatorViewModel navigatorViewModel = (NavigatorViewModel)Locator.Current.GetService(typeof(NavigatorViewModel))!;
-        SaveFileDialog dialog = new();
-        dialog.Filters.Add(new FileDialogFilter{Name = $"Playlists ({preferenceViewModel.PlaylistExtension})", 
-            Extensions = navigatorViewModel.PlaylistExtensions});
-        dialog.Title = $"Save Playlist as {preferenceViewModel.PlaylistExtension}";
-        dialog.DefaultExtension = preferenceViewModel.PlaylistExtension;
-        string result = await dialog.ShowAsync(_mainWindow);
-        if (result != null)
-        {
-            try
-            {
-                IPlaylist playlist = PlaylistHandler(new FileInfo(result));
-                foreach (PlaylistTrack playlistTrack in PlaylistTracks)
-                {
-                    playlist.AddTrack(playlistTrack.Track);
-                }
-                playlist.Relative = !preferenceViewModel.PlaylistAbsolute;
-                playlist.SavePlaylist(result);
-                Log.Information("Playlist saved to {Arg0}", result);
-            }
-            catch (ArgumentOutOfRangeException e)
-            {
-                Log.Information(e,"Imported playlist is not supported");
-            }
-        }
-    }
-    private async Task OpenFile()
-    {
-        NavigatorViewModel navigatorViewModel = (NavigatorViewModel)Locator.Current.GetService(typeof(NavigatorViewModel))!;
-        OpenFileDialog dialog = new();
-        dialog.Filters.Add(new FileDialogFilter{Name = "Playlists", 
-            Extensions = navigatorViewModel.PlaylistExtensions});
-        dialog.AllowMultiple = false;
-        dialog.Title = "Open File";
-        string[] result = await dialog.ShowAsync(_mainWindow);
-        if (result != null)
-        {
-            foreach (string filepath in result)
-            {
-                FileInfo file = new(filepath);
-                try
-                {
-                    IPlaylist playlist = PlaylistHandler(file);
-                    ImportPlaylist(playlist);
-                    Log.Information("Playlist imported from {Arg0}", result);
-                }
-                catch (ArgumentOutOfRangeException e)
-                {
-                    Log.Information(e,"Imported playlist is not supported");
-                }
-            }
-        }
     }
     internal IPlaylist PlaylistHandler(FileInfo importPlaylist)
     {
@@ -180,7 +120,6 @@ public class PlaylistViewModel : ViewModelBase
         {
             Log.Warning(e,"You are moving items outside of the list!");
         }
-            
     }
 
     private void RemoveTrack()
@@ -192,13 +131,5 @@ public class PlaylistViewModel : ViewModelBase
         playbackViewModel.PlaylistMedia.RemoveAt(trackIndex);
         UpdatePlaylistTotals();
         Log.Information("Removing '{Arg0}' from playlist", track.Title);
-    }
-
-    internal void UpdateEditTrack(int index)
-    {
-        PlaybackViewModel playbackViewModel = (PlaybackViewModel)Locator.Current.GetService(typeof(PlaybackViewModel))!;
-        MoveItem.MoveListItem(PlaylistTracks, index, index);
-        MoveItem.MoveListItem(playbackViewModel.PlaylistMedia, index, index);
-        UpdatePlaylistTotals();
     }
 }
