@@ -5,6 +5,8 @@
         <Nullable>enable</Nullable>
         <TargetFramework>net6.0</TargetFramework>
         <LangVersion>10</LangVersion>
+        <Configurations>Debug;Release;Alpha</Configurations>
+        <Platforms>AnyCPU</Platforms>
     </PropertyGroup>
 
     <ItemGroup>

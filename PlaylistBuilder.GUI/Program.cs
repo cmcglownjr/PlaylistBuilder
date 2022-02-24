@@ -26,12 +26,11 @@ namespace PlaylistBuilder.GUI
             {
                 Directory.CreateDirectory(logDirectory);
             }
-            var workingDirectory = @"/home/eezyville/Programming/Rider/PlaylistBuilder/PlaylistBuilder.GUI/";
             Log.Logger = new LoggerConfiguration()
                 .Enrich.WithExceptionDetails()
                 .MinimumLevel.Debug()
                 .WriteTo.Console()
-                .WriteTo.File(Path.Combine(workingDirectory, "PlaylistBuilder.log"), rollingInterval: RollingInterval.Day,
+                .WriteTo.File(Path.Combine(logDirectory, "PlaylistBuilder.log"), rollingInterval: RollingInterval.Day,
                     outputTemplate:"{Timestamp:yyyy-MM-dd HH:mm:ss} [{Level:u3}] {Message:lj}{NewLine}{Exception}")
                 .CreateLogger();
             return AppBuilder.Configure<App>()

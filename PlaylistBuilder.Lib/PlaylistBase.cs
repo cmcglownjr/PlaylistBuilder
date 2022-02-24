@@ -88,8 +88,9 @@ public abstract class PlaylistBase : IPlaylist
     private void ReadPlaylist(FileInfo playlistPath)
     {
         IPlaylistIO reader = PlaylistIOFactory.GetInstance().GetPlaylistIO(playlistPath.FullName);
-        foreach (Track track in reader.Tracks)
+        foreach (string filePath in reader.FilePaths)
         {
+            Track track = new Track(filePath.Replace("\\", "/"));
             _playlist.Add(track);
         }
     }

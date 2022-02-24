@@ -57,7 +57,7 @@ public class PlaybackViewModel:ViewModelBase
     public PlaybackViewModel()
     {
         Core.Initialize();
-        LibVlc = new(true);
+        LibVlc = new(false);
         _mediaIconModel = (IconModel)Locator.Current.GetService(typeof(IconModel))!;
         TrackImage.Source = _mediaIconModel.CDImage;
         PlayBtn = ReactiveCommand.Create(() => MediaPlayback(PlaybackControl.Play));
