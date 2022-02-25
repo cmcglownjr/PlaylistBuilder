@@ -18,6 +18,8 @@ namespace PlaylistBuilder.GUI.ViewModels
         public ReactiveCommand<Unit, Unit> ShuffleBtnPressed { get; }
         public ReactiveCommand<Unit, Unit> RemoveDuplicateBtnPressed { get; }
         public ReactiveCommand<Unit, Unit> RemoveUnavailableBtnPressed { get; }
+        public ReactiveCommand<Unit, Unit> AboutPlaylistBuilderBtnPressed { get; }
+        public ReactiveCommand<Unit, Unit> AboutAvaloniaBtnPressed { get; }
 
         public MainWindowViewModel()
         {
@@ -28,6 +30,8 @@ namespace PlaylistBuilder.GUI.ViewModels
             ShuffleBtnPressed = ReactiveCommand.Create(ShufflePlaylist);
             RemoveDuplicateBtnPressed = ReactiveCommand.Create(RemoveDuplicates);
             RemoveUnavailableBtnPressed = ReactiveCommand.Create(RemoveUnavailable);
+            AboutPlaylistBuilderBtnPressed = ReactiveCommand.Create(AboutPlaylistBuilder);
+            AboutAvaloniaBtnPressed = ReactiveCommand.Create(AboutAvalonia);
         }
 
         private void QuitProgram(Window window)
@@ -89,6 +93,18 @@ namespace PlaylistBuilder.GUI.ViewModels
             playlistViewModel.PlaylistTracks.Clear();
             playlist.RemoveUnavailable();
             playlistViewModel.ImportPlaylist(playlist);
+        }
+
+        private void AboutPlaylistBuilder()
+        {
+            var window = new AboutPlaylistBuilderView();
+            window.Show();
+        }
+
+        private void AboutAvalonia()
+        {
+            var window = new AboutAvaloniaView();
+            window.Show();
         }
     }
 }
