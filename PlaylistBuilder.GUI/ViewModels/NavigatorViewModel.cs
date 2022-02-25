@@ -22,6 +22,9 @@ public class NavigatorViewModel : ViewModelBase
     private string _currentDirectory = "";
     private readonly string _rootDirectory =
         Directory.GetDirectoryRoot(Environment.SpecialFolder.Personal.ToString());
+    private bool _undoBool;
+    private bool _redoBool;
+    private bool _parentBool;
     private int _selectedDirectoryIndex;
     private readonly List<string> _mediaExtensions = new();
     private readonly IconModel? _mediaIconModel;
@@ -38,6 +41,21 @@ public class NavigatorViewModel : ViewModelBase
     {
         get => _currentDirectory;
         set => this.RaiseAndSetIfChanged(ref _currentDirectory, value);
+    }
+    public bool UndoBool
+    {
+        get => _undoBool;
+        set => this.RaiseAndSetIfChanged(ref _undoBool, value);
+    }
+    public bool RedoBool
+    {
+        get => _redoBool;
+        set => this.RaiseAndSetIfChanged(ref _redoBool, value);
+    }
+    public bool ParentBool
+    {
+        get => _parentBool;
+        set => this.RaiseAndSetIfChanged(ref _parentBool, value);
     }
 
     public int SelectedDirectoryIndex
@@ -59,6 +77,7 @@ public class NavigatorViewModel : ViewModelBase
         ParentBtnPressed = ReactiveCommand.Create(ParentDirectory);
         UndoBtnPressed = ReactiveCommand.Create(UndoNavigation);
         RedoBtnPressed = ReactiveCommand.Create(RedoNavigation);
+        ParentBool = true;
     }
     private void FindExtensions()
     {
@@ -127,6 +146,7 @@ public class NavigatorViewModel : ViewModelBase
         string homeDirectory = Environment.GetFolderPath(Environment.SpecialFolder.Personal);
         _undoStack.Push(CurrentDirectory);
         _redoStack.Clear();
+        NavigationBool();
         ItemList = new List<MediaItemModel>(PopulateTree(homeDirectory));
     }
     private void ParentDirectory()
@@ -134,11 +154,14 @@ public class NavigatorViewModel : ViewModelBase
         if (CurrentDirectory != _rootDirectory)
         {
             _undoStack.Push(CurrentDirectory);
+            ParentBool = true;
             _redoStack.Clear();
             ItemList = new List<MediaItemModel>(PopulateTree(Directory.GetParent(CurrentDirectory).ToString()));
+            NavigationBool();
         }
         else
         {
+            NavigationBool();
             Log.Warning("You are at the root level!");
         }
     }
@@ -147,6 +170,7 @@ public class NavigatorViewModel : ViewModelBase
         if (!initialDirectory)
         {
             _undoStack.Push(_currentDirectory);
+            NavigationBool();
         }
     }
     private void UndoNavigation()
@@ -157,6 +181,7 @@ public class NavigatorViewModel : ViewModelBase
             CurrentDirectory = _undoStack.Peek();
             _undoStack.Pop();
             ItemList = new List<MediaItemModel>(PopulateTree(CurrentDirectory));
+            NavigationBool();
         }
     }
     private void RedoNavigation()
@@ -167,6 +192,7 @@ public class NavigatorViewModel : ViewModelBase
             CurrentDirectory = _redoStack.Peek();
             _redoStack.Pop();
             ItemList = new List<MediaItemModel>(PopulateTree(CurrentDirectory));
+            NavigationBool();
         }
     }
     public void DblTappedItem()
@@ -182,16 +208,17 @@ public class NavigatorViewModel : ViewModelBase
                 _redoStack.Clear();
                 CurrentDirectory = selectedItem.FullPath;
                 ItemList = new List<MediaItemModel>(PopulateTree(CurrentDirectory));
+                NavigationBool();
                 break;
             }
             case MediaItemType.Media:
             {
-                playlistViewModel.PlaylistTracks.Add(new PlaylistTrack(new Track(selectedItem.FullPath)));
+                var track = new Track(selectedItem.FullPath);
+                playlistViewModel.PlaylistTracks.Add(new PlaylistTrack(track));
                 playbackViewModel.PlaylistMedia.Add(new(new Media(playbackViewModel.LibVlc, 
                     new Uri(selectedItem.FullPath))));
                 playlistViewModel.UpdatePlaylistTotals();
-                Log.Information("Adding {Arg0} tracks to the playlist", 
-                    playlistViewModel.PlaylistTracks.Count);
+                Log.Information("Adding {Arg0} track to the playlist", track.Title);
                 break;
             }
             case MediaItemType.Playlist:
@@ -201,7 +228,7 @@ public class NavigatorViewModel : ViewModelBase
                 {
                     IPlaylist playlist = playlistViewModel.PlaylistHandler(file);
                     playlistViewModel.ImportPlaylist(playlist);
-                    Log.Information("Adding a media item to the current playlist");
+                    Log.Information("Adding a new playlist with {Arg0} items", playlist.ReadList.Count);
                 }
                 catch (ArgumentOutOfRangeException e)
                 {
@@ -210,5 +237,12 @@ public class NavigatorViewModel : ViewModelBase
                 break;
             }
         }
+    }
+
+    private void NavigationBool()
+    {
+        UndoBool = _undoStack.Count > 0;
+        RedoBool = _redoStack.Count > 0;
+        ParentBool = CurrentDirectory != _rootDirectory;
     }
 }

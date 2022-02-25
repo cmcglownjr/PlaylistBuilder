@@ -14,13 +14,16 @@
     </Design.DataContext>
     <StackPanel Orientation="Vertical" Margin="10" HorizontalAlignment="Left">
                 <StackPanel Orientation="Horizontal">
-                    <Button Classes="FileNavigation" Command="{Binding UndoBtnPressed}">
+                    <Button Classes="FileNavigation" Command="{Binding UndoBtnPressed}"
+                            IsEnabled="{Binding UndoBool}">
                         <Image Width="25" Height="25" Source="../Assets/undo.png"/>
                     </Button>
-                    <Button Classes="FileNavigation" Command="{Binding RedoBtnPressed}">
+                    <Button Classes="FileNavigation" Command="{Binding RedoBtnPressed}"
+                            IsEnabled="{Binding RedoBool}">
                         <Image Width="25" Height="25" Source="../Assets/redo.png"/>
                     </Button>
-                    <Button Classes="FileNavigation" Command="{Binding ParentBtnPressed}">
+                    <Button Classes="FileNavigation" Command="{Binding ParentBtnPressed}"
+                            IsEnabled="{Binding ParentBool}">
                         <Image Width="25" Height="25" Source="../Assets/parent.png"/>
                     </Button>
                     <Button Classes="FileNavigation" Command="{Binding HomeBtnPressed}">
