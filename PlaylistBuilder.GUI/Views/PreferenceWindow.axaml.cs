@@ -6,12 +6,15 @@ using Splat;
 
 namespace PlaylistBuilder.GUI.Views;
 
-public partial class PlaybackView : UserControl
+public partial class PreferenceWindow : Window
 {
-    public PlaybackView()
+    public PreferenceWindow()
     {
-        DataContext = Locator.Current.GetService(typeof(PlaybackViewModel));
+        DataContext = Locator.Current.GetService(typeof(PreferenceViewModel));
         InitializeComponent();
+#if DEBUG
+        this.AttachDevTools();
+#endif
     }
 
     private void InitializeComponent()

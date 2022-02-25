@@ -6,28 +6,40 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="PlaylistBuilder.GUI.Views.PlaylistView">
+    <UserControl.Styles>
+        <StyleInclude Source="/Assets/DefaultStyle.axaml"/>
+    </UserControl.Styles>
     <Design.DataContext>
         <vm:PlaylistViewModel/>
     </Design.DataContext>
     <StackPanel Orientation="Vertical">
-        <StackPanel Orientation="Horizontal" Margin="10">
-            <Button>
-                <Image Width="25" Height="25" Source="../Assets/new.png"/>
-            </Button>
-            <Button>
-                <Image Width="25" Height="25" Source="../Assets/open.png"/>
-            </Button>
-            <Button>
-                <Image Width="25" Height="25" Source="../Assets/save.png"/>
-            </Button>
-        </StackPanel>
-        <TabControl>
-            <TabItem Header="Playlist 1">
-                <DataGrid Name="PlaylistDataGrid" Items="{Binding PlaylistTracks}" 
-                          AutoGenerateColumns="False" CanUserResizeColumns="True" Margin="5 0">
+                <StackPanel Orientation="Horizontal" Margin="10">
+                    <Button Classes="PlaylistButton" Command="{Binding NewBtnPressed}">
+                        <Image Classes="ButtonImage" Source="../Assets/new.png"/>
+                    </Button>
+                    <Button Classes="PlaylistButton" Command="{Binding OpenBtnPressed}">
+                        <Image Classes="ButtonImage" Source="../Assets/open.png"/>
+                    </Button>
+                    <Button Classes="PlaylistButton" Command="{Binding SaveBtnPressed}">
+                        <Image Classes="ButtonImage" Source="../Assets/save.png"/>
+                    </Button>
+                    <Button Classes="PlaylistButton" Command="{Binding SwapUpBtnPressed}">
+                        <Image Classes="ButtonImage" Source="../Assets/swapUp.png"/>
+                    </Button>
+                    <Button Classes="PlaylistButton" Command="{Binding SwapDownBtnPressed}">
+                        <Image Classes="ButtonImage" Source="../Assets/swapDown.png"/>
+                    </Button>
+                    <Button Classes="PlaylistButton" Command="{Binding RemoveBtnPressed}">
+                        <Image Classes="ButtonImage" Source="../Assets/cancel.png"/>
+                    </Button>
+                </StackPanel>
+                <DataGrid x:Name="PlaylistDataGrid" Items="{Binding PlaylistTracks, Mode=TwoWay}" Margin="5 0" Height="500" 
+                          x:DataType="models:PlaylistTrack" AreRowDetailsFrozen="False" CanUserReorderColumns="True"
+                          DoubleTapped="OnDoubleTapped"
+                          SelectedIndex="{Binding SelectedPlaylistIndex, Mode=TwoWay}">
                     <DataGrid.Columns>
                         <DataGridTextColumn Header="Track"
-                                            Binding="{Binding Track}" Width="80"/>
+                                            Binding="{Binding TrackNumber}" Width="80"/>
                         <DataGridTextColumn Header="Title"
                                             Binding="{Binding Title}" Width="180"/>
                         <DataGridTextColumn Header="Artist"
@@ -40,26 +52,5 @@
                                             Binding="{Binding FileName}" Width="180"/>
                     </DataGrid.Columns>
                 </DataGrid>
-            </TabItem>
-            <TabItem Header="Playlist 2">
-                <DataGrid Items="{Binding PlaylistTracks}" 
-                          AutoGenerateColumns="False" CanUserResizeColumns="True" Margin="5 0">
-                    <DataGrid.Columns>
-                        <DataGridTextColumn Header="Track"
-                                            Binding="{Binding Track}" Width="80"/>
-                        <DataGridTextColumn Header="Title"
-                                            Binding="{Binding Title}" Width="180"/>
-                        <DataGridTextColumn Header="Artist"
-                                            Binding="{Binding Artist}" Width="180"/>
-                        <DataGridTextColumn Header="Album"
-                                            Binding="{Binding Album}" Width="180"/>
-                        <DataGridTextColumn Header="Duration"
-                                            Binding="{Binding Duration}" Width="180"/>
-                        <DataGridTextColumn Header="File Name"
-                                            Binding="{Binding FileName}" Width="180"/>
-                    </DataGrid.Columns>
-                </DataGrid>
-            </TabItem>
-        </TabControl>
-    </StackPanel>
+            </StackPanel>
 </UserControl>

@@ -7,13 +7,13 @@ using Splat;
 
 namespace PlaylistBuilder.GUI.Views;
 
-public partial class PlaylistView : UserControl
+public partial class NavigatorView : UserControl
 {
-    private PlaylistViewModel _playlistViewModel;
-    public PlaylistView()
+    private NavigatorViewModel _navigatorViewModel;
+    public NavigatorView()
     {
-        DataContext = Locator.Current.GetService(typeof(PlaylistViewModel));
-        _playlistViewModel = (PlaylistViewModel)Locator.Current.GetService(typeof(PlaylistViewModel))!;
+        DataContext = Locator.Current.GetService(typeof(NavigatorViewModel));
+        _navigatorViewModel = (NavigatorViewModel)Locator.Current.GetService(typeof(NavigatorViewModel))!;
         InitializeComponent();
     }
 
@@ -23,6 +23,7 @@ public partial class PlaylistView : UserControl
     }
     private void OnDoubleTapped(object? sender, RoutedEventArgs e)
     {
-        _playlistViewModel.DblTappedPlaylist();
+        _navigatorViewModel.DblTappedItem();
+        //TODO: Do this as an MVVM way
     }
 }

@@ -5,63 +5,39 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="PlaylistBuilder.GUI.Views.PlaybackView">
+    <UserControl.Styles>
+        <StyleInclude Source="/Assets/DefaultStyle.axaml"/>
+    </UserControl.Styles>
     <Design.DataContext>
         <vm:PlaybackViewModel/>
     </Design.DataContext>
     <StackPanel Orientation="Horizontal" Margin="10">
-        <Border BorderThickness="0" BorderBrush="Black">
-            <StackPanel Orientation="Horizontal" Width="350">
-                <Image Width="100" Height="100" Source="../Assets/CD.png"/>
-                <StackPanel Orientation="Vertical" Margin="10 0">
-                    <TextBlock Text="Title" Margin="0 10"/>
-                    <TextBlock Text="Artist" Margin="0 10"/>
-                    <TextBlock Text="Album" Margin="0 10"/>
-                </StackPanel>
+        <StackPanel x:Name="TrackDetail" Orientation="Horizontal" Width="350">
+            <ContentControl Classes="TrackImage" Content="{Binding TrackImage}"/>
+            <StackPanel Orientation="Vertical" Margin="10 0">
+                <TextBlock Classes="PlaybackDetail" Text="{Binding TrackTitle}"/>
+                <TextBlock Classes="PlaybackDetail" Text="{Binding TrackArtist}"/>
+                <TextBlock Classes="PlaybackDetail" Text="{Binding TrackAlbum}"/>
             </StackPanel>
-        </Border>
-        <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-            <Button>
-                <Button.Styles>
-                    <Style Selector="Button">
-                        <Setter Property="CornerRadius" Value="100"/>
-                    </Style>
-                </Button.Styles>
-                <Image Width="25" Height="25" Source="../Assets/previous.png"/>
+        </StackPanel>
+        <StackPanel x:Name="Playback" Orientation="Horizontal" VerticalAlignment="Center">
+            <Button Classes="PlaybackButton" Command="{Binding PreviousBtn}">
+                <Image Classes="ButtonImage" Source="../Assets/previous.png"/>
             </Button>
-            <Button>
-                <Button.Styles>
-                    <Style Selector="Button">
-                        <Setter Property="CornerRadius" Value="100"/>
-                    </Style>
-                </Button.Styles>
-                <Image Width="25" Height="25" Source="../Assets/stop.png"/>
+            <Button Classes="PlaybackButton" Command="{Binding StopBtn}">
+                <Image Classes="ButtonImage" Source="../Assets/stop.png"/>
             </Button>
-            <Button>
-                <Button.Styles>
-                    <Style Selector="Button">
-                        <Setter Property="CornerRadius" Value="100"/>
-                    </Style>
-                </Button.Styles>
-                <Image Width="25" Height="25" Source="../Assets/play.png"/>
+            <Button Classes="PlaybackButton" Command="{Binding PlayBtn}">
+                <Image Classes="ButtonImage" Source="../Assets/play.png"/>
             </Button>
-            <Button>
-                <Button.Styles>
-                    <Style Selector="Button">
-                        <Setter Property="CornerRadius" Value="100"/>
-                    </Style>
-                </Button.Styles>
-                <Image Width="25" Height="25" Source="../Assets/pause.png"/>
+            <Button Classes="PlaybackButton" Command="{Binding PauseBtn}">
+                <Image Classes="ButtonImage" Source="../Assets/pause.png"/>
             </Button>
-            <Button>
-                <Button.Styles>
-                    <Style Selector="Button">
-                        <Setter Property="CornerRadius" Value="100"/>
-                    </Style>
-                </Button.Styles>
-                <Image Width="25" Height="25" Source="../Assets/next.png"/>
+            <Button Classes="PlaybackButton" Command="{Binding NextBtn}">
+                <Image Classes="ButtonImage" Source="../Assets/next.png"/>
             </Button>
-            <TextBlock Text="# Tracks - [Total Time]" Margin="10 0"/>
-            <ProgressBar Minimum="0" Maximum="500" Width="500"></ProgressBar>
+            <TextBlock Classes="PlaybackText" Text="{Binding PlaylistDetails}"/>
+            <!-- <ProgressBar Minimum="0" Maximum="500" Width="500"></ProgressBar> -->
         </StackPanel>
     </StackPanel>
 </UserControl>

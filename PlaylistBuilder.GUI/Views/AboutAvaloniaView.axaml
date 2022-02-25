@@ -1,0 +1,20 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+        Width="300" Height="300"
+        x:Class="PlaylistBuilder.GUI.Views.AboutAvaloniaView"
+        x:Name="AboutAvalonia"
+        Icon="/Assets/builder.ico"
+        Title="About Avalonia">
+        <StackPanel Orientation="Horizontal">
+                <Image Source="../Assets/avalonia.png" Height="75" Width="75" Margin="10"/>
+                <StackPanel Orientation="Vertical" Width="200" Margin="10">
+                        <TextBlock FontWeight="ExtraBold" Margin="0 5">About Avalonia</TextBlock>
+                        <TextBlock TextWrapping="Wrap" Margin="0 5">This program uses Avalonia UI version 0.10.12</TextBlock>
+                        <TextBlock TextWrapping="Wrap" Margin="0 5">Avalonia is a cross-platform UI framework for dotnet, providing a flexible styling system and supporting a wide range of Operating Systems such as Windows, Linux, MacOs.</TextBlock>
+                        <TextBlock TextWrapping="Wrap" Margin="0 5">Avalonia is licensed under the MIT License and is supported by the .Net Foundation</TextBlock> 
+                </StackPanel>
+        </StackPanel>
+</Window>

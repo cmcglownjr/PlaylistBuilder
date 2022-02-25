@@ -7,11 +7,11 @@ namespace PlaylistBuilder.Lib;
 public abstract class PlaylistBase : IPlaylist
 {
     protected bool _relative;
-    protected List<Track> _playlist = new();
+    protected List<Track> Playlist = new();
     private FileInfo _loadedPlaylist;
     protected FileInfo _savedPlaylist;
     public bool Relative { set => _relative = value; }
-    public List<Track> ReadList => _playlist;
+    public List<Track> ReadList => Playlist;
     public void LoadPlaylist(string path)
     {
         ClearPlaylist();
@@ -27,17 +27,17 @@ public abstract class PlaylistBase : IPlaylist
 
     public void AddTrack(Track track)
     {
-        _playlist.Add(track);
+        Playlist.Add(track);
     }
 
     public void RemoveTrack(Track track)
     {
         //TODO: I need to refactor this
-        foreach (Track playlistTrack in _playlist)
+        foreach (Track playlistTrack in Playlist)
         {
             if (playlistTrack.Path == track.Path)
             {
-                _playlist.Remove(playlistTrack);
+                Playlist.Remove(playlistTrack);
                 break;
             }
         }
@@ -45,18 +45,18 @@ public abstract class PlaylistBase : IPlaylist
 
     public void ClearPlaylist()
     {
-        _playlist.Clear();
+        Playlist.Clear();
     }
 
     public void ShufflePlaylist()
     {
-        Shuffle(_playlist);
+        Shuffle(Playlist);
     }
 
     public void RemoveDuplicates()
     {
         Dictionary<Track, string> trackDict = new();
-        foreach (Track track in _playlist)
+        foreach (Track track in Playlist)
         {
             trackDict.Add(track, $"{track.TrackNumber}:{track.Title}:{track.Album}:{track.Artist}");
         }
@@ -67,30 +67,31 @@ public abstract class PlaylistBase : IPlaylist
         ClearPlaylist();
         foreach (Track unique in uniqueValues.Keys)
         {
-            _playlist.Add(unique);
+            Playlist.Add(unique);
         }
     }
 
     public void RemoveUnavailable()
     {
         List<Track> tempPlaylist = new List<Track>();
-        foreach (Track track in _playlist)
+        foreach (Track track in Playlist)
         {
             if (File.Exists(track.Path))
             {
                 tempPlaylist.Add(track);
             }
         }
-        _playlist = tempPlaylist;
+        Playlist = tempPlaylist;
     }
 
     protected abstract void CreateFile();
     private void ReadPlaylist(FileInfo playlistPath)
     {
         IPlaylistIO reader = PlaylistIOFactory.GetInstance().GetPlaylistIO(playlistPath.FullName);
-        foreach (Track track in reader.Tracks)
+        foreach (string filePath in reader.FilePaths)
         {
-            _playlist.Add(track);
+            Track track = new Track(filePath.Replace("\\", "/"));
+            Playlist.Add(track);
         }
     }
     public static void Shuffle<T>(IList<T> list)

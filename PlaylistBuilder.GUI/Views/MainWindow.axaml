@@ -1,50 +1,52 @@
 <Window xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:vm="using:PlaylistBuilder.GUI.ViewModels"
+        xmlns:views="clr-namespace:PlaylistBuilder.GUI.Views"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:views="clr-namespace:PlaylistBuilder.GUI.Views"
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
         x:Class="PlaylistBuilder.GUI.Views.MainWindow"
-        Icon="/Assets/avalonia-logo.ico"
-        Title="PlaylistBuilder">
-
+        x:Name="MainWindow"
+        Icon="/Assets/builder.ico"
+        Title="Playlist Builder">
+    <Window.Styles>
+        <StyleInclude Source="/Assets/DefaultStyle.axaml"/>
+    </Window.Styles>
     <Design.DataContext>
         <vm:MainWindowViewModel/>
     </Design.DataContext>
     <StackPanel Orientation="Vertical" Width="800" HorizontalAlignment="Left">
         <Menu>
             <MenuItem Header="_File">
-                <MenuItem Header="_Open Playlist..."/>
-                <MenuItem Header="_Save Playlist"/>
+                <MenuItem Header="_Open Playlist..." Command="{Binding OpenBtnPressed}"/>
+                <MenuItem Header="_Save Playlist" Command="{Binding SaveBtnPressed}"/>
                 <Separator/>
-                <MenuItem Header="_Quit"/>
+                <MenuItem Header="_Quit" Command="{Binding QuitBtnPressed}"
+                          CommandParameter="{Binding ElementName=MainWindow}"/>
             </MenuItem>
             <MenuItem Header="_Settings">
-                <MenuItem Header="Preferences"/>
+                <MenuItem Header="Preferences" Command="{Binding PreferenceBtnPressed}"/>
             </MenuItem>
             <MenuItem Header="_Playlist">
-                <MenuItem Header="New Playlist"/>
-                <Separator/>
-                <MenuItem Header="Shuffle Mode"/>
-                <MenuItem Header="Repeat Mode"/>
-                <Separator/>
-                <MenuItem Header="Clear Playlist"/>
-                <MenuItem Header="Shuffle Playlist"/>
-                <MenuItem Header="Remove Duplicates"/>
-                <MenuItem Header="Remove Unavailable"/>
+                <!-- <MenuItem Header="New Playlist"/> -->
+                <!-- <Separator/> -->
+                <!-- <MenuItem Header="Shuffle Mode"/> -->
+                <!-- <MenuItem Header="Repeat Mode"/> -->
+                <!-- <Separator/> -->
+                <!-- <MenuItem Header="Clear Playlist"/> -->
+                <MenuItem Header="Shuffle Playlist" Command="{Binding ShuffleBtnPressed}"/>
+                <MenuItem Header="Remove Duplicates" Command="{Binding RemoveDuplicateBtnPressed}"/>
+                <MenuItem Header="Remove Unavailable" Command="{Binding RemoveUnavailableBtnPressed}"/>
             </MenuItem>
             <MenuItem Header="About">
-                <MenuItem Header="About PlaylistBuilder"/>
-                <MenuItem Header="About AvaloniaUI"/>
+                <MenuItem Header="About PlaylistBuilder" Command="{Binding AboutPlaylistBuilderBtnPressed}"/>
+                <MenuItem Header="About AvaloniaUI" Command="{Binding AboutAvaloniaBtnPressed}"/>
             </MenuItem>
         </Menu>
         <StackPanel Orientation="Horizontal">
-            <views:DirectoryView/>
-            <views:PlaylistView/>
+          <views:NavigatorView/>
+          <views:PlaylistView/>
         </StackPanel>
-        <StackPanel>
-            <views:PlaybackView/>
-        </StackPanel>
+        <views:PlaybackView/>
     </StackPanel>
 </Window>

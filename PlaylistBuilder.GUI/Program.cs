@@ -1,7 +1,10 @@
 ﻿using System;
+using System.IO;
 using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.ReactiveUI;
+using Serilog;
+using Serilog.Exceptions;
 
 namespace PlaylistBuilder.GUI
 {
@@ -16,9 +19,25 @@ namespace PlaylistBuilder.GUI
 
         // Avalonia configuration, don't remove; also used by visual designer.
         public static AppBuilder BuildAvaloniaApp()
-            => AppBuilder.Configure<App>()
+        {
+            var logDirectory =
+                Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "PlaylistBuilder");
+            if (!Directory.Exists(logDirectory))
+            {
+                Directory.CreateDirectory(logDirectory);
+            }
+            Log.Logger = new LoggerConfiguration()
+                .Enrich.WithExceptionDetails()
+                .MinimumLevel.Debug()
+                .WriteTo.Console()
+                .WriteTo.File(Path.Combine(logDirectory, "PlaylistBuilder.log"), rollingInterval: RollingInterval.Day,
+                    outputTemplate:"{Timestamp:yyyy-MM-dd HH:mm:ss} [{Level:u3}] {Message:lj}{NewLine}{Exception}")
+                .CreateLogger();
+            return AppBuilder.Configure<App>()
                 .UsePlatformDetect()
                 .LogToTrace()
                 .UseReactiveUI();
+        }
+        
     }
 }

@@ -16,7 +16,7 @@ public class PlaylistPLS : PlaylistBase
         using StreamWriter sw = File.CreateText(_savedPlaylist.FullName);
         sw.WriteLine(_header);
         sw.WriteLine("");
-        foreach (Track track in _playlist)
+        foreach (Track track in Playlist)
         {
             count++;
             if (_relative)
