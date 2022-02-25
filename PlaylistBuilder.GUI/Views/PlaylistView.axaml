@@ -14,23 +14,23 @@
     </Design.DataContext>
     <StackPanel Orientation="Vertical">
                 <StackPanel Orientation="Horizontal" Margin="10">
-                    <Button Command="{Binding NewBtnPressed}">
-                        <Image Width="25" Height="25" Source="../Assets/new.png"/>
+                    <Button Classes="PlaylistButton" Command="{Binding NewBtnPressed}">
+                        <Image Classes="ButtonImage" Source="../Assets/new.png"/>
                     </Button>
-                    <Button Command="{Binding OpenBtnPressed}">
-                        <Image Width="25" Height="25" Source="../Assets/open.png"/>
+                    <Button Classes="PlaylistButton" Command="{Binding OpenBtnPressed}">
+                        <Image Classes="ButtonImage" Source="../Assets/open.png"/>
                     </Button>
-                    <Button Command="{Binding SaveBtnPressed}">
-                        <Image Width="25" Height="25" Source="../Assets/save.png"/>
+                    <Button Classes="PlaylistButton" Command="{Binding SaveBtnPressed}">
+                        <Image Classes="ButtonImage" Source="../Assets/save.png"/>
                     </Button>
-                    <Button Command="{Binding SwapUpBtnPressed}">
-                        <Image Width="25" Height="25" Source="../Assets/swapUp.png"/>
+                    <Button Classes="PlaylistButton" Command="{Binding SwapUpBtnPressed}">
+                        <Image Classes="ButtonImage" Source="../Assets/swapUp.png"/>
                     </Button>
-                    <Button Command="{Binding SwapDownBtnPressed}">
-                        <Image Width="25" Height="25" Source="../Assets/swapDown.png"/>
+                    <Button Classes="PlaylistButton" Command="{Binding SwapDownBtnPressed}">
+                        <Image Classes="ButtonImage" Source="../Assets/swapDown.png"/>
                     </Button>
-                    <Button Command="{Binding RemoveBtnPressed}">
-                        <Image Width="25" Height="25" Source="../Assets/cancel.png"/>
+                    <Button Classes="PlaylistButton" Command="{Binding RemoveBtnPressed}">
+                        <Image Classes="ButtonImage" Source="../Assets/cancel.png"/>
                     </Button>
                 </StackPanel>
                 <DataGrid x:Name="PlaylistDataGrid" Items="{Binding PlaylistTracks, Mode=TwoWay}" Margin="5 0" Height="500" 

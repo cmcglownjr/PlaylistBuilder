@@ -16,22 +16,22 @@
                 <StackPanel Orientation="Horizontal">
                     <Button Classes="FileNavigation" Command="{Binding UndoBtnPressed}"
                             IsEnabled="{Binding UndoBool}">
-                        <Image Width="25" Height="25" Source="../Assets/undo.png"/>
+                        <Image Classes="ButtonImage" Source="../Assets/undo.png"/>
                     </Button>
                     <Button Classes="FileNavigation" Command="{Binding RedoBtnPressed}"
                             IsEnabled="{Binding RedoBool}">
-                        <Image Width="25" Height="25" Source="../Assets/redo.png"/>
+                        <Image Classes="ButtonImage" Source="../Assets/redo.png"/>
                     </Button>
                     <Button Classes="FileNavigation" Command="{Binding ParentBtnPressed}"
                             IsEnabled="{Binding ParentBool}">
-                        <Image Width="25" Height="25" Source="../Assets/parent.png"/>
+                        <Image Classes="ButtonImage" Source="../Assets/parent.png"/>
                     </Button>
                     <Button Classes="FileNavigation" Command="{Binding HomeBtnPressed}">
-                        <Image Width="25" Height="25" Source="../Assets/home.png"/>
+                        <Image Classes="ButtonImage" Source="../Assets/home.png"/>
                     </Button>
                     <TextBlock Text="{Binding CurrentDirectory}" Width="200" VerticalAlignment="Center"/>
                 </StackPanel>
-                <ListBox Items="{Binding ItemList}" Width="350" Height="500"
+                <ListBox Classes="NavigationList" Items="{Binding ItemList}" Width="350" Height="500"
                          ScrollViewer.VerticalScrollBarVisibility="Auto" 
                          ScrollViewer.HorizontalScrollBarVisibility="Auto" 
                          SelectionMode="Single"

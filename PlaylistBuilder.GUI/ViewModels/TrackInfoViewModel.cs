@@ -119,10 +119,13 @@ public class TrackInfoViewModel : ViewModelBase
         get => _setYear; 
         set => this.RaiseAndSetIfChanged(ref _setYear, value);
     }
-    public ReactiveCommand<Unit, Unit> PreviousBtnPressed { get; }
-    public ReactiveCommand<Unit, Unit> NextBtnPressed { get; }
-    public ReactiveCommand<Unit, Unit> SaveBtnPressed { get; }
-    public ReactiveCommand<Window, Unit> DiscardBtnPressed { get; }
+    public ReactiveCommand<Unit, Unit>? PreviousBtnPressed { get; }
+    public ReactiveCommand<Unit, Unit>? NextBtnPressed { get; }
+    public ReactiveCommand<Unit, Unit>? SaveBtnPressed { get; }
+    public ReactiveCommand<Window, Unit>? DiscardBtnPressed { get; }
+
+    public TrackInfoViewModel(){ }
+    
 
     public TrackInfoViewModel(PlaylistTrack track)
     {

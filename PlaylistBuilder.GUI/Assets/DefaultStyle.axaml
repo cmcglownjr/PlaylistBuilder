@@ -8,5 +8,35 @@
 
     <Style Selector="Button.FileNavigation">
         <Setter Property="Margin" Value="5"/>
+        <Setter Property="Background" Value="White"/>
+    </Style>
+    <Style Selector="ListBox.NavigationList">
+        <Setter Property="Background" Value="White"/>
+        <Setter Property="BorderBrush" Value="Black"/>
+        <Setter Property="BorderThickness" Value="0 0 0 0"/>
+    </Style>
+    <Style Selector="Button.PlaybackButton">
+        <Setter Property="CornerRadius" Value="100"/>
+        <Setter Property="Background" Value="White"/>
+    </Style>
+    <Style Selector="Button.PlaylistButton">
+        <Setter Property="Background" Value="White"/>
+    </Style>
+    <Style Selector="Image.ButtonImage">
+        <Setter Property="Width" Value="25"/>
+        <Setter Property="Height" Value="25"/>
+    </Style>
+    <Style Selector="ContentControl.TrackImage">
+        <Setter Property="Height" Value="100"/>
+        <Setter Property="Width" Value="100"/>
+    </Style>
+    <Style Selector="TextBlock.PlaybackDetail">
+        <Setter Property="Margin" Value="0 5"/>
+        <Setter Property="Width" Value="230"/>
+        <Setter Property="TextWrapping" Value="Wrap"/>
+    </Style>
+    <Style Selector="TextBlock.PlaybackText">
+        <Setter Property="Margin" Value="10 0"/>
+        <Setter Property="TextWrapping" Value="Wrap"/>
     </Style>
 </Styles>
