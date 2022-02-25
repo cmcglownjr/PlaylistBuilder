@@ -8,8 +8,11 @@ namespace PlaylistBuilder.GUI.Models
     public class IconModel
     {
         public readonly Bitmap FolderImage, MusicImage, PlaylistImage, RedoImage, UndoImage, ParentImage, HomeImage, 
-            PreviousImage, NextImage, PlayImage, PauseImage, StopImage, NewImage, OpenImage, SaveImage, CDImage, 
-            CancelImage, SwapUpImage, SwapDownImage;
+            PreviousImage, NextImage, PlayImage, PauseImage, StopImage, NewImage, OpenImage, SaveImage;
+
+        public readonly Bitmap? CDImage;
+
+        public readonly Bitmap CancelImage, SwapUpImage, SwapDownImage;
 
         public IconModel()
         {

@@ -24,6 +24,9 @@
     <Style Selector="Button.PlaylistButton">
         <Setter Property="Background" Value="White"/>
     </Style>
+    <Style Selector="Button.TrackInfoButton">
+        <Setter Property="Background" Value="White"/>
+    </Style>
     <Style Selector="Image.ButtonImage">
         <Setter Property="Width" Value="25"/>
         <Setter Property="Height" Value="25"/>
@@ -31,10 +34,15 @@
     <Style Selector="ContentControl.TrackImage">
         <Setter Property="Height" Value="100"/>
         <Setter Property="Width" Value="100"/>
+        <Setter Property="Margin" Value="5"/>
     </Style>
     <Style Selector="TextBlock.PlaybackDetail">
         <Setter Property="Margin" Value="0 5"/>
         <Setter Property="Width" Value="230"/>
+        <Setter Property="TextWrapping" Value="Wrap"/>
+    </Style>
+    <Style Selector="TextBlock.TrackDetail">
+        <Setter Property="Margin" Value="5"/>
         <Setter Property="TextWrapping" Value="Wrap"/>
     </Style>
     <Style Selector="TextBlock.PlaybackText">
@@ -45,5 +53,9 @@
         <Setter Property="Width" Value="200"/>
         <Setter Property="VerticalAlignment" Value="Center"/>
         <Setter Property="TextWrapping" Value="Wrap"/>
+    </Style>
+    <Style Selector="TextBox.TrackEdit">
+        <Setter Property="Margin" Value="5"/>
+        <!-- <Setter Property="TextWrapping" Value="Wrap"/> -->
     </Style>
 </Styles>

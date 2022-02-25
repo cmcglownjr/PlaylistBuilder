@@ -16,7 +16,7 @@ namespace PlaylistBuilder.GUI.ViewModels;
 
 public class TrackInfoViewModel : ViewModelBase
 {
-    private Image _trackImage = new();
+    private readonly Image _trackImage = new();
     private readonly IconModel? _mediaIconModel;
     private int _playlistIndex;
     private string _trackAlbum = "No Media";
@@ -130,7 +130,7 @@ public class TrackInfoViewModel : ViewModelBase
     public TrackInfoViewModel(PlaylistTrack track)
     {
         _mediaIconModel = (IconModel)Locator.Current.GetService(typeof(IconModel))!;
-        PlaylistViewModel playlistViewModel = (PlaylistViewModel)Locator.Current.GetService(typeof(PlaylistViewModel))!;
+        var playlistViewModel = (PlaylistViewModel)Locator.Current.GetService(typeof(PlaylistViewModel))!;
         _playlistIndex = playlistViewModel.SelectedPlaylistIndex;
         PreviousBtnPressed = ReactiveCommand.Create(()=>CycleItems(false));
         NextBtnPressed = ReactiveCommand.Create(()=>CycleItems(true));
@@ -139,19 +139,16 @@ public class TrackInfoViewModel : ViewModelBase
         GetTrackInfo(track);
     }
 
-    private Bitmap AlbumImage(PlaylistTrack track)
+    private Bitmap? AlbumImage(PlaylistTrack track)
     {
         if (track.Track.EmbeddedPictures.Count > 0)
         {
             IList<PictureInfo> embeddedPictures = track.Track.EmbeddedPictures;
-            System.Drawing.Image image =
-                System.Drawing.Image.FromStream(new MemoryStream(embeddedPictures[0].PictureData));
-            using (MemoryStream memory = new MemoryStream())
-            {
-                image.Save(memory, ImageFormat.Jpeg);
-                memory.Position = 0;
-                return new Bitmap(memory);
-            }
+            var image = System.Drawing.Image.FromStream(new MemoryStream(embeddedPictures[0].PictureData));
+            using var memory = new MemoryStream();
+            image.Save(memory, ImageFormat.Jpeg);
+            memory.Position = 0;
+            return new Bitmap(memory);
         }
         return _mediaIconModel?.CDImage;
     }
@@ -166,7 +163,7 @@ public class TrackInfoViewModel : ViewModelBase
         Length = $"{track.Duration}";
         BitRate = $"{track.Track.Bitrate} kbps";
         SampleRate = $"{track.Track.SampleRate} Hz";
-        FileSize = $"{(trackInfo.Length/1024f/1024f).ToString("N")} MB";
+        FileSize = $"{(trackInfo.Length/1024f/1024f):N} MB";
         FileType = trackInfo.Extension;
         FileName = track.FileName;
         SetTitle = track.Title;
@@ -181,7 +178,7 @@ public class TrackInfoViewModel : ViewModelBase
 
     private void CycleItems(bool forward)
     {
-        PlaylistViewModel playlistViewModel = (PlaylistViewModel)Locator.Current.GetService(typeof(PlaylistViewModel))!;
+        var playlistViewModel = (PlaylistViewModel)Locator.Current.GetService(typeof(PlaylistViewModel))!;
         try
         {
             if (forward)
@@ -203,24 +200,21 @@ public class TrackInfoViewModel : ViewModelBase
 
     private void SaveItem()
     {
-        int trackNumber;
-        int discNumber;
-        int year;
-        PlaylistViewModel playlistViewModel = (PlaylistViewModel)Locator.Current.GetService(typeof(PlaylistViewModel))!;
-        Track editTrack = playlistViewModel.PlaylistTracks[_playlistIndex].Track;
+        var playlistViewModel = (PlaylistViewModel)Locator.Current.GetService(typeof(PlaylistViewModel))!;
+        var editTrack = playlistViewModel.PlaylistTracks[_playlistIndex].Track;
         editTrack.Title = SetTitle;
         editTrack.Artist = SetArtist;
         editTrack.Album = SetAlbum;
         editTrack.AlbumArtist = SetAlbumArtist;
-        if (int.TryParse(SetTrack, out trackNumber))
+        if (int.TryParse(SetTrack, out var trackNumber))
         {
             editTrack.TrackNumber = trackNumber;
         }
-        if (int.TryParse(SetDisc, out discNumber))
+        if (int.TryParse(SetDisc, out var discNumber))
         {
             editTrack.DiscNumber = discNumber;
         }
-        if (int.TryParse(SetYear, out year))
+        if (int.TryParse(SetYear, out var year))
         {
             editTrack.Year = year;
         }
@@ -230,7 +224,7 @@ public class TrackInfoViewModel : ViewModelBase
         Log.Information("Saving track info for {Arg0}", editTrack.Title);
     }
 
-    private void DiscardBtn(Window window)
+    private static void DiscardBtn(Window window)
     {
         window.Close();
     }
