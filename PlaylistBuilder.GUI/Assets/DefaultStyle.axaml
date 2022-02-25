@@ -14,6 +14,8 @@
         <Setter Property="Background" Value="White"/>
         <Setter Property="BorderBrush" Value="Black"/>
         <Setter Property="BorderThickness" Value="0 0 0 0"/>
+        <Setter Property="Width" Value="350"/>
+        <Setter Property="Height" Value="500"/>
     </Style>
     <Style Selector="Button.PlaybackButton">
         <Setter Property="CornerRadius" Value="100"/>
@@ -37,6 +39,11 @@
     </Style>
     <Style Selector="TextBlock.PlaybackText">
         <Setter Property="Margin" Value="10 0"/>
+        <Setter Property="TextWrapping" Value="Wrap"/>
+    </Style>
+    <Style Selector="TextBlock.NavigationText">
+        <Setter Property="Width" Value="200"/>
+        <Setter Property="VerticalAlignment" Value="Center"/>
         <Setter Property="TextWrapping" Value="Wrap"/>
     </Style>
 </Styles>

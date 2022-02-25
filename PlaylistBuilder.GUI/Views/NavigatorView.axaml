@@ -29,9 +29,9 @@
                     <Button Classes="FileNavigation" Command="{Binding HomeBtnPressed}">
                         <Image Classes="ButtonImage" Source="../Assets/home.png"/>
                     </Button>
-                    <TextBlock Text="{Binding CurrentDirectory}" Width="200" VerticalAlignment="Center"/>
+                    <TextBlock Classes="NavigationText" Text="{Binding CurrentDirectory}"/>
                 </StackPanel>
-                <ListBox Classes="NavigationList" Items="{Binding ItemList}" Width="350" Height="500"
+                <ListBox Classes="NavigationList" Items="{Binding ItemList}"
                          ScrollViewer.VerticalScrollBarVisibility="Auto" 
                          ScrollViewer.HorizontalScrollBarVisibility="Auto" 
                          SelectionMode="Single"
