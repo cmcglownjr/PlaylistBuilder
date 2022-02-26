@@ -4,6 +4,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PlaylistBuilder.Lib", "Play
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PlaylistBuilder.GUI", "PlaylistBuilder.GUI\PlaylistBuilder.GUI.csproj", "{75D0FF1F-E5D3-4697-877D-906A54F57AE5}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PlaylistBuilder.Tests", "PlaylistBuilder.Tests\PlaylistBuilder.Tests.csproj", "{9F3B74D3-4DEC-4A73-A891-45E2350CCF42}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -25,5 +27,11 @@ Global
 		{75D0FF1F-E5D3-4697-877D-906A54F57AE5}.Alpha|Any CPU.ActiveCfg = Alpha|Any CPU
 		{75D0FF1F-E5D3-4697-877D-906A54F57AE5}.Alpha|Any CPU.Build.0 = Alpha|Any CPU
 		{75D0FF1F-E5D3-4697-877D-906A54F57AE5}.Alpha|Any CPU.Deploy.0 = Alpha|Any CPU
+		{9F3B74D3-4DEC-4A73-A891-45E2350CCF42}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9F3B74D3-4DEC-4A73-A891-45E2350CCF42}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9F3B74D3-4DEC-4A73-A891-45E2350CCF42}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9F3B74D3-4DEC-4A73-A891-45E2350CCF42}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9F3B74D3-4DEC-4A73-A891-45E2350CCF42}.Alpha|Any CPU.ActiveCfg = Debug|Any CPU
+		{9F3B74D3-4DEC-4A73-A891-45E2350CCF42}.Alpha|Any CPU.Build.0 = Debug|Any CPU
 	EndGlobalSection
 EndGlobal
