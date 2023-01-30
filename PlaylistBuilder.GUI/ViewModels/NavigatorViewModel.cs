@@ -32,6 +32,8 @@ public class NavigatorViewModel : ViewModelBase
     private Stack<string> _undoStack = new();
     private Stack<string> _redoStack = new();
     internal readonly List<string> PlaylistExtensions = new();
+
+    delegate void TestDelegate();
     public List<MediaItemModel> ItemList
     {
         get => _itemList;
