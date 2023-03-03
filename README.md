@@ -40,4 +40,4 @@ Currently I have no way to navigate to network drives. I would also like to have
 
 #### License:
 
-This project is license under the terms of the GNU GPLv3 License.
+This project is license under the terms of the AGNU GPLv3 License.

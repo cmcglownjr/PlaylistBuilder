@@ -5,7 +5,9 @@
         <LangVersion>10</LangVersion>
         <Configurations>Debug;Release;Alpha</Configurations>
         <Platforms>AnyCPU</Platforms>
-        <TargetFrameworks>net6.0;net7.0</TargetFrameworks>
+        <Version>0.1.0</Version>
+        <PackageIcon>Assets\playlistbuilder_color.png</PackageIcon>
+        <TargetFramework>net7.0</TargetFramework>
     </PropertyGroup>
     <ItemGroup>
         <Folder Include="Models\" />
