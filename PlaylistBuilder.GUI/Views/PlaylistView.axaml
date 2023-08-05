@@ -33,7 +33,7 @@
                         <Image Classes="ButtonImage" Source="../Assets/cancel.png"/>
                     </Button>
                 </StackPanel>
-                <DataGrid x:Name="PlaylistDataGrid" Items="{Binding PlaylistTracks, Mode=TwoWay}" Margin="5 0" Height="500" 
+                <DataGrid x:Name="PlaylistDataGrid" ItemsSource="{Binding PlaylistTracks, Mode=TwoWay}" Margin="5 0" Height="500" 
                           x:DataType="models:PlaylistTrack" AreRowDetailsFrozen="False" CanUserReorderColumns="True"
                           DoubleTapped="OnDoubleTapped"
                           SelectedIndex="{Binding SelectedPlaylistIndex, Mode=TwoWay}">

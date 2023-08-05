@@ -31,7 +31,7 @@
                     </Button>
                     <TextBlock Classes="NavigationText" Text="{Binding CurrentDirectory}"/>
                 </StackPanel>
-                <ListBox Classes="NavigationList" Items="{Binding ItemList}"
+                <ListBox Classes="NavigationList" ItemsSource="{Binding ItemList}"
                          ScrollViewer.VerticalScrollBarVisibility="Auto" 
                          ScrollViewer.HorizontalScrollBarVisibility="Auto" 
                          SelectionMode="Single"

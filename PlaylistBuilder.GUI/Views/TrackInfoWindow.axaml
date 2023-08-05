@@ -6,7 +6,7 @@
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
         Width="520" Height="500"
         x:Class="PlaylistBuilder.GUI.Views.TrackInfoWindow"
-        x:Name="TrackInfoWindow"
+        x:Name="TrackInfo"
         Icon="/Assets/builder.ico"
         Title="TrackInfoWindow">
         <Window.Styles>

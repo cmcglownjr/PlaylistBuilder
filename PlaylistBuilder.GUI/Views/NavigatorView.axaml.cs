@@ -21,7 +21,7 @@ public partial class NavigatorView : UserControl
     {
         AvaloniaXamlLoader.Load(this);
     }
-    private void OnDoubleTapped(object? sender, RoutedEventArgs e)
+    public void OnDoubleTapped(object? sender, RoutedEventArgs e)
     {
         _navigatorViewModel.DblTappedItem();
         //TODO: Do this as an MVVM way

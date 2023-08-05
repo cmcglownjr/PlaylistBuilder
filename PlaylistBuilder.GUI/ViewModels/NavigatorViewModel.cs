@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Reactive;
@@ -28,13 +29,13 @@ public class NavigatorViewModel : ViewModelBase
     private int _selectedDirectoryIndex;
     private readonly List<string> _mediaExtensions = new();
     private readonly IconModel? _mediaIconModel;
-    private List<MediaItemModel> _itemList = new();
+    private ObservableCollection<MediaItemModel> _itemList = new();
     private Stack<string> _undoStack = new();
     private Stack<string> _redoStack = new();
     internal readonly List<string> PlaylistExtensions = new();
 
     delegate void TestDelegate();
-    public List<MediaItemModel> ItemList
+    public ObservableCollection<MediaItemModel> ItemList
     {
         get => _itemList;
         private set => this.RaiseAndSetIfChanged(ref _itemList, value);
@@ -74,7 +75,7 @@ public class NavigatorViewModel : ViewModelBase
     {
         _mediaIconModel = (IconModel)Locator.Current.GetService(typeof(IconModel))!;
         FindExtensions();
-        ItemList = new List<MediaItemModel>(PopulateTree(_musicDirectory));
+        ItemList = new ObservableCollection<MediaItemModel>(PopulateTree(_musicDirectory));
         HomeBtnPressed = ReactiveCommand.Create(HomeDirectory);
         ParentBtnPressed = ReactiveCommand.Create(ParentDirectory);
         UndoBtnPressed = ReactiveCommand.Create(UndoNavigation);
@@ -149,7 +150,7 @@ public class NavigatorViewModel : ViewModelBase
         _undoStack.Push(CurrentDirectory);
         _redoStack.Clear();
         NavigationBool();
-        ItemList = new List<MediaItemModel>(PopulateTree(homeDirectory));
+        ItemList = new ObservableCollection<MediaItemModel>(PopulateTree(homeDirectory));
     }
     private void ParentDirectory()
     {
@@ -158,7 +159,7 @@ public class NavigatorViewModel : ViewModelBase
             _undoStack.Push(CurrentDirectory);
             ParentBool = true;
             _redoStack.Clear();
-            ItemList = new List<MediaItemModel>(PopulateTree(Directory.GetParent(CurrentDirectory).ToString()));
+            ItemList = new ObservableCollection<MediaItemModel>(PopulateTree(Directory.GetParent(CurrentDirectory).ToString()));
             NavigationBool();
         }
         else
@@ -182,7 +183,7 @@ public class NavigatorViewModel : ViewModelBase
             _redoStack.Push(CurrentDirectory);
             CurrentDirectory = _undoStack.Peek();
             _undoStack.Pop();
-            ItemList = new List<MediaItemModel>(PopulateTree(CurrentDirectory));
+            ItemList = new ObservableCollection<MediaItemModel>(PopulateTree(CurrentDirectory));
             NavigationBool();
         }
     }
@@ -193,7 +194,7 @@ public class NavigatorViewModel : ViewModelBase
             _undoStack.Push(CurrentDirectory);
             CurrentDirectory = _redoStack.Peek();
             _redoStack.Pop();
-            ItemList = new List<MediaItemModel>(PopulateTree(CurrentDirectory));
+            ItemList = new ObservableCollection<MediaItemModel>(PopulateTree(CurrentDirectory));
             NavigationBool();
         }
     }
@@ -209,7 +210,7 @@ public class NavigatorViewModel : ViewModelBase
                 TrackNavigation(false);
                 _redoStack.Clear();
                 CurrentDirectory = selectedItem.FullPath;
-                ItemList = new List<MediaItemModel>(PopulateTree(CurrentDirectory));
+                ItemList = new ObservableCollection<MediaItemModel>(PopulateTree(CurrentDirectory));
                 NavigationBool();
                 break;
             }
