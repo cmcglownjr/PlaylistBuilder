@@ -35,7 +35,7 @@
                 </StackPanel>
                 <DataGrid x:Name="PlaylistDataGrid" ItemsSource="{Binding PlaylistTracks, Mode=TwoWay}" Margin="5 0" Height="500" 
                           x:DataType="models:PlaylistTrack" AreRowDetailsFrozen="False" CanUserReorderColumns="True"
-                          DoubleTapped="OnDoubleTapped"
+                          DoubleTapped="InputElement_OnDoubleTapped"
                           SelectedIndex="{Binding SelectedPlaylistIndex, Mode=TwoWay}">
                     <DataGrid.Columns>
                         <DataGridTextColumn Header="Track"

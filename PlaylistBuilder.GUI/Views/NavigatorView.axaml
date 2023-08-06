@@ -36,7 +36,7 @@
                          ScrollViewer.HorizontalScrollBarVisibility="Auto" 
                          SelectionMode="Single"
                          SelectedIndex="{Binding SelectedDirectoryIndex}"
-                         DoubleTapped="OnDoubleTapped">
+                         DoubleTapped="InputElement_OnDoubleTapped">
                     <ListBox.ItemTemplate>
                         <DataTemplate DataType="models:MediaItemModel">
                             <StackPanel Orientation="Horizontal">

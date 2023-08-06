@@ -1,5 +1,7 @@
+using System;
 using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
 using PlaylistBuilder.GUI.ViewModels;
@@ -21,7 +23,8 @@ public partial class NavigatorView : UserControl
     {
         AvaloniaXamlLoader.Load(this);
     }
-    public void OnDoubleTapped(object? sender, RoutedEventArgs e)
+    
+    private void InputElement_OnDoubleTapped(object? sender, TappedEventArgs e)
     {
         _navigatorViewModel.DblTappedItem();
         //TODO: Do this as an MVVM way

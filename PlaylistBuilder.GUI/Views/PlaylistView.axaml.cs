@@ -1,6 +1,7 @@
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
+using Avalonia.Input;
 using Avalonia.Markup.Xaml;
 using PlaylistBuilder.GUI.ViewModels;
 using Splat;
@@ -21,7 +22,7 @@ public partial class PlaylistView : UserControl
     {
         AvaloniaXamlLoader.Load(this);
     }
-    private void OnDoubleTapped(object? sender, RoutedEventArgs e)
+    private void InputElement_OnDoubleTapped(object? sender, TappedEventArgs e)
     {
         _playlistViewModel.DblTappedPlaylist();
     }
