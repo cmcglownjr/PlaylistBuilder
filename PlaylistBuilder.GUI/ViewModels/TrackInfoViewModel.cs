@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Drawing.Imaging;
 using System.IO;
 using System.Reactive;
 using ATL;
@@ -10,13 +9,14 @@ using PlaylistBuilder.GUI.Models;
 using ReactiveUI;
 using Serilog;
 using Splat;
+using SixLabors.ImageSharp;
 using static PlaylistBuilder.GUI.Models.UpdateItem;
 
 namespace PlaylistBuilder.GUI.ViewModels;
 
 public class TrackInfoViewModel : ViewModelBase
 {
-    private readonly Image _trackImage = new();
+    private readonly Avalonia.Controls.Image _trackImage = new();
     private readonly IconModel? _mediaIconModel;
     private int _playlistIndex;
     private string _trackAlbum = "No Media";
@@ -35,8 +35,9 @@ public class TrackInfoViewModel : ViewModelBase
     private string? _setTrack = "";
     private string? _setDisc = "";
     private string? _setYear = "";
+    
+    public Avalonia.Controls.Image TrackImage => _trackImage;
 
-    public Image TrackImage => _trackImage;
     public string TrackAlbum
     {
         get => _trackAlbum; 
@@ -129,7 +130,7 @@ public class TrackInfoViewModel : ViewModelBase
 
     public TrackInfoViewModel(PlaylistTrack track)
     {
-        _mediaIconModel = (IconModel)Locator.Current.GetService(typeof(IconModel))!;
+        _mediaIconModel = (IconModel)Locator.Current.GetService(typeof(IconModel));
         var playlistViewModel = (PlaylistViewModel)Locator.Current.GetService(typeof(PlaylistViewModel))!;
         _playlistIndex = playlistViewModel.SelectedPlaylistIndex;
         PreviousBtnPressed = ReactiveCommand.Create(()=>CycleItems(false));
@@ -139,18 +140,19 @@ public class TrackInfoViewModel : ViewModelBase
         GetTrackInfo(track);
     }
 
-    private Bitmap? AlbumImage(PlaylistTrack track)
+    private Bitmap AlbumImage(PlaylistTrack track)
     {
         if (track.Track.EmbeddedPictures.Count > 0)
         {
             IList<PictureInfo> embeddedPictures = track.Track.EmbeddedPictures;
-            var image = System.Drawing.Image.FromStream(new MemoryStream(embeddedPictures[0].PictureData));
+            var img = SixLabors.ImageSharp.Image.Load(new MemoryStream(embeddedPictures[0].PictureData));
             using var memory = new MemoryStream();
-            image.Save(memory, ImageFormat.Jpeg);
+            img.SaveAsJpeg(memory);
             memory.Position = 0;
             return new Bitmap(memory);
+
         }
-        return _mediaIconModel?.CDImage;
+        return _mediaIconModel.CDImage;
     }
 
     private void GetTrackInfo(PlaylistTrack track)

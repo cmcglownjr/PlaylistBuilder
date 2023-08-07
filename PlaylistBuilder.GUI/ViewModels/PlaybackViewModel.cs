@@ -1,22 +1,21 @@
 using System;
 using System.Collections.Generic;
-using System.Drawing.Imaging;
 using System.IO;
 using System.Reactive;
 using ATL;
-using Avalonia.Controls;
 using Avalonia.Media.Imaging;
 using LibVLCSharp.Shared;
 using PlaylistBuilder.GUI.Models;
 using ReactiveUI;
 using Serilog;
+using SixLabors.ImageSharp;
 using Splat;
 
 namespace PlaylistBuilder.GUI.ViewModels;
 
 public class PlaybackViewModel:ViewModelBase
 {
-    private Image _trackImage = new();
+    private Avalonia.Controls.Image _trackImage = new();
     private readonly IconModel? _mediaIconModel;
     private string _trackAlbum = "No Media";
     private string _trackArtist = "No Media";
@@ -24,7 +23,7 @@ public class PlaybackViewModel:ViewModelBase
     private string _playlistDetails = "0 tracks - [00:00:00]";
     internal LibVLC LibVlc;
     public List<MediaPlayer> PlaylistMedia = new();
-    public Image TrackImage => _trackImage;
+    public Avalonia.Controls.Image TrackImage => _trackImage;
     public string TrackAlbum
     {
         get => _trackAlbum; 
@@ -135,11 +134,10 @@ public class PlaybackViewModel:ViewModelBase
             if (track.EmbeddedPictures.Count > 0)
             {
                 IList<PictureInfo> embeddedPictures = track.EmbeddedPictures;
-                System.Drawing.Image image =
-                    System.Drawing.Image.FromStream(new MemoryStream(embeddedPictures[0].PictureData));
+                var image = SixLabors.ImageSharp.Image.Load(new MemoryStream(embeddedPictures[0].PictureData));
                 using (MemoryStream memory = new MemoryStream())
                 {
-                    image.Save(memory, ImageFormat.Jpeg);
+                    image.SaveAsJpeg(memory);
                     memory.Position = 0;
                     TrackImage.Source = new Bitmap(memory);
                 }

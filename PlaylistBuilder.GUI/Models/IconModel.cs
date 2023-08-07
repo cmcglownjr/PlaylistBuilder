@@ -11,7 +11,7 @@ namespace PlaylistBuilder.GUI.Models
             new(AssetLoader.Open(new Uri("avares://PlaylistBuilder.GUI/Assets/folder.png"))), 
             MusicImage = new(AssetLoader.Open(new Uri("avares://PlaylistBuilder.GUI/Assets/music.png"))), 
             PlaylistImage = new(AssetLoader.Open(new Uri("avares://PlaylistBuilder.GUI/Assets/playlist.png")));
-        public readonly Bitmap? CDImage = 
+        public readonly Bitmap CDImage = 
             new(AssetLoader.Open(new Uri("avares://PlaylistBuilder.GUI/Assets/CD.png")));
     }
 }
