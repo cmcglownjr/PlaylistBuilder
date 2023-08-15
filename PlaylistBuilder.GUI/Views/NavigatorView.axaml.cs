@@ -1,11 +1,10 @@
-using System;
-using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Input;
-using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
 using PlaylistBuilder.GUI.ViewModels;
 using Splat;
+
+using FluentAvalonia.UI.Controls;
 
 namespace PlaylistBuilder.GUI.Views;
 
@@ -28,5 +27,10 @@ public partial class NavigatorView : UserControl
     {
         _navigatorViewModel.DblTappedItem();
         //TODO: Do this as an MVVM way
+    }
+
+    private void BreadcrumbBar_ItemClicked(BreadcrumbBar sender, BreadcrumbBarItemClickedEventArgs args)
+    {
+        _navigatorViewModel.BreadcrumbItemTapped(args.Index);
     }
 }
