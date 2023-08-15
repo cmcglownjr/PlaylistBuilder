@@ -4,6 +4,7 @@
              xmlns:models="clr-namespace:PlaylistBuilder.GUI.Models"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:ui="using:FluentAvalonia.UI.Controls"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="PlaylistBuilder.GUI.Views.NavigatorView">
     <UserControl.Styles>
@@ -13,38 +14,46 @@
         <vm:NavigatorViewModel/>
     </Design.DataContext>
     <StackPanel Orientation="Vertical" Margin="10" HorizontalAlignment="Left">
-                <StackPanel Orientation="Horizontal">
-                    <Button Classes="FileNavigation" Command="{Binding UndoBtnPressed}"
-                            IsEnabled="{Binding UndoBool}">
-                        <Image Classes="ButtonImage" Source="../Assets/undo.png"/>
-                    </Button>
-                    <Button Classes="FileNavigation" Command="{Binding RedoBtnPressed}"
-                            IsEnabled="{Binding RedoBool}">
-                        <Image Classes="ButtonImage" Source="../Assets/redo.png"/>
-                    </Button>
-                    <Button Classes="FileNavigation" Command="{Binding ParentBtnPressed}"
-                            IsEnabled="{Binding ParentBool}">
-                        <Image Classes="ButtonImage" Source="../Assets/parent.png"/>
-                    </Button>
-                    <Button Classes="FileNavigation" Command="{Binding HomeBtnPressed}">
-                        <Image Classes="ButtonImage" Source="../Assets/home.png"/>
-                    </Button>
-                    <TextBlock Classes="NavigationText" Text="{Binding CurrentDirectory}"/>
-                </StackPanel>
-                <ListBox Classes="NavigationList" ItemsSource="{Binding ItemList}"
-                         ScrollViewer.VerticalScrollBarVisibility="Auto" 
-                         ScrollViewer.HorizontalScrollBarVisibility="Auto" 
-                         SelectionMode="Single"
-                         SelectedIndex="{Binding SelectedDirectoryIndex}"
-                         DoubleTapped="InputElement_OnDoubleTapped">
-                    <ListBox.ItemTemplate>
-                        <DataTemplate DataType="models:MediaItemModel">
-                            <StackPanel Orientation="Horizontal">
-                                <Image x:Name="ItemImage" Width="25" Height="25" Source="{Binding MediaIcon.Source}" Margin="5 0"/>
-                                <TextBlock Text="{Binding Name}" Margin="5 0" TextWrapping="Wrap"/>
-                            </StackPanel>
-                        </DataTemplate>
-                    </ListBox.ItemTemplate>
-                </ListBox>
-            </StackPanel>
+        <StackPanel Orientation="Horizontal">
+            <Button Classes="FileNavigation" Command="{Binding UndoBtnPressed}"
+                    IsEnabled="{Binding UndoBool}">
+                <Image Classes="ButtonImage" Source="../Assets/undo.png"/>
+            </Button>
+            <Button Classes="FileNavigation" Command="{Binding RedoBtnPressed}"
+                    IsEnabled="{Binding RedoBool}">
+                <Image Classes="ButtonImage" Source="../Assets/redo.png"/>
+            </Button>
+            <Button Classes="FileNavigation" Command="{Binding ParentBtnPressed}"
+                    IsEnabled="{Binding ParentBool}">
+                <Image Classes="ButtonImage" Source="../Assets/parent.png"/>
+            </Button>
+            <Button Classes="FileNavigation" Command="{Binding HomeBtnPressed}">
+                <Image Classes="ButtonImage" Source="../Assets/home.png"/>
+            </Button>
+        </StackPanel>
+        <ui:BreadcrumbBar x:Name="BreadcrumbBar" 
+                          ItemsSource="{Binding Breadcrumbs}"
+                          ItemClicked="BreadcrumbBar_ItemClicked">
+            <ui:BreadcrumbBar.ItemTemplate>
+                <DataTemplate x:DataType="models:BreadcrumbModel">
+                    <ui:BreadcrumbBarItem Content="{Binding Text}" MaxWidth="75" />
+                </DataTemplate>
+            </ui:BreadcrumbBar.ItemTemplate>
+        </ui:BreadcrumbBar>
+        <ListBox Classes="NavigationList" ItemsSource="{Binding ItemList}"
+                 ScrollViewer.VerticalScrollBarVisibility="Auto" 
+                 ScrollViewer.HorizontalScrollBarVisibility="Auto" 
+                 SelectionMode="Single"
+                 SelectedIndex="{Binding SelectedDirectoryIndex}"
+                 DoubleTapped="InputElement_OnDoubleTapped">
+            <ListBox.ItemTemplate>
+                <DataTemplate DataType="models:MediaItemModel">
+                    <StackPanel Orientation="Horizontal">
+                        <Image x:Name="ItemImage" Width="25" Height="25" Source="{Binding MediaIcon.Source}" Margin="5 0"/>
+                        <TextBlock Text="{Binding Name}" Margin="5 0" TextWrapping="Wrap"/>
+                    </StackPanel>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
+    </StackPanel>
 </UserControl>
