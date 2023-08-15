@@ -1,11 +1,11 @@
 # Changelog
 
-## [0.2.0]() (2023-08-14)
+## [0.2.0](https://gitlab.com/cmcglownjr/playlistbuilder/-/releases/v0.2.0) (2023-08-14)
 ### Changelog
 ****
 - Added a breadcrumb bar for navigation. Will have to work on usability.
 
-## [0.1.0]() (2023-08-06)
+## [0.1.0](https://gitlab.com/cmcglownjr/playlistbuilder/-/releases/v0.1.0) (2023-08-06)
 ### Changelog
 ****
 - Updated Avalonia to v11.0.2
