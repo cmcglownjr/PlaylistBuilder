@@ -1,3 +1,5 @@
+using System;
+
 namespace PlaylistBuilder.GUI.Models;
 
 public class BreadcrumbModel
@@ -10,9 +12,12 @@ public class BreadcrumbModel
         set => _text = value;
     }
 
-    public BreadcrumbModel(string text)
+    public string Path { get; set; }
+
+    public BreadcrumbModel(string text, string path)
     {
         Text = text;
+        Path = path;
     }
     private static string Truncate(string s, int max) 
     { 

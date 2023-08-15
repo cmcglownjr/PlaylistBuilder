@@ -22,7 +22,6 @@ public class NavigatorViewModel : ViewModelBase
     private readonly string _musicDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyMusic);
     private string _currentDirectory = "";
     private ObservableCollection<BreadcrumbModel> _breadcrumbs = new();
-    private Dictionary<string, string> _breadcrumbDictionary = new();
     private readonly string _rootDirectory =
         Directory.GetDirectoryRoot(Environment.SpecialFolder.Personal.ToString());
     private bool _undoBool;
@@ -73,12 +72,6 @@ public class NavigatorViewModel : ViewModelBase
         get => _selectedDirectoryIndex;
         set => this.RaiseAndSetIfChanged(ref _selectedDirectoryIndex, value);
     }
-
-    public Dictionary<string, string> BreadcrumbDictionary
-    {
-        get => _breadcrumbDictionary;
-        set => this.RaiseAndSetIfChanged(ref _breadcrumbDictionary, value);
-    }
     public ReactiveCommand<Unit, Unit> HomeBtnPressed { get; }
     public ReactiveCommand<Unit, Unit> ParentBtnPressed { get; }
     public ReactiveCommand<Unit, Unit> UndoBtnPressed { get; }
@@ -94,7 +87,6 @@ public class NavigatorViewModel : ViewModelBase
         UndoBtnPressed = ReactiveCommand.Create(UndoNavigation);
         RedoBtnPressed = ReactiveCommand.Create(RedoNavigation);
         ParentBool = true;
-        Breadcrumbs = CreateBreadcrumbs();
     }
     private void FindExtensions()
     {
@@ -270,22 +262,22 @@ public class NavigatorViewModel : ViewModelBase
         ObservableCollection<BreadcrumbModel> breadcrumbsList = new();
         string[] directories = _currentDirectory.Split(Path.DirectorySeparatorChar);
         directories[0] = Directory.GetDirectoryRoot(_currentDirectory);
-        BreadcrumbDictionary.Clear();
         int i = 0;
         foreach (var directory in directories)
         {
             if (i > 0)
             {
-                BreadcrumbDictionary.Add(directory, Path.Join(BreadcrumbDictionary[directories[i-1]], directory));
+                breadcrumbsList.Add(new(
+                    directory, 
+                    Path.Join(breadcrumbsList[i-1].Path, directory)
+                    ));
             }
             else
             {
-                BreadcrumbDictionary.Add(directory, directory);
+                breadcrumbsList.Add(new(directory, directory));
             }
-            breadcrumbsList.Add(new(directory));
             i += 1;
         }
-
         return breadcrumbsList;
     }
 
@@ -293,7 +285,7 @@ public class NavigatorViewModel : ViewModelBase
     {
         TrackNavigation(false);
         _redoStack.Clear();
-        CurrentDirectory = BreadcrumbDictionary[Breadcrumbs[index].Text];
+        CurrentDirectory = Breadcrumbs[index].Path;
         ItemList = new ObservableCollection<MediaItemModel>(PopulateTree(CurrentDirectory));
         NavigationBool();
     }
