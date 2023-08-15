@@ -21,6 +21,8 @@ public class NavigatorViewModel : ViewModelBase
 {
     private readonly string _musicDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyMusic);
     private string _currentDirectory = "";
+    private ObservableCollection<BreadcrumbModel> _breadcrumbs = new();
+    private Dictionary<string, string> _breadcrumbDictionary = new();
     private readonly string _rootDirectory =
         Directory.GetDirectoryRoot(Environment.SpecialFolder.Personal.ToString());
     private bool _undoBool;
@@ -33,12 +35,17 @@ public class NavigatorViewModel : ViewModelBase
     private Stack<string> _undoStack = new();
     private Stack<string> _redoStack = new();
     internal readonly List<string> PlaylistExtensions = new();
-
-    delegate void TestDelegate();
+    
     public ObservableCollection<MediaItemModel> ItemList
     {
         get => _itemList;
         private set => this.RaiseAndSetIfChanged(ref _itemList, value);
+    }
+
+    public ObservableCollection<BreadcrumbModel> Breadcrumbs
+    {
+        get => _breadcrumbs;
+        private set => this.RaiseAndSetIfChanged(ref _breadcrumbs, value);
     }
     public string CurrentDirectory
     {
@@ -66,6 +73,12 @@ public class NavigatorViewModel : ViewModelBase
         get => _selectedDirectoryIndex;
         set => this.RaiseAndSetIfChanged(ref _selectedDirectoryIndex, value);
     }
+
+    public Dictionary<string, string> BreadcrumbDictionary
+    {
+        get => _breadcrumbDictionary;
+        set => this.RaiseAndSetIfChanged(ref _breadcrumbDictionary, value);
+    }
     public ReactiveCommand<Unit, Unit> HomeBtnPressed { get; }
     public ReactiveCommand<Unit, Unit> ParentBtnPressed { get; }
     public ReactiveCommand<Unit, Unit> UndoBtnPressed { get; }
@@ -81,6 +94,7 @@ public class NavigatorViewModel : ViewModelBase
         UndoBtnPressed = ReactiveCommand.Create(UndoNavigation);
         RedoBtnPressed = ReactiveCommand.Create(RedoNavigation);
         ParentBool = true;
+        Breadcrumbs = CreateBreadcrumbs();
     }
     private void FindExtensions()
     {
@@ -142,6 +156,7 @@ public class NavigatorViewModel : ViewModelBase
             }
         }
         CurrentDirectory = directory;
+        Breadcrumbs = new ObservableCollection<BreadcrumbModel>(CreateBreadcrumbs());
         return itemList;
     }
     private void HomeDirectory()
@@ -159,7 +174,8 @@ public class NavigatorViewModel : ViewModelBase
             _undoStack.Push(CurrentDirectory);
             ParentBool = true;
             _redoStack.Clear();
-            ItemList = new ObservableCollection<MediaItemModel>(PopulateTree(Directory.GetParent(CurrentDirectory).ToString()));
+            ItemList = new ObservableCollection<MediaItemModel>(PopulateTree(Directory.GetParent(CurrentDirectory)
+                .ToString()));
             NavigationBool();
         }
         else
@@ -247,5 +263,38 @@ public class NavigatorViewModel : ViewModelBase
         UndoBool = _undoStack.Count > 0;
         RedoBool = _redoStack.Count > 0;
         ParentBool = CurrentDirectory != _rootDirectory;
+    }
+
+    private ObservableCollection<BreadcrumbModel> CreateBreadcrumbs()
+    {
+        ObservableCollection<BreadcrumbModel> breadcrumbsList = new();
+        string[] directories = _currentDirectory.Split(Path.DirectorySeparatorChar);
+        directories[0] = Directory.GetDirectoryRoot(_currentDirectory);
+        BreadcrumbDictionary.Clear();
+        int i = 0;
+        foreach (var directory in directories)
+        {
+            if (i > 0)
+            {
+                BreadcrumbDictionary.Add(directory, Path.Join(BreadcrumbDictionary[directories[i-1]], directory));
+            }
+            else
+            {
+                BreadcrumbDictionary.Add(directory, directory);
+            }
+            breadcrumbsList.Add(new(directory));
+            i += 1;
+        }
+
+        return breadcrumbsList;
+    }
+
+    public void BreadcrumbItemTapped(int index)
+    {
+        TrackNavigation(false);
+        _redoStack.Clear();
+        CurrentDirectory = BreadcrumbDictionary[Breadcrumbs[index].Text];
+        ItemList = new ObservableCollection<MediaItemModel>(PopulateTree(CurrentDirectory));
+        NavigationBool();
     }
 }
