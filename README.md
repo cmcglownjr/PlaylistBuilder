@@ -30,7 +30,7 @@ I will build executables at a later date.
 
 The program is pretty straight forward. The main window is shown below:
 
-![Main Window](Images/version_0.5.0.png)
+![Main Window](Images/version_0.2.0.png)
 
 The left is a list view of the current working directory. It will start in your music directory. Double clicking a 
 folder will move you to that folder. Double clicking a playlist will clear the current playlist and import the new one. 
