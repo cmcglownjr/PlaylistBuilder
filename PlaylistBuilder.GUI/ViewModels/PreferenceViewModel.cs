@@ -88,6 +88,15 @@ public class PreferenceViewModel : ViewModelBase
     }
     private void OnClosePressed(Window window)
     {
-        window.Close();
+        try
+        {
+            window.Close();
+        }
+        catch (Exception e)
+        {
+            //TODO: Fix this error
+            Log.Error("Need to fix window close null exception.");
+            throw;
+        }
     }
 }
