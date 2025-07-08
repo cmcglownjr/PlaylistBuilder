@@ -11,13 +11,14 @@ jobs:
     steps:
       - name: Checkout main branch
         uses: actions/checkout@v4
+        
+      - name: Push to GitLab
+        run: |
+          git remote add gitlab https://gitlab-ci-token:${{ secrets.GL_TOKEN }}@gitlab.com/cmcglownjr/playlistbuilder.git
+          git push gitlab main
 
       - name: Push to GitHub
         run: |
           git remote add github https://${{ secrets.GH_TOKEN }}@github.com/cmcglownjr/PlaylistBuilder.git
           git push github main
-
-      - name: Push to GitLab
-        run: |
-          git remote add gitlab https://gitlab-ci-token:${{ secrets.GL_TOKEN }}@gitlab.com/cmcglownjr/playlistbuilder.git
-          git push gitlab main
+          
