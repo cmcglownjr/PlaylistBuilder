@@ -9,11 +9,11 @@ This project was created to scratch that itch of mine. The process of building i
 #### Technologies:
 
 - [.Net 7](https://dotnet.microsoft.com/en-us/download/dotnet/7.0)
-- [Avalonia](https://github.com/AvaloniaUI/Avalonia) 11.0.10
-- [Serilog](https://serilog.net/) 3.1.1
-- [Xunit](https://xunit.net/) 2.8.1
+- [Avalonia](https://github.com/AvaloniaUI/Avalonia) 11.1.4
+- [Serilog](https://serilog.net/) 4.0.2
+- [Xunit](https://xunit.net/) 2.9.2
 - [LibVLCSharp](https://github.com/videolan/libvlcsharp) 3.8.5
-- [ATL.Net](https://github.com/Zeugma440/atldotnet) 5.24.0
+- [ATL.Net](https://github.com/Zeugma440/atldotnet) 6.5.0
 
 #### Launch:
 
