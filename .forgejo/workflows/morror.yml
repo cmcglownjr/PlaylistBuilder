@@ -1,0 +1,23 @@
+name: Mirror to GitHub and GitLab
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  mirror:
+    runs-on: docker
+    steps:
+      - name: Checkout main branch
+        uses: actions/checkout@v4
+
+      - name: Push to GitHub
+        run: |
+          git remote add github https://x-access-token:${{ secrets.GH_TOKEN }}@github.com/cmcglownjr/playlistbuilder.git
+          git push github main
+
+      - name: Push to GitLab
+        run: |
+          git remote add gitlab https://oauth2:${{ secrets.GL_TOKEN }}@gitlab.com/cmcglownjr/PlaylistBuilder.git
+          git push gitlab main
