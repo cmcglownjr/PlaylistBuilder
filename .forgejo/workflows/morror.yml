@@ -9,30 +9,18 @@ jobs:
   mirror:
     runs-on: docker
     steps:
-      - name: Is curl here?
-        run: |
-          response=$(curl -s -H "X-Vault-Token: ${{ secrets.OPENBAO_TOKEN }}" \
-            "${{ secrets.OPENBAO_ADDR }}/v1/secret/data/forgejo")
-          
-      - name: Get secrets from OpenBao with curl
-        run: |
-          response=$(curl -s -H "X-Vault-Token: ${{ secrets.OPENBAO_TOKEN }}" \
-            "${{ secrets.OPENBAO_ADDR }}/v1/secret/data/forgejo")
-            
-          export GH_TOKEN=$(echo "$response" | jq -r '.data.data.GH_TOKEN')
-          export GL_TOKEN=$(echo "$response" | jq -r '.data.data.GL_TOKEN')
-          
-      - uses: actions/checkout@v4
+      - name: Checkout main branch
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0
-      
+        
       - name: Push to GitLab
         run: |
-          git remote add gitlab https://gitlab-ci-token:$GL_TOKEN@gitlab.com/cmcglownjr/playlistbuilder.git
+          git remote add gitlab https://gitlab-ci-token:${{ secrets.GL_TOKEN }}@gitlab.com/cmcglownjr/playlistbuilder.git
           git push gitlab main
 
       - name: Push to GitHub
         run: |
-          git remote add github https://$GH_TOKEN@github.com/cmcglownjr/PlaylistBuilder.git
+          git remote add github https://${{ secrets.GH_TOKEN }}@github.com/cmcglownjr/PlaylistBuilder.git
           git push github main
           
