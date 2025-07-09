@@ -9,6 +9,9 @@ jobs:
   mirror:
     runs-on: docker
     steps:
+      - name: Install curl
+        run: |
+          sudo apt install curl
           
       - name: Get secrets from OpenBao with curl
         id: get_secrets
