@@ -9,18 +9,25 @@ jobs:
   mirror:
     runs-on: docker
     steps:
-      - name: Checkout main branch
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
         with:
           fetch-depth: 0
+      - name: Get secrets from OpenBao with curl
+        id: get_secrets
+        run: |
+            response=$(curl -s -H "X-Vault-Token: ${{ secrets.OPENBAO_TOKEN }}" \
+              "${{ secrets.OPENBAO_ADDR }}/v1/secret/data/forgejo")
+            
+            export GH_TOKEN=$(echo "$response" | jq -r '.data.data.GH_TOKEN')
+            export GL_TOKEN=$(echo "$response" | jq -r '.data.data.GL_TOKEN')
         
       - name: Push to GitLab
         run: |
-          git remote add gitlab https://gitlab-ci-token:${{ secrets.GL_TOKEN }}@gitlab.com/cmcglownjr/playlistbuilder.git
+          git remote add gitlab https://gitlab-ci-token:$GL_TOKEN@gitlab.com/cmcglownjr/playlistbuilder.git
           git push gitlab main
 
       - name: Push to GitHub
         run: |
-          git remote add github https://${{ secrets.GH_TOKEN }}@github.com/cmcglownjr/PlaylistBuilder.git
+          git remote add github https://$GH_TOKEN@github.com/cmcglownjr/PlaylistBuilder.git
           git push github main
           
