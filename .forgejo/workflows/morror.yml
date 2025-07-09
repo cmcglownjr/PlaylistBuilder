@@ -14,7 +14,6 @@ jobs:
           curl --help
           
       - name: Get secrets from OpenBao with curl
-        id: get_secrets
         run: |
           response=$(curl -s -H "X-Vault-Token: ${{ secrets.OPENBAO_TOKEN }}" \
             "${{ secrets.OPENBAO_ADDR }}/v1/secret/data/forgejo")
