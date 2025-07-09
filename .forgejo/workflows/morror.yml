@@ -11,7 +11,6 @@ jobs:
     steps:
       - name: Is curl here?
         run: |
-          curl --help
           response=$(curl -s -H "X-Vault-Token: ${{ secrets.OPENBAO_TOKEN }}" \
             "${{ secrets.OPENBAO_ADDR }}/v1/secret/data/forgejo")
           
