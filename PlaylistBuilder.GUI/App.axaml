@@ -11,6 +11,6 @@
         <sty:FluentAvaloniaTheme/>
         <FluentTheme/>
         <StyleInclude Source="avares://Avalonia.Controls.DataGrid/Themes/Fluent.xaml"/>
-        <StyleInclude Source="avares://FluentAvalonia.BreadcrumbBar/Styling/Styles.axaml" />
+        <!-- <StyleInclude Source="avares://FluentAvalonia.BreadcrumbBar/Styling/Styles.axaml" /> -->
     </Application.Styles>
 </Application>
