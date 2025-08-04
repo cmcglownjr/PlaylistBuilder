@@ -1,7 +1,6 @@
 ﻿using System;
 using System.IO;
 using Avalonia;
-using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.ReactiveUI;
 using Serilog;
 using Serilog.Exceptions;
